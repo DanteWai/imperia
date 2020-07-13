@@ -11,8 +11,8 @@ import {OrderComponent} from "./components/order";
 window.addEventListener('load',() => {
 
     jQuery('.scrollbar-inner').scrollbar();
+    const basket = new BasketComponent('basket')
     new CalculateParamComponent('main-content') //компонет подборщика на главной странице
-    new CatalogContentComponent('catalog-content')
-    new BasketComponent('basket')
+    new CatalogContentComponent('catalog-content', basket)
     new OrderComponent('order')
 });

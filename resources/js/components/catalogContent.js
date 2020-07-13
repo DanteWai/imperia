@@ -5,8 +5,10 @@ import Server from "@core/servers";
 
 
 export class CatalogContentComponent extends Component {
-    constructor(id) {
-        super(id)
+    constructor(id, basket) {
+        super(id, false)
+        this.basket = basket
+        this.init()
     }
 
     init(){
@@ -26,6 +28,11 @@ export class CatalogContentComponent extends Component {
         this.catalog.$el.addEventListener('click', clickBrand.bind(this))
         //смена страницы
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
+
+        this.catalog.$el.addEventListener('showBasket', () => {
+            this.basket.show()
+        })
+
 
         checkJSON.call(this)
     }

@@ -10806,10 +10806,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var Component = /*#__PURE__*/function () {
   function Component(id) {
+    var initial = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
     _classCallCheck(this, Component);
 
     this.$el = document.getElementById(id);
-    if (this.$el) this.init();
+    if (this.$el && initial) this.init();
   }
 
   _createClass(Component, [{

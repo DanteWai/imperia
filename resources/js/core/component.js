@@ -1,7 +1,7 @@
 export class Component {
-    constructor(id){
+    constructor(id, initial = true){
         this.$el = document.getElementById(id);
-        if(this.$el) this.init();
+        if(this.$el && initial) this.init();
 
     }
     init(){}

@@ -14,9 +14,9 @@ class DatabaseSeeder extends Seeder
     {
          $this->call(MainMenuSeed::class);
          $this->call(CategoriesTableSeeds::class);
-         /*$this->call(BrandsTableSeed::class);
+         $this->call(BrandsTableSeed::class);
         factory(\App\Models\Product::class, 500)->create();
-        factory(\App\Models\Product_option::class, 3000)->create();*/
+        factory(\App\Models\Product_option::class, 3000)->create();
 
     }
 }

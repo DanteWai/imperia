@@ -13,6 +13,7 @@ export class CatalogProductsComponent extends Component {
         this.page = 1;
         this.$el.addEventListener('click',pagination.bind(this))
         this.$el.addEventListener('click',addBasket.bind(this))
+        this.event = new Event('showBasket',{bubbles: false, cancelable: false});
     }
 
     send(json, token){
@@ -32,6 +33,8 @@ function addBasket(e){
     if(el){
         el.disabled = true
         el.innerHTML = "<span>Товар в корзине</span>"
+        this.$el.dispatchEvent(this.event)
+        // TODO - добавить инициализацию корзины
         addBasketJson(el.dataset.optionId , el.previousElementSibling.value)
     }
 }
