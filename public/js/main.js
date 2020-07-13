@@ -10721,8 +10721,6 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
   _createClass(CatalogContentComponent, [{
     key: "init",
     value: function init() {
-      var _this2 = this;
-
       this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
       this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list');
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
@@ -10735,9 +10733,7 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
       this.catalog.$el.addEventListener('click', clickBrand.bind(this)); //смена страницы
 
       this.catalog.$el.addEventListener('change-page', changeParam.bind(this));
-      this.catalog.$el.addEventListener('showBasket', function () {
-        _this2.basket.show();
-      });
+      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
       checkJSON.call(this);
     }
   }]);
@@ -10745,15 +10741,21 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
   return CatalogContentComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
+function changeBasket() {
+  this.basket.json = localStorage.getItem('basket');
+  this.basket.fill();
+  this.basket.show();
+}
+
 function changeCategory() {
-  var _this3 = this;
+  var _this2 = this;
 
   this.server.post('catalog/switch', {
     category_id: this.header.category_id
   }, {}, this.token).then(function (answer) {
     if (answer.option_panel && answer.list) {
-      _this3.header.optionPanel.innerHTML = answer.option_panel;
-      _this3.catalog.$el.innerHTML = answer.list;
+      _this2.header.optionPanel.innerHTML = answer.option_panel;
+      _this2.catalog.$el.innerHTML = answer.list;
     }
   });
 }
@@ -11003,7 +11005,8 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
       this.server.post('catalog/list', json, {
         'Content-Type': 'application/json;charset=utf-8'
       }, token).then(function (answer) {
-        //console.log(answer)
+        console.log('answer', answer);
+
         if (answer.products) {
           _this.$el.innerHTML = answer.products;
         }
@@ -11019,10 +11022,10 @@ function addBasket(e) {
 
   if (el) {
     el.disabled = true;
-    el.innerHTML = "<span>Товар в корзине</span>";
-    this.$el.dispatchEvent(this.event); // TODO - добавить инициализацию корзины
+    el.innerHTML = "<span>Товар в корзине</span>"; // TODO - добавить инициализацию корзины
 
     addBasketJson(el.dataset.optionId, el.previousElementSibling.value);
+    this.$el.dispatchEvent(this.event);
   }
 }
 

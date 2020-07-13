@@ -19,7 +19,7 @@ export class CatalogProductsComponent extends Component {
     send(json, token){
         this.json = json;
         this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
-            //console.log(answer)
+            console.log('answer', answer)
             if(answer.products){
                 this.$el.innerHTML = answer.products
             }
@@ -33,9 +33,9 @@ function addBasket(e){
     if(el){
         el.disabled = true
         el.innerHTML = "<span>Товар в корзине</span>"
-        this.$el.dispatchEvent(this.event)
         // TODO - добавить инициализацию корзины
         addBasketJson(el.dataset.optionId , el.previousElementSibling.value)
+        this.$el.dispatchEvent(this.event)
     }
 }
 export function addBasketJson(id,count) {

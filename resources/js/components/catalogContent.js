@@ -29,14 +29,18 @@ export class CatalogContentComponent extends Component {
         //смена страницы
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
 
-        this.catalog.$el.addEventListener('showBasket', () => {
-            this.basket.show()
-        })
+        this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this))
 
 
         checkJSON.call(this)
     }
 
+}
+
+function changeBasket() {
+    this.basket.json = localStorage.getItem('basket');
+    this.basket.fill();
+    this.basket.show();
 }
 
 function changeCategory(){
