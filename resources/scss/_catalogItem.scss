@@ -1,0 +1,120 @@
+.product-navigation{
+    margin:1em 1em 1em 0;
+    position: absolute;
+    bottom: 0;
+    left: 2em;
+    a{
+        color: #959595;
+        text-decoration: none;
+        font-size: 2em;
+
+        &:hover{
+            color: #6b6b6b;
+        }
+    }
+}
+
+.product{
+    display: flex;
+    padding: 2em;
+    > div{
+        background-color: #fff;
+        padding:1em;
+        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
+    }
+
+    .product-preview {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        flex:300px;
+        .product-preview-options{
+            margin:0.5em auto;
+            font-size: 1.4em;
+            color:#001D3D;
+        }
+    }
+
+    .product-description{
+        flex:70%;
+        margin-left:1em;
+        display: flex;
+        flex-direction: column;
+        font-size: calc(0.8rem + 0.5vw);
+
+        .stock{
+            margin:auto 0 0 0;
+            span{
+                text-decoration: underline;
+                color:#001D3D;
+            }
+        }
+
+        ul{
+            list-style-type: none;
+            margin:0;
+            padding: 0;
+            
+
+            li{
+                display: flex;
+                justify-content: space-between;
+                max-width: 700px;
+                .desc-name{
+                    font-weight: bold;
+                    color:#001D3D;
+                }
+            }
+        }
+    }
+}
+
+.similar-header {
+    color:#001D3D;
+    font-size: 2rem;
+    font-weight: 100;
+    margin:0 1em;
+}
+
+
+@media only screen and (max-width: 1000px) {
+    .product{
+
+    
+        .product-preview {
+
+            img, span{
+                max-width: 200px;
+                align-self: center;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .product{
+
+    
+        .product-description ul li {
+
+           flex-direction: column;
+
+           +li{
+               margin-top:0.5em;
+           }
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .product{
+        padding: 1em;
+        flex-direction: column;
+        .product-description{
+            margin-left:0;
+            margin-top:1em;
+        }
+    }
+
+
+}

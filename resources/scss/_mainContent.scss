@@ -1,0 +1,357 @@
+.main.content {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    width: $widthAll;
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    [data-choice-others] {
+        transition: 0.8s;
+        overflow: hidden;
+        max-height: 100px;
+    }
+
+
+    button {
+        cursor: pointer;
+        align-self: center;
+        padding: $buttonPadding;
+
+        color: $mainColorText;
+        border: none;
+        border-radius: 1em;
+        font-size: 1rem;
+
+        &:first-child {
+            margin-top: 2em;
+        }
+
+    }
+
+    .pick {
+        &:disabled {
+            background: #333;
+            color: #f2f2f2;
+
+            &:hover {
+                background: #333;
+            }
+        }
+
+        background-color: $mainColorOp;
+        text-transform: uppercase;
+        margin-top:0.5em;
+        font-family: Arial;
+
+
+        &:hover {
+
+            transition: 0.2s;
+            background-color: $mainHoverColor;
+        }
+    }
+
+    .clear {
+
+        color: #ffffff82;
+        background-color: rgba(255, 255, 255, 0);
+
+        svg {
+            stroke: rgba(255, 255, 255, 0.7);
+            ;
+            width: 10px;
+            height: 10px;
+        }
+
+
+        &:hover {
+            color: #fff;
+
+            svg {
+                stroke: #fff;
+            }
+        }
+    }
+
+    .season-choice,
+    .heavy-choice {
+        margin-top: 0.5em;
+        position: absolute;
+        bottom: -2em;
+
+        input {
+            display: none;
+
+            &.active+label {
+                background-color: $mainColor;
+            }
+        }
+
+        label {
+            cursor: pointer;
+            display: inline-block;
+            background-color: #fff;
+            color: $mainColorText;
+            font-size: 0.9rem;
+            padding: 0.3em 2em;
+            border-radius: 0.3em;
+
+            &:hover {
+                background-color: rgb(255, 217, 110);
+            }
+        }
+    }
+
+    .heavy-choice{
+        right:0;
+    }
+
+
+
+
+
+    .choice-menu {
+        display: flex;
+        align-self: center;
+
+        >li {
+            font-size: 2.2rem;
+            color: $colorNoActiveText;
+            margin: 0 0.6em;
+            cursor: pointer;
+
+            &:hover {
+                color: $colorHoverText;
+
+                .choice-icon {
+                    fill: $colorHoverText;
+                }
+            }
+
+            &.active {
+                color: $colorText;
+
+                .choice-icon {
+                    fill: $colorText;
+                }
+            }
+
+            .choice-icon {
+                width: 50px;
+                height: 50px;
+                fill: $colorNoActiveText;
+            }
+
+        }
+
+
+
+    }
+
+
+
+
+    .content-choice {
+        display: flex;
+        position: relative;
+
+        .choice-list {
+            background-color: #fff;
+            flex: 1;
+            border-radius: 1em;
+            margin-top: 1em;
+            transition: 0.4s;
+            overflow: hidden;
+            position: relative;
+
+            .header-choice {
+                position: absolute;
+                top: 10px;
+                right: 5%;
+                font-size: 0.8rem;
+                font-weight: bold;
+                color: #032a74;
+            }
+
+            &.run {
+                opacity: 0;
+                margin-right: 5%;
+                transition: 0.4s;
+            }
+
+
+            +.choice-list {
+                margin-left: 3em;
+            }
+
+            h4 {
+                color: $contentMainColor;
+                padding: 1em 1em;
+                border-bottom: 2px solid $contentMainColor;
+                margin: 0;
+                font-size: calc(0.5rem + 0.5vmax);
+                font-weight: 300;
+            }
+
+            ul {
+                color: rgba(0, 0, 0, 0.65);
+                max-height: 40vh;
+                overflow-y: auto;
+                margin: 0.5em 0;
+
+                li {
+                    text-align: right;
+                    padding: 0.6em 1em;
+                    font-size: calc(0.5rem + 0.5vmax);
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #F2F2F2;
+                    }
+
+                    &.active {
+                        background-color: $mainColor;
+                        color: $mainColorText;
+
+                        &:hover {
+                            background-color: #ffd96e;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    @media only screen and (max-width: 1280px) {
+        .main.content {
+            width: 90vw;
+            transition: 0.5s;
+
+            button {
+                font-size: 0.8rem;
+            }
+        }
+
+    }
+
+    @media only screen and (max-width: 1000px) {
+        .content-choice {
+            flex-wrap: wrap;
+            margin: -0.5em;
+
+
+            .choice-list {
+                flex: 40%;
+                margin: 0.5em;
+
+                ul {
+                    max-height: 20vh;
+                }
+
+                +.choice-list {
+                    margin: 0.5em;
+
+                }
+            }
+
+        }
+
+        .main.content {
+
+
+
+            .heavy-choice {
+                align-self: center;
+                margin: 0.5em;
+                font-size: 1rem;
+
+            }
+
+            .pick {
+                margin-top: 0.7em;
+            }
+        }
+
+
+
+    }
+
+    @media only screen and (max-width: 500px) {
+
+        .choice-menu {
+            >li {
+                font-size: 1.6rem;
+                margin: 0;
+
+                +li {
+                    margin-left: 0.5em;
+                }
+
+                .choice-icon {
+                    height: 30px;
+                    width: 30px;
+                }
+            }
+
+        }
+
+        .content-choice {
+            flex-direction: column;
+
+            .choice-list {
+                height: initial;
+                overflow: initial;
+                flex: 0;
+                cursor: pointer;
+                border-radius: 0;
+
+                h4 {
+                    margin: 0;
+                }
+
+                ul {
+                    margin: 0;
+                    max-height: 0;
+                    transition: $DeployTime;
+
+                    &.deploy {
+                        max-height: 40vh;
+                    }
+                }
+
+            }
+
+        }
+
+        .main.content {
+            button {
+                align-self: initial;
+                border-radius: initial;
+                padding: 1.3em 0;
+            }
+
+            .clear {
+                margin-top: 0.5em;
+                background-color: rgba(255, 255, 255, 0.3);
+
+            }
+
+            .heavy-choice {
+                align-self: flex-start;
+                margin: 0.5em 0;
+                font-size: 1rem;
+
+            }
+
+        }
+
+        .main.content .season-choice label {
+            border-radius: 0;
+        }
+    }

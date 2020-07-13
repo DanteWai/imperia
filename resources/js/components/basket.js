@@ -1,0 +1,83 @@
+import {Component} from "@core/component";
+import Server from "@core/servers";
+import route from './../route'
+
+export class BasketComponent extends Component {
+    constructor(id) {
+        super(id)
+    }
+
+    init(){
+
+        this.server = new Server();
+        this.token = document.querySelector('[name="_token"]').value
+        this.json = localStorage.getItem('basket')
+        this.body = this.$el.querySelector('.basket-list')
+        this.count = 0;
+        this.$count = this.$el.querySelector('.basket-count-p')
+
+        if(this.json) {
+
+            this.fill()
+        }
+
+        this.$el.addEventListener('click',collapse.bind(this))
+        this.$el.addEventListener('click',deleteElement.bind(this))
+    }
+
+    async fill() {
+        let answer = await this.server.post('catalog/basket', this.json, {'Content-Type': 'application/json;charset=utf-8'}, this.token)
+        this.count = answer.length
+        this.countRender()
+        this.show()
+
+
+        this.body.innerHTML = answer.map(el => {
+            return `
+            <li data-option-id="${el.option_id}">
+                <img src="/images/test/koleso.png" alt="">
+                <div class="basket-list-body">
+                <a href="${route('productPage',[el.model],[el.option_id])}" class="basket-list-body-name">
+                    ${el.brand} ${el.model}
+                </a>
+                <p class="basket-list-body-param">Параметры товара</p>
+                </div>
+                <input type="text" value="${el.count}">
+                <span class="basket-list-body-count">шт</span>
+                <span data-product-price="4700" class="basket-list-body-price">${el.price * el.count}</span>
+                <span class="basket-list-body-delete">Удалить</span>
+            </li>
+            `
+        }).join('')
+
+    }
+
+    countRender(){
+        this.$count.innerHTML = this.count;
+    }
+}
+
+///catalog/basket
+
+function collapse(e){
+    let tr = e.target.closest('.basket-icon')
+    if(tr){
+        this.$el.classList.toggle('small')
+        this.$el.classList.toggle('big')
+    }
+}
+function deleteElement(e){
+    let tr = e.target.closest('.basket-list-body-delete')
+    if(tr){
+        let parent = tr.parentElement
+        let json = JSON.parse(this.json)
+        delete json[parent.dataset.optionId]
+        localStorage.setItem('basket',JSON.stringify(json))
+        parent.remove()
+
+        this.count = this.count -1
+        this.countRender()
+    }
+}
+
+

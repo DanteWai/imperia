@@ -1,0 +1,305 @@
+.wrapper nav{
+    z-index: 500;
+}
+
+.v-nav {
+    background: linear-gradient(to bottom, #ffe032 0%,#f29100 100%);
+    list-style-type: none;
+    margin: 0;
+    min-height: 60px;
+    height: 1px;
+
+
+    display: flex;
+
+    .logo {
+        padding: 0.2em 0;
+        font-family: "Source Sans Pro";
+        margin-top: -0.5rem;
+        font-size: calc(1.2rem + 0.8vmax);
+        line-height: 1.1;
+
+        span {
+            display: block;
+            font-size: calc(0.57rem + 0.4vmax);
+            margin-left: 2px;
+        }
+    }
+
+    .v-nav-item {
+        position: relative;
+        a {
+            text-decoration: none;
+            color: $mainColorText;
+            height: 100%;
+            width: 100%;
+            display: block;
+            font-size: 1em;
+        }
+
+        >a {
+            font-size: calc(0.8rem + 0.2vmax);
+            padding: 1em 1.6em;
+            display: flex;
+            align-items: center;
+
+            &:hover {
+                background-color: #141a46;
+                color: #ecc45e;
+            }
+            
+        }
+
+        &:first-child {
+            margin-right: 3em;
+            margin-left: 0;
+        }
+
+        &.menu-phone {
+            font-size: calc(0.5rem + 0.4vmax);
+            align-self: center;
+            margin-left: auto;
+            margin-right: 1em;
+
+            span+span {
+                margin-left: 1.5em;
+            }
+        }
+
+        &.basket{
+            display: flex;
+            align-items: center;
+            cursor:pointer;
+            padding: 0 1em;
+            margin-left:1em;
+            &:hover{
+                background-color: rgba(2, 28, 77, 0.808);
+            }
+        }
+
+        .basket-icon{
+            width:40px;
+            height:40px;
+            fill:rgba(255, 255, 255, 0.719);
+        }
+    }
+}
+
+/*Стили для выпадающего списка*/
+.v-nav-catalog{
+    margin:0;
+    position: absolute;
+    left:0;
+    right:0;
+    background-color: rgba(0, 23, 53, 0.98);
+    list-style-type: none;
+    color:#fff;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    
+    max-height: 0;
+    transition: $DeployTime;
+    z-index: 10;
+
+     * {
+        z-index: 100;
+    }
+
+    &::before{
+        transition:$DeployTime;
+        background-size: contain;
+        content: " ";
+        background-size: contain;
+        width: 15em;
+        height: 15em;
+        position: absolute;
+        left:-20%;
+        bottom:-10%;
+        transition:1s;
+        z-index: 0;
+
+    }
+
+    &.shin::before{
+        background: url('../images/tyre.svg') no-repeat;
+        background-size: contain;
+    }
+    &.disk::before{
+        background: url('../images/disk.svg') no-repeat;
+        background-size: contain;
+    }
+
+
+    h3, .catalog-header{
+        margin:0;
+    }
+    
+    .catalog-item{
+
+        + .catalog-item{
+            margin-left:1em;
+        }
+        margin-bottom:1em;
+    }
+    
+    .menu-container{
+        z-index: 1;
+        flex:100%;
+        max-height: 500px;
+        opacity: 1;
+        transition: 0.5s;
+  
+        input{
+            height: 28px;
+            left: 0;
+            margin: 0;
+            opacity: 0; 
+            padding: 0;
+            position: absolute;
+            top: -10px; 
+            width: 36px;
+            z-index:2;
+            &:checked+ label{
+                .menu-icon.sun {
+                    fill:rgb(226, 153, 19);
+                }
+                .menu-icon.snow {
+                    fill:rgb(75, 151, 238);
+                }
+            }
+        }
+
+        .season-choice{
+            display: flex;
+            margin-right: 0.5em;
+            margin-bottom: -10px;
+
+            label ~ label{
+                margin-left:1em;
+            }
+        }
+
+        &.run{
+            opacity: 0;
+            max-height: 0;
+            margin-left: -50px;
+            transitioN:0.3s;
+        }
+        
+       
+  
+    }
+    .menu-container ul{
+        list-style-type: none;
+        padding: 0;
+        display: inline-flex;
+        margin:1em 0 2em -1em;
+        flex-wrap: wrap;
+
+        li{
+
+                margin-left:1em;
+                margin-top:0.5em;
+
+            a{
+                color: $mainColorText;
+                
+                padding: 0.5em 1em;
+                background-color: $mainColor;
+                &:hover{
+                    text-decoration: none;
+                    background: #b98905;
+                }
+            }
+        }
+    }
+    span{
+        font-size:0.8rem;
+        display: block;
+    }
+
+}
+
+.category-header{
+    font-size: 2rem;
+    cursor: pointer;
+    display: inline-block;
+    color:rgba(177, 216, 255, 0.49); 
+    &.active{
+        color:#fff;
+        &::after{
+            width: 100%;
+            transition:  0.3s ease-in-out;
+        }
+    }
+    &:not(.active):hover{
+        color:rgba(177, 216, 255, 0.719); 
+    }
+    &::after{
+        content:" ";
+        width:0;
+        height:2px;
+        display: block;
+        background-color: #febe0a;
+    }
+}
+
+
+
+
+@media only screen and (max-width: 1000px) {
+    .v-nav {
+
+        .v-nav-item {
+            &:first-child {
+                margin-right: 1em;
+            }
+
+            &.menu-phone {
+                span+span {
+                    margin-left: 0;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .hide700 {
+        display: none;
+    }
+
+    .v-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0;
+
+        .v-nav-item {
+            &:first-child {
+                margin-right: 1em;
+            }
+
+            &.menu-phone {
+                span+span {
+                    margin-left: 0;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 400px) {
+
+    .v-nav {
+        .v-nav-item {
+            flex: 50%;
+
+            >a {
+                justify-content: center;
+            }
+        }
+    }
+}

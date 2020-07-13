@@ -1,0 +1,44 @@
+.body{
+    display: flex;
+    height: 100%;
+}
+
+.nav-wrapper{
+    min-width: 240px;
+    height: 100%;
+    background-color: $bgMenu;
+    color:$colorMenu;
+
+
+    .menu{
+        font-family: 'Didact Gothic', sans-serif;
+        font-size: 1.1rem;
+        margin:0;
+        padding: 0;
+        li{
+
+            a{
+                svg{
+                    fill:$colorMenu;
+                    width: 16px;
+                    height: auto;
+                    margin-right: 10px;
+                }
+                box-sizing: border-box;
+                display: block;
+                text-decoration: none;
+                color:$colorMenu;
+                width: 100%;
+                padding:1em 1.4em;
+                transition: 0.3s;
+                &:hover{
+                    color:#fff;
+                    background: #2B3745;
+                }
+                span{
+                     margin-right:0.5em;
+                 }
+            }
+        }
+    }
+}

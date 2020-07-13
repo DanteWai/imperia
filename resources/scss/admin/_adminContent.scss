@@ -1,0 +1,340 @@
+.content-wrapper {
+    width: 100%;
+    @include wrapper-full();
+
+    /*Заголовок страниц*/
+    .section-title{
+        margin:1em 0;
+        color:$titleColor;
+        font-size: 1.4rem;
+    }
+
+    /* Поиск*/
+    .search{
+        margin-top: $mrt;
+        display: flex;
+        box-shadow: 0 1px 5px rgba(4, 9, 20, 0.15);
+        .search-icon{
+            background-color: #fff;
+            border-radius: 3px 0   0 3px;
+            padding: 8px;
+            //border: 1px solid #f1f4f6;
+            svg{
+                height: 40px;
+                width:40px;
+                fill:$basicButtonColor;
+            }
+        }
+        input{
+            width: 100%;
+            border-radius:  0 3px 3px 0;
+            border:none;
+            border-left: 1px solid #ced4da;
+            padding: 1em;
+        }
+    }
+
+    .filters-title{
+        margin: 1em 0 0.7em  0;
+        color:#495057;
+        font-size: 1rem;
+    }
+    .filters{
+        background-color: #fff;
+        padding: 1em;
+        margin-top: $mrt;
+        border-radius: 3px;
+        box-shadow: 0 1px 5px rgba(4, 9, 20, 0.15);
+
+        button{
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        .desc::after, .asc::after{
+            content:'';
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: 46%;
+            right: 10px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+
+        .asc::after{
+            border-bottom: 5px solid $basicButtonColor;
+        }
+        .desc::after{
+            border-top: 5px solid $basicButtonColor;
+        }
+    }
+
+    /*Меню на главной странице*/
+    .mainPageMenu {
+        @include row-flex();
+
+        li {
+
+            @include col();
+            @include size(4);
+            margin-top: 1%;
+            padding: 1.6em 1em;
+            min-height: 60px;
+            position: relative;
+            transition: 0.3s;
+            background: #fff;
+            border-radius: 3px;
+            box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,0.03),0 0.9375rem 1.40625rem rgba(4,9,20,0.03),0 0.25rem 0.53125rem rgba(4,9,20,0.05),0 0.125rem 0.1875rem rgba(4,9,20,0.03);
+            border: 3px solid rgba(255,255,255,0);
+            text-align: center;
+
+            &:hover {
+                border-color: #b4c1db;
+            }
+
+            .mainPageMenu-header{
+                font-size: 1.4rem;
+                color: #495057;
+                margin-top: 5px;
+            }
+
+            a{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+
+                &:focus{
+                    outline: 0;
+                }
+            }
+        }
+    }
+
+    /* блок-заголовок контентной области*/
+    .content-header{
+
+    }
+
+    /*Основные навигационные кнопки страницы*/
+    .content-control-buttons {
+        margin-top: $mrt;
+    }
+
+    .products-categories {
+        display: flex;
+
+        li+li {
+            margin-left: $mrt;
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+
+            text-decoration: none;
+            color: $titleColor;
+
+            font-size: 1.4em;
+            background: #fff;
+            padding: 1em 2.5em;
+            border-radius: 3px;
+            box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
+
+            .category-icon{
+                fill:#b1b7bb;
+            }
+
+            &.active{
+                color:#2651be;
+                .category-icon{
+                    fill:#2651be;
+                }
+            }
+            &:hover{
+                color:#3f6ad8;
+                .category-icon{
+                    fill:#3f6ad8;
+                }
+            }
+        }
+
+    }
+
+    .category-icon{
+        width:34px;
+        height:34px;
+        margin-right: 5px;
+    }
+
+    /*стандартная гурппа элементов блоками*/
+    .group-elements{
+
+        @include row-flex();
+
+        &.pages{
+            .group-elements-item {
+                @include size(6);
+            }
+        }
+
+        .group-elements-item{
+            &.products{
+                @include size(2);
+            }
+            @include col();
+            @include size(2);
+            margin-top: $mrt *2;
+            background: $bgCardElement;
+            border-radius: 3px;
+            box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
+            display: flex;
+            flex-direction: column;
+
+
+
+            img{
+                width:100%;
+                height: 90px;
+                object-fit: contain;
+                border-radius: 3px 3px 0 0;
+                padding:6px;
+                border-bottom: 1px solid #d7d7d7;
+                box-shadow: 0 0 10px rgba(4,9,20,.03);
+            }
+
+            .group-elements-item_title{
+                font-size: 1.2rem;
+                color: #495057;
+                margin: 10px 10px 5px;
+
+            }
+
+            .group-elements-item_text{
+                color:#495057;
+                margin: 10px 10px 5px;
+
+            }
+            .group-elements-item_options{
+                display: flex;
+                flex-direction: column;
+                margin:10px;
+                a{
+                    color: #3f6ad8;
+
+                    display: inline-block;
+                    &:hover{
+                        text-display: none;
+                    }
+                }
+
+            }
+            .group-elements-item_date {
+                margin-right: auto;
+                color:#a2a2a2;
+                font-size: 0.9rem;
+            }
+            .group-elements-item_footer{
+                margin: auto 10px 5px;
+                display: flex;
+                align-items: flex-end;
+
+                a{
+                    text-decoration: none;
+                    margin-left:10px;
+                }
+                svg{
+                    height:24px;
+                    width: auto;
+                    fill:#777;
+                }
+            }
+        }
+        .edit-link:hover svg{
+            fill:$basicButtonColor;
+        }
+        .delete-link:hover svg{
+            fill:$dangerButtonColor;
+        }
+    }
+
+    .table-elements{
+
+        box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
+        background-color: #fff;
+        margin-top: $mrt;
+        border-radius: 3px;
+        overflow: hidden;
+        font-size: 14px;
+        width: 100%;
+        thead{
+            font-weight: bold;
+            color:#f2f2f2;
+            background: $backButtonColor;
+
+
+
+        }
+        td{
+            padding:8px 15px;
+        }
+        tr:nth-child(even){
+            background-color: #f5f5f5;
+        }
+        tbody tr:hover{
+            background: #ddd;
+
+        }
+        svg{
+            height:24px;
+            width: auto;
+            fill:#777;
+        }
+        .edit-link:hover svg{
+            fill:$basicButtonColor;
+        }
+        .delete-link:hover svg{
+            fill:$dangerButtonColor;
+        }
+    }
+
+    .paginate{
+        display: flex;
+        margin-top: $mrt;
+        .paginate-item{
+            color: #333;
+            padding: 8px 14px;
+            cursor: pointer;
+            background: #fff;
+
+            &:hover{
+                background: darken(#eee,15%);
+            }
+            +  .paginate-item{
+                margin-left: 5px;
+            }
+            &.active{
+                background: $basicButtonColor;
+                color:#f2f2f2;
+            }
+        }
+    }
+
+
+}
+
+.orders-list{
+    h2{
+        font-size: 1.1em;
+        font-weight: bold;
+        color:#333;
+    }
+    margin-top:1%;
+    background-color: #fff;
+    border-radius: 3px;
+    padding:1%;
+    box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
+}
+

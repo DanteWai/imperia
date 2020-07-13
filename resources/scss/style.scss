@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+$DeployTime: 0.7s;
+$colorText: #fff;
+$colorNoActiveText:rgba(255, 255, 255, 0.45);
+$colorHoverText:rgba(255, 255, 255, 0.829);
+$mainBgColor: rgba(0,0,0,0.3);
+$widthAll: 75vw;
+$buttonPadding: 1.3em 7em;
+$mainColor: rgb(254, 190, 10);
+$mainColorOp:rgb(254, 190, 10);
+$mainHoverColor:#ffd86e;
+$footerButtons: rgb(254, 190, 10);
+$mainColorText: rgba(0, 24, 56, 0.84);
+$contentMainColor:rgba(0, 24, 51, 0.94);
+
+:root {
+    box-sizing: border-box;
+}
+
+:focus{
+    outline:none;
+}
+
+*,
+::before,
+::after {
+    box-sizing: inherit;
+}
+
+
+body {
+    font-family: Roboto, Arial, Sans-serif;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: 100vh;
+    background: url(../images/bg-car.webp);
+    background-position-y: 40%;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    > * {
+        z-index: 1;
+    }
+
+    &::before{
+        display: block;
+        content: " ";
+       background-color: $mainBgColor;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 0;
+    }
+
+}
+
+
+#choice-bg, #choice-color{
+    color:rgba(255,255,255,0.5);
+
+    margin-left: 1em;
+    margin-top:0.5em;
+    cursor: pointer;
+    font-size: 0.8rem;
+    position: absolute;
+    left:0;
+    top:10%;
+}
+
+#choice-bg-box, #choice-color-box{
+    margin-left: 1em;
+
+    height: 60px;
+    position: absolute;
+    left:0;
+    top:13%;
+    z-index: 99999;
+
+    img{
+        height: 100%;
+        max-height: 100px;
+        max-width: 100px;
+        object-fit: cover;
+        opacity: 0.5;
+        cursor: pointer;
+        &:hover{
+            opacity: 1;
+        }
+    }
+
+    &.no{
+        display: none;
+    }
+}
+
+
+
+
+@import "v-menu";
+@import "info";
+@import "catalog";
+@import "catalogItem";
+@import "mainContent";
+@import "checkout";
+@import "footer";
+
+
+.collapse{
+    max-height: 0;
+    overflow: hidden;
+
+}
+
+html .deploy{
+    max-height: 500px;
+    transition:$DeployTime;
+    &.v-nav-catalog{
+        padding:2em 0 2em 10%;
+        &.shin::before{
+            background: url(../images/tyre.svg) no-repeat;
+            background-size: contain;
+            transform: rotate(360deg);
+
+        }
+        &.disk::before{
+            background: url(../images/disk.svg) no-repeat;
+            background-size: contain;
+            transform: rotate(600deg);
+
+        }
+
+    }
+    &.v-nav-catalog::before{
+        left:-3%;
+        transition:$DeployTime;
+
+    }
+
+}
+
+
+.m-0{
+    margin:0;
+}
+
+@media only screen and (max-width: 500px) {
+    .wrapper {
+        background-size: auto;
+    }
+}
