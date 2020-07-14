@@ -1,3 +1,4 @@
+//Главный компонент отображения каталога
 import {Component} from "@core/component";
 import {CatalogHeaderComponent} from "./catalogHeader";
 import {CatalogProductsComponent} from "./catalogProducts";
@@ -18,8 +19,6 @@ export class CatalogContentComponent extends Component {
         this.token = this.$el.querySelector('[name="_token"]').value
 
 
-
-
         //Смена категории в шапке
         this.header.$el.addEventListener('change-category', changeCategory.bind(this))
         //Смена параметра поиска товара
@@ -28,7 +27,7 @@ export class CatalogContentComponent extends Component {
         this.catalog.$el.addEventListener('click', clickBrand.bind(this))
         //смена страницы
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
-
+        //показ корзины
         this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this))
 
 
@@ -38,19 +37,19 @@ export class CatalogContentComponent extends Component {
 }
 
 function changeBasket() {
+    //рендерит корзину
     this.basket.json = localStorage.getItem('basket');
     this.basket.fill();
     this.basket.show();
 }
 
-function changeCategory(){
-    this.server.post('catalog/switch',{category_id:this.header.category_id},{},this.token).then(answer => {
-        if(answer.option_panel && answer.list){
-            this.header.optionPanel.innerHTML = answer.option_panel;
-            this.catalog.$el.innerHTML = answer.list
-        }
-
-    })
+async function changeCategory(){
+    //посылает запрос при смене основной категории и получает новый html
+    let answer = await this.server.post('catalog/switch',{category_id:this.header.category_id},{},this.token)
+    if(answer.option_panel && answer.list){
+        this.header.optionPanel.innerHTML = answer.option_panel //смена доступных для товара опций
+        this.catalog.$el.innerHTML = answer.list //?
+    } 
 }
 function clickBrand(e){
     let target = e.target.closest('.category-item')

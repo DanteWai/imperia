@@ -20,12 +20,17 @@ export class CatalogProductsComponent extends Component {
         this.json = json;
         this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
             console.log('answer', answer)
-            if(answer.products){
-                this.$el.innerHTML = answer.products
-            }
 
+            if(answer.data){
+                this.$el.innerHTML = productsRender(answer) //TODO
+            }
         })
     }
+}
+
+function productsRender(object){
+    // тут рендер шаблона
+    // сам шаблон в views/catalog/product_list
 }
 
 function addBasket(e){
@@ -33,11 +38,11 @@ function addBasket(e){
     if(el){
         el.disabled = true
         el.innerHTML = "<span>Товар в корзине</span>"
-        // TODO - добавить инициализацию корзины
         addBasketJson(el.dataset.optionId , el.previousElementSibling.value)
         this.$el.dispatchEvent(this.event)
     }
 }
+
 export function addBasketJson(id,count) {
     let basket = localStorage.getItem('basket')
     let data = {}

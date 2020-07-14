@@ -148,9 +148,9 @@ class CatalogController extends SiteController
 
         if(isset($post['base_option']) && isset($post['json_option'])){
             $products = $this->o_rep->getParamOption($post['base_option'],$post['json_option'], false, $post['page']);
-            //return response()->json($products);
-            $list = view('catalog.product_list')->with(['products'=>$products])->render();
-            return response()->json(['products'=>$list]);
+            return response()->json($products);
+            //$list = view('catalog.product_list')->with(['products'=>$products])->render();
+            //return response()->json(['products'=>$list]);
         }
         return response()->json(['error'=>"не удалось получить товары"]);
     }

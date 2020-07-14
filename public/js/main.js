@@ -10676,6 +10676,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -10696,6 +10700,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+//Главный компонент отображения каталога
 
 
 
@@ -10732,7 +10737,8 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 
       this.catalog.$el.addEventListener('click', clickBrand.bind(this)); //смена страницы
 
-      this.catalog.$el.addEventListener('change-page', changeParam.bind(this));
+      this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
+
       this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
       checkJSON.call(this);
     }
@@ -10742,22 +10748,45 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 function changeBasket() {
+  //рендерит корзину
   this.basket.json = localStorage.getItem('basket');
   this.basket.fill();
   this.basket.show();
 }
 
 function changeCategory() {
-  var _this2 = this;
+  return _changeCategory.apply(this, arguments);
+}
 
-  this.server.post('catalog/switch', {
-    category_id: this.header.category_id
-  }, {}, this.token).then(function (answer) {
-    if (answer.option_panel && answer.list) {
-      _this2.header.optionPanel.innerHTML = answer.option_panel;
-      _this2.catalog.$el.innerHTML = answer.list;
-    }
-  });
+function _changeCategory() {
+  _changeCategory = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var answer;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return this.server.post('catalog/switch', {
+              category_id: this.header.category_id
+            }, {}, this.token);
+
+          case 2:
+            answer = _context.sent;
+
+            if (answer.option_panel && answer.list) {
+              this.header.optionPanel.innerHTML = answer.option_panel; //смена доступных для товара опций
+
+              this.catalog.$el.innerHTML = answer.list; //?
+            }
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+  return _changeCategory.apply(this, arguments);
 }
 
 function clickBrand(e) {
@@ -11007,8 +11036,8 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
       }, token).then(function (answer) {
         console.log('answer', answer);
 
-        if (answer.products) {
-          _this.$el.innerHTML = answer.products;
+        if (answer.data) {
+          _this.$el.innerHTML = productsRender(answer); //TODO
         }
       });
     }
@@ -11017,13 +11046,16 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
   return CatalogProductsComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
+function productsRender(object) {// тут рендер шаблона
+  // сам шаблон в views/catalog/product_list
+}
+
 function addBasket(e) {
   var el = e.target.closest('.add-basket');
 
   if (el) {
     el.disabled = true;
-    el.innerHTML = "<span>Товар в корзине</span>"; // TODO - добавить инициализацию корзины
-
+    el.innerHTML = "<span>Товар в корзине</span>";
     addBasketJson(el.dataset.optionId, el.previousElementSibling.value);
     this.$el.dispatchEvent(this.event);
   }
