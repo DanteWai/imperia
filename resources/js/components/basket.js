@@ -1,6 +1,5 @@
 import {Component} from "@core/component";
 import Server from "@core/servers";
-import route from './../route'
 
 export class BasketComponent extends Component {
     constructor(id) {
@@ -16,10 +15,7 @@ export class BasketComponent extends Component {
         this.count = 0;
         this.$count = this.$el.querySelector('.basket-count-p')
 
-        if(this.json) {
-
-            this.fill()
-        }
+        this.json && this.fill() //выполнить fill если есть json
 
         this.$el.addEventListener('click',collapse.bind(this))
         this.$el.addEventListener('click',deleteElement.bind(this))
@@ -27,17 +23,21 @@ export class BasketComponent extends Component {
 
     async fill() {
         let answer = await this.server.post('catalog/basket', this.json, {'Content-Type': 'application/json;charset=utf-8'}, this.token)
+        console.log(answer)
         this.count = answer.length
         this.countRender()
         this.show()
 
 
+
         this.body.innerHTML = answer.map(el => {
+
+
             return `
             <li data-option-id="${el.option_id}">
                 <img src="/images/test/koleso.png" alt="">
                 <div class="basket-list-body">
-                <a href="${route('productPage',[el.model],[el.option_id])}" class="basket-list-body-name">
+                <a href="" class="basket-list-body-name">
                     ${el.brand} ${el.model}
                 </a>
                 <p class="basket-list-body-param">Параметры товара</p>

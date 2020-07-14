@@ -142,28 +142,24 @@ class CatalogController extends SiteController
     }
 
     public function productList(Request $request) {
-
-
         $post = $request->all();
 
         if(isset($post['base_option']) && isset($post['json_option'])){
             $products = $this->o_rep->getParamOption($post['base_option'],$post['json_option'], false, $post['page']);
             return response()->json($products);
-            //$list = view('catalog.product_list')->with(['products'=>$products])->render();
-            //return response()->json(['products'=>$list]);
         }
         return response()->json(['error'=>"не удалось получить товары"]);
     }
 
-    public function basketList() {
 
-        $post = file_get_contents('php://input');
-        $post = json_decode($post, true);
 
-        foreach($post as $option_id => $count){
-            $options[] = $option_id;
-        }
+    public function basketList(Request $request) {
+
+        $post = $request->all();
+        $options = array_keys($post);
         $products = $this->o_rep->getProducts($options);
+
+        $outputProducts = [];
 
         foreach($products as $key => $product){
             $outputProducts[$key]['option_id']=$product['option_id'];
@@ -174,8 +170,7 @@ class CatalogController extends SiteController
             $outputProducts[$key]['image']=$product['product']['product_images'];
             $outputProducts[$key]['options']=$product['options'];
         }
-
-        return $outputProducts;
+        return response()->json($outputProducts);
     }
 
 

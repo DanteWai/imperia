@@ -1,6 +1,6 @@
 import {Component} from "@core/component";
 import Server from "@core/servers";
-import route from './../route'
+
 
 export class OrderComponent extends Component {
     constructor(id) {

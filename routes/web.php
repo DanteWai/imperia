@@ -27,15 +27,19 @@ Route::post('/newPraramlist','IndexController@changeContent');
 
 /*Каталог*/
 Route::get('/catalog','CatalogController@index')->name('catalog');
-Route::post('/catalog/switch','CatalogController@switchCategory')->name('switchCategory');
-Route::post('/catalog/list','CatalogController@productList')->name('productList');
-Route::post('/catalog/basket','CatalogController@basketList')->name('basket');
+
+
 
 Route::get('/catalog/checkout','CatalogController@checkout')->name('checkout');
 Route::post('/catalog/checkout','CatalogController@checkout_output')->name('checkout_output');
 
 Route::get('catalog/{model}/{id}', 'CatalogController@productPage')->name('productPage');
 
+
+//json
+Route::post('/catalog/switch','CatalogController@switchCategory')->name('switchCategory'); //отрендеренный html для смены категории
+Route::post('/catalog/list','CatalogController@productList')->name('productList'); //json с товарами с учетом параметров
+Route::post('/catalog/basket','CatalogController@basketList')->name('basket');
 
 /*Админка*/
 

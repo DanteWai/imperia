@@ -10373,7 +10373,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BasketComponent", function() { return BasketComponent; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-/* harmony import */ var _route__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../route */ "./resources/js/route.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -10402,7 +10401,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
 var BasketComponent = /*#__PURE__*/function (_Component) {
   _inherits(BasketComponent, _Component);
 
@@ -10423,10 +10421,7 @@ var BasketComponent = /*#__PURE__*/function (_Component) {
       this.body = this.$el.querySelector('.basket-list');
       this.count = 0;
       this.$count = this.$el.querySelector('.basket-count-p');
-
-      if (this.json) {
-        this.fill();
-      }
+      this.json && this.fill(); //выполнить fill если есть json
 
       this.$el.addEventListener('click', collapse.bind(this));
       this.$el.addEventListener('click', deleteElement.bind(this));
@@ -10447,14 +10442,15 @@ var BasketComponent = /*#__PURE__*/function (_Component) {
 
               case 2:
                 answer = _context.sent;
+                console.log(answer);
                 this.count = answer.length;
                 this.countRender();
                 this.show();
                 this.body.innerHTML = answer.map(function (el) {
-                  return "\n            <li data-option-id=\"".concat(el.option_id, "\">\n                <img src=\"/images/test/koleso.png\" alt=\"\">\n                <div class=\"basket-list-body\">\n                <a href=\"").concat(Object(_route__WEBPACK_IMPORTED_MODULE_2__["default"])('productPage', [el.model], [el.option_id]), "\" class=\"basket-list-body-name\">\n                    ").concat(el.brand, " ").concat(el.model, "\n                </a>\n                <p class=\"basket-list-body-param\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</p>\n                </div>\n                <input type=\"text\" value=\"").concat(el.count, "\">\n                <span class=\"basket-list-body-count\">\u0448\u0442</span>\n                <span data-product-price=\"4700\" class=\"basket-list-body-price\">").concat(el.price * el.count, "</span>\n                <span class=\"basket-list-body-delete\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n            </li>\n            ");
+                  return "\n            <li data-option-id=\"".concat(el.option_id, "\">\n                <img src=\"/images/test/koleso.png\" alt=\"\">\n                <div class=\"basket-list-body\">\n                <a href=\"\" class=\"basket-list-body-name\">\n                    ").concat(el.brand, " ").concat(el.model, "\n                </a>\n                <p class=\"basket-list-body-param\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</p>\n                </div>\n                <input type=\"text\" value=\"").concat(el.count, "\">\n                <span class=\"basket-list-body-count\">\u0448\u0442</span>\n                <span data-product-price=\"4700\" class=\"basket-list-body-price\">").concat(el.price * el.count, "</span>\n                <span class=\"basket-list-body-delete\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n            </li>\n            ");
                 }).join('');
 
-              case 7:
+              case 8:
               case "end":
                 return _context.stop();
             }
@@ -11343,7 +11339,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrderComponent", function() { return OrderComponent; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-/* harmony import */ var _route__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../route */ "./resources/js/route.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11365,7 +11360,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 
 
 
@@ -12427,43 +12421,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     })(window.angular);
   }
 });
-
-/***/ }),
-
-/***/ "./resources/js/route.js":
-/*!*******************************!*\
-  !*** ./resources/js/route.js ***!
-  \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var routes = __webpack_require__(/*! ./routes.json */ "./resources/js/routes.json");
-
-/* harmony default export */ __webpack_exports__["default"] = (function () {
-  var args = Array.prototype.slice.call(arguments);
-  var name = args.shift();
-
-  if (routes[name] === undefined) {
-    console.log('error');
-  } else {
-    return '/' + routes[name].split('/').map(function (str) {
-      return str[0] === '{' ? args.shift() : str;
-    }).join('/');
-  }
-});
-
-/***/ }),
-
-/***/ "./resources/js/routes.json":
-/*!**********************************!*\
-  !*** ./resources/js/routes.json ***!
-  \**********************************/
-/*! exports provided: debugbar.openhandler, debugbar.clockwork, debugbar.telescope, debugbar.assets.css, debugbar.assets.js, debugbar.cache.delete, , home, catalog, switchCategory, productList, basket, checkout, checkout_output, productPage, admin, products, productAdd, productStore, product_update, product_edit, product_destroy, update, brands.index, brands.create, brands.store, brands.show, brands.edit, brands.update, brands.destroy, pages.index, pages.create, pages.store, pages.show, pages.edit, pages.update, pages.destroy, p_lists, list_add2, list_import, parsers, parser_add, parser_store, parser_edit, parser_update, page, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"debugbar.openhandler\":\"_debugbar/open\",\"debugbar.clockwork\":\"_debugbar/clockwork/{id}\",\"debugbar.telescope\":\"_debugbar/telescope/{id}\",\"debugbar.assets.css\":\"_debugbar/assets/stylesheets\",\"debugbar.assets.js\":\"_debugbar/assets/javascript\",\"debugbar.cache.delete\":\"_debugbar/cache/{key}/{tags?}\",\"\":\"newPraramlist\",\"home\":\"/\",\"catalog\":\"catalog\",\"switchCategory\":\"catalog/switch\",\"productList\":\"catalog/list\",\"basket\":\"catalog/basket\",\"checkout\":\"catalog/checkout\",\"checkout_output\":\"catalog/checkout\",\"productPage\":\"catalog/{model}/{id}\",\"admin\":\"imperia_admin_panel\",\"products\":\"imperia_admin_panel/products/{category}\",\"productAdd\":\"imperia_admin_panel/product/add\",\"productStore\":\"imperia_admin_panel/product/add\",\"product_update\":\"imperia_admin_panel/product/add/{product}\",\"product_edit\":\"imperia_admin_panel/product/edit/{product}\",\"product_destroy\":\"imperia_admin_panel/product/destroy/{product}\",\"update\":\"imperia_admin_panel/update\",\"brands.index\":\"imperia_admin_panel/brands\",\"brands.create\":\"imperia_admin_panel/brands/create\",\"brands.store\":\"imperia_admin_panel/brands\",\"brands.show\":\"imperia_admin_panel/brands/{brand}\",\"brands.edit\":\"imperia_admin_panel/brands/{brand}/edit\",\"brands.update\":\"imperia_admin_panel/brands/{brand}\",\"brands.destroy\":\"imperia_admin_panel/brands/{brand}\",\"pages.index\":\"imperia_admin_panel/pages\",\"pages.create\":\"imperia_admin_panel/pages/create\",\"pages.store\":\"imperia_admin_panel/pages\",\"pages.show\":\"imperia_admin_panel/pages/{page}\",\"pages.edit\":\"imperia_admin_panel/pages/{page}/edit\",\"pages.update\":\"imperia_admin_panel/pages/{page}\",\"pages.destroy\":\"imperia_admin_panel/pages/{page}\",\"p_lists\":\"imperia_admin_panel/price_lists\",\"list_add2\":\"imperia_admin_panel/price_lists/add\",\"list_import\":\"imperia_admin_panel/price_lists/add\",\"parsers\":\"imperia_admin_panel/parsers\",\"parser_add\":\"imperia_admin_panel/parsers/add\",\"parser_store\":\"imperia_admin_panel/parsers/add\",\"parser_edit\":\"imperia_admin_panel/parsers/edit/{parser}\",\"parser_update\":\"imperia_admin_panel/parsers/edit/{parser}\",\"page\":\"{page?}\"}");
 
 /***/ }),
 
