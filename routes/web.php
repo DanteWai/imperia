@@ -18,21 +18,11 @@ Route::get('/','IndexController@index')->name('home');
 Route::post('/praramlist','IndexController@paramList');
 Route::post('/newPraramlist','IndexController@changeContent');
 
-/*Дополнителньые страницы*/
-//Route::get('/payment','PageController@index')->name('payment');
-//Route::get('/delivery','PageController@index')->name('delivery');
-//Route::get('/contacts','PageController@index')->name('contacts');
-
-
 
 /*Каталог*/
 Route::get('/catalog','CatalogController@index')->name('catalog');
-
-
-
 Route::get('/catalog/checkout','CatalogController@checkout')->name('checkout');
 Route::post('/catalog/checkout','CatalogController@checkout_output')->name('checkout_output');
-
 Route::get('catalog/{model}/{id}', 'CatalogController@productPage')->name('productPage');
 
 
@@ -62,19 +52,11 @@ Route::group(['prefix'=>env('APP_ADMIN_URL', 'imperia_admin_panel')], function()
     ]);
 
 
-    //Route::resources(['brands', 'Admin\BrandsController'],['parameters' => ['brands'=> 'brand_alias'] ]);
-
-    //Route::get('/pages/',['uses'=>'Admin\BrandsController@index'])->name('pages');
 
 
     Route::get('/price_lists',['uses'=>'Admin\PricListsController@index'])->name('p_lists');
     Route::get('/price_lists/add',['uses'=>'Admin\PricListsController@add'])->name('list_add');
-
-
     Route::post('/price_lists/add',['uses'=>'Admin\PricListsController@import'])->name('list_import');
-
-
-
     Route::post('/price_lists/parse',['uses'=>'Admin\PricListsController@testParse'])->name('parserst');
     Route::post('/price_lists/add_product',['uses'=>'Admin\PricListsController@addFromParse'])->name('parserstz');
     Route::post('/price_lists/add_price',['uses'=>'Admin\PricListsController@addPrice'])->name('parserstx');

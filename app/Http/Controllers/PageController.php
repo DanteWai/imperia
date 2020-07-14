@@ -22,11 +22,16 @@ class PageController extends SiteController
 
 
     public function Index($page) {
-
-        $this->title = 'Вестник';
         $page = $this->page_rep->getPage($page);
-        $content = view('pageContent', compact('page'))->render();
-        $this->vars = Arr::add($this->vars,'content',$content);
-        return $this->renderOutput();
+
+        if($page){
+            $this->title = 'page';
+            $content = view('pageContent', compact('page'))->render();
+            $this->vars = Arr::add($this->vars,'content',$content);
+            return $this->renderOutput();
+        } else{
+            return abort(404);
+        }
+
     }
 }
