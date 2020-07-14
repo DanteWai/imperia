@@ -879,7 +879,8 @@ window.addEventListener('load', function () {
   /*$('.inputFile').on('change',function(){
       this.nextElementSibling.innerHTML = this.value.substr(this.value.lastIndexOf("\\")+1,this.length);
   });
-     $('.category_selector').on('change',function () {
+  
+  $('.category_selector').on('change',function () {
       server.get(this.dataset.href + '?id=' + this.value,{
           'X-CSRF-TOKEN':$('input[name="_token"]').val(),
           "X-Requested-With": "XMLHttpRequest",
@@ -888,7 +889,7 @@ window.addEventListener('load', function () {
           if(answer.html){
               $('.product-options').html(answer.html)
           }
-       });
+        });
   });*/
 });
 

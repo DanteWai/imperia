@@ -15,7 +15,7 @@ export class BasketComponent extends Component {
         this.count = 0;
         this.$count = this.$el.querySelector('.basket-count-p')
 
-        this.json && this.fill() //выполнить fill если есть json
+        Object.keys(JSON.parse(this.json)).length && this.fill() //выполнить fill если есть json
 
         this.$el.addEventListener('click',collapse.bind(this))
         this.$el.addEventListener('click',deleteElement.bind(this))
@@ -23,7 +23,7 @@ export class BasketComponent extends Component {
 
     async fill() {
         let answer = await this.server.post('catalog/basket', this.json, {'Content-Type': 'application/json;charset=utf-8'}, this.token)
-        console.log(answer)
+        //console.log(answer)
         this.count = answer.length
         this.countRender()
         this.show()
@@ -73,11 +73,16 @@ function deleteElement(e){
         let json = JSON.parse(this.json)
         delete json[parent.dataset.optionId]
         localStorage.setItem('basket',JSON.stringify(json))
+        this.json = JSON.stringify(json);
         parent.remove()
+
+        // Если корзина пустая - скрыть ее
+        if (!Object.keys(JSON.parse(this.json)).length) {
+            this.$el.classList.remove('big');
+            this.hide();
+        }
 
         this.count = this.count -1
         this.countRender()
     }
 }
-
-

@@ -94,7 +94,7 @@ function productsRender(object){ // рендер шаблона
 
 function addBasket(e){
     let el = e.target.closest('.add-basket');
-    if(el){
+    if(el && !el.disabled){
         el.disabled = true
         el.innerHTML = "<span>Товар в корзине</span>"
         addBasketJson(el.dataset.optionId , el.previousElementSibling.value)
