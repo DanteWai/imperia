@@ -1,5 +1,6 @@
 import {Component} from "@core/component";
 import Server from "@core/servers";
+import Lang from './../lang';
 
 export class CatalogProductsComponent extends Component {
     constructor(id) {
@@ -59,7 +60,7 @@ function productsRender(object){
                     ${Object.keys(item.options).map(option => {
                         return `
                             <li>
-                                <span class="product-list-option-title">${option}</span>
+                                <span class="product-list-option-title">${Lang.get(`ru.${option}`)}</span>
                                 <span class="product-list-option-desc">${(item.options[option] === 'true') ? 'Да' : item.options[option]}</span>
                             </li>
                         `;
