@@ -1,8 +1,8 @@
 import lang from 'lang.js';
-import ru from './lang/ru/ru';
+import messages from './translations_messages';
 
 const Lang = new lang({
-   messages: ru,
+   messages: messages,
    locale: 'ru',
    fallback: 'en'
 });

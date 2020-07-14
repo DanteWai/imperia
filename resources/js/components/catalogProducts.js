@@ -1,11 +1,10 @@
 import {Component} from "@core/component";
 import Server from "@core/servers";
-import Lang from './../lang';
+import Lang from '@js/lang/lang';
 
 export class CatalogProductsComponent extends Component {
     constructor(id) {
         super(id)
-
     }
 
     init(){
@@ -29,9 +28,8 @@ export class CatalogProductsComponent extends Component {
     }
 }
 
-function productsRender(object){
-    // тут рендер шаблона
-    // сам шаблон в views/catalog/product_list
+function productsRender(object){ // рендер шаблона
+
     let pagination = '';
 
     // рендер кнопок пагинации
@@ -72,7 +70,7 @@ function productsRender(object){
                     <button data-option-id="${id}" class="add-basket" ${ (basket.includes(id.toString())) ? 'disabled' : '' }>
                         ${ (basket.includes(id.toString())) ?
                             '<span>Товар в корзине</span>' :
-                            '<span>Добавить в корзину</span>' 
+                            '<span>Добавить в корзину</span>'
                         }
                     </button>
                 </span>

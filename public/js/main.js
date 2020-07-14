@@ -11623,7 +11623,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasketJson", function() { return addBasketJson; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../lang */ "./resources/js/lang.js");
+/* harmony import */ var _js_lang_lang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @js/lang/lang */ "./resources/js/lang/lang.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11694,8 +11694,7 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 function productsRender(object) {
-  // тут рендер шаблона
-  // сам шаблон в views/catalog/product_list
+  // рендер шаблона
   var pagination = ''; // рендер кнопок пагинации
 
   if (object.last_page > 1) {
@@ -11710,7 +11709,7 @@ function productsRender(object) {
     var brandName = item.product.product_model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
     var id = item.option_id;
     return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
-      return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
+      return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
     }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
   }).join(''); // рендер всего шаблона
 
@@ -12284,10 +12283,10 @@ function objToFormData(data) {
 
 /***/ }),
 
-/***/ "./resources/js/lang.js":
-/*!******************************!*\
-  !*** ./resources/js/lang.js ***!
-  \******************************/
+/***/ "./resources/js/lang/lang.js":
+/*!***********************************!*\
+  !*** ./resources/js/lang/lang.js ***!
+  \***********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -12295,12 +12294,12 @@ function objToFormData(data) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lang.js */ "./node_modules/lang.js/src/lang.js");
 /* harmony import */ var lang_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lang_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _lang_ru_ru__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lang/ru/ru */ "./resources/js/lang/ru/ru.js");
-/* harmony import */ var _lang_ru_ru__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_lang_ru_ru__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _translations_messages__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./translations_messages */ "./resources/js/lang/translations_messages.js");
+/* harmony import */ var _translations_messages__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_translations_messages__WEBPACK_IMPORTED_MODULE_1__);
 
 
 var Lang = new lang_js__WEBPACK_IMPORTED_MODULE_0___default.a({
-  messages: _lang_ru_ru__WEBPACK_IMPORTED_MODULE_1___default.a,
+  messages: _translations_messages__WEBPACK_IMPORTED_MODULE_1___default.a,
   locale: 'ru',
   fallback: 'en'
 });
@@ -12308,10 +12307,10 @@ var Lang = new lang_js__WEBPACK_IMPORTED_MODULE_0___default.a({
 
 /***/ }),
 
-/***/ "./resources/js/lang/ru/ru.js":
-/*!************************************!*\
-  !*** ./resources/js/lang/ru/ru.js ***!
-  \************************************/
+/***/ "./resources/js/lang/translations_messages.js":
+/*!****************************************************!*\
+  !*** ./resources/js/lang/translations_messages.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12328,7 +12327,7 @@ module.exports = {
     "m_speed": "\u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C",
     "model": "\u041C\u043E\u0434\u0435\u043B\u044C",
     "mount": "\u0421\u0432\u0435\u0440\u043B\u043E\u0432\u043A\u0430",
-    "radius": "\u0420\u0430\u0434\u0438\u0443\u0441",
+    "radius": "\u0414\u0438\u0430\u043C\u0435\u0442\u0440",
     "season": "\u0421\u0435\u0437\u043E\u043D",
     "ship": "\u0428\u0438\u043F\u044B",
     "width": "\u0428\u0438\u0440\u0438\u043D\u0430"

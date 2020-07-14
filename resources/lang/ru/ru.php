@@ -1,4 +1,8 @@
 <?php
+// инициализация файла php artisan lang:js resources/js/lang/translations_messages.js --no-lib
+// настройки config/localization-js
+
+
 return [
     'brand' => 'Производитель',
     'radius' => 'Диаметр',
