@@ -1,5 +1,4 @@
 import './../../scss/admin/adminStyle.scss';
-import $ from 'jquery';
 import "regenerator-runtime/runtime";
 import Server from './servers';
 import Tabs from './tabs';
@@ -19,7 +18,7 @@ import {PriceToParse} from "./components/priceToParse";
 window.addEventListener('load',() => {
 
 
-    let priceParse = new PriceToParse('parse')
+    new PriceToParse('parse')
 
     new Tabs({
         parent:'.tabs-contaiter',
@@ -29,7 +28,10 @@ window.addEventListener('load',() => {
 
 
     // Вешаем на файловые инпуты обработку текста
-    $('.inputFile').on('change',function(){
+
+
+    // todo переписать на чистый js
+    /*$('.inputFile').on('change',function(){
         this.nextElementSibling.innerHTML = this.value.substr(this.value.lastIndexOf("\\")+1,this.length);
     });
 
@@ -46,7 +48,7 @@ window.addEventListener('load',() => {
             }
 
         });
-    });
+    });*/
 
 });
 

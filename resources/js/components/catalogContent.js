@@ -9,7 +9,7 @@ export class CatalogContentComponent extends Component {
     constructor(id, basket) {
         super(id, false)
         this.basket = basket
-        this.init()
+        this.$el && this.init()
     }
 
     init(){
@@ -49,7 +49,7 @@ async function changeCategory(){
     if(answer.option_panel && answer.list){
         this.header.optionPanel.innerHTML = answer.option_panel //смена доступных для товара опций
         this.catalog.$el.innerHTML = answer.list //?
-    } 
+    }
 }
 function clickBrand(e){
     let target = e.target.closest('.category-item')
