@@ -11034,10 +11034,9 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
       this.server.post('catalog/list', json, {
         'Content-Type': 'application/json;charset=utf-8'
       }, token).then(function (answer) {
-        console.log('answer', answer);
-
+        //console.log('answer', answer)
         if (answer.data) {
-          _this.$el.innerHTML = productsRender(answer); //TODO
+          _this.$el.innerHTML = productsRender(answer);
         }
       });
     }
@@ -11046,8 +11045,28 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
   return CatalogProductsComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
-function productsRender(object) {// тут рендер шаблона
+function productsRender(object) {
+  // тут рендер шаблона
   // сам шаблон в views/catalog/product_list
+  var pagination = ''; // рендер кнопок пагинации
+
+  if (object.last_page > 1) {
+    for (var i = 1; i <= object.last_page && i <= 20; i++) {
+      pagination += "<a ".concat(object.current_page === i ? 'class="active"' : '', " data-page=\"").concat(i, "\"></a>");
+    }
+  }
+
+  var basket = localStorage.getItem('basket') ? Object.keys(JSON.parse(localStorage.getItem('basket'))) : []; // рендер карточек товаров
+
+  var products = object.data.map(function (item) {
+    var brandName = item.product.product_model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
+    var id = item.option_id;
+    return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
+      return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(option, "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
+    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
+  }).join(''); // рендер всего шаблона
+
+  return "\n        <section class=\"content-filter\">\n            <div class=\"filter\">\n                <!--<p class=\"filter-trigger\">\u0424\u0438\u043B\u044C\u0442\u0440</p>-->\n            </div>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
 }
 
 function addBasket(e) {
