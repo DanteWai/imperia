@@ -1582,7 +1582,7 @@ var BasketComponent = /*#__PURE__*/function (_Component) {
       this.body = this.$el.querySelector('.basket-list');
       this.count = 0;
       this.$count = this.$el.querySelector('.basket-count-p');
-      Object.keys(JSON.parse(this.json)).length && this.fill(); //выполнить fill если есть json
+      this.json && this.fill(); //выполнить fill если есть json
 
       this.$el.addEventListener('click', collapse.bind(this));
       this.$el.addEventListener('click', deleteElement.bind(this));
@@ -1665,7 +1665,10 @@ function deleteElement(e) {
     parent.remove(); // Если корзина пустая - скрыть ее
 
     if (!Object.keys(JSON.parse(this.json)).length) {
+      localStorage.removeItem('basket');
+      this.$el.classList.add('small');
       this.$el.classList.remove('big');
+      this.body.innerHTML = '<li class="basket-empty">Пока товаров нет</li>';
       this.hide();
     }
 
@@ -1682,10 +1685,18 @@ function changeCount(e) {
     var parent = target.parentElement;
     var priceElement = parent.querySelector('.basket-list-body-price');
     var json = JSON.parse(this.json);
+    var value = Number.parseInt(Number(target.value));
+
+    if (Number.isNaN(value) || value < 1) {
+      target.value = 1;
+      value = 1;
+    } else target.value = Math.floor(target.value);
+
     json[parent.dataset.optionId] = target.value;
-    localStorage.setItem('basket', JSON.stringify(json));
-    this.json = JSON.stringify(json);
-    priceElement.textContent = +priceElement.dataset.productPrice * +target.value;
+    json = JSON.stringify(json);
+    localStorage.setItem('basket', json);
+    this.json = json;
+    priceElement.textContent = +priceElement.dataset.productPrice * value;
   }
 }
 
