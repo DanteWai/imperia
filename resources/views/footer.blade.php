@@ -8,7 +8,7 @@
                         <use xlink:href="/images/sprite.svg#x"></use>
                     </svg>
                     <label for="FIO">ФИО</label>
-                    <input type="text" name="" id="">
+                    <input type="text" name="name" id="">
                     <label for="email">E-mail</label>
                     <input type="email" name="email" id="">
                     <label for="tel">Номер телефона:</label>

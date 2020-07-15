@@ -2700,7 +2700,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendCallComponent", function() { return SendCallComponent; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
+/* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2721,6 +2729,8 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
 
 
 
@@ -2741,6 +2751,11 @@ var SendCallComponent = /*#__PURE__*/function (_Component) {
       this.btn = this.$el.querySelector('.call');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
+      this.$form = this.$el.querySelector('form');
+      this.$form.addEventListener('submit', submitHandler.bind(this));
+      this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
+        tel: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]
+      });
       this.btn.addEventListener('click', collapse.bind(this));
       this.close.addEventListener('click', collapse.bind(this));
     }
@@ -2754,6 +2769,19 @@ function collapse(e) {
   var parent = target.closest('#call');
   var collapse = parent.querySelector('.js-collapse');
   collapse.classList.toggle('collapse');
+}
+
+function submitHandler(e) {
+  e.preventDefault();
+  var parent = e.target.closest('.js-collapse');
+
+  if (this.submit.isValid()) {
+    var formData = _objectSpread({}, this.submit.value());
+
+    this.submit.clear();
+    parent.classList.add('collapse');
+    console.log(formData);
+  }
 }
 
 /***/ }),
@@ -2770,7 +2798,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendWriteComponent", function() { return SendWriteComponent; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
+/* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2794,6 +2830,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
 var SendWriteComponent = /*#__PURE__*/function (_Component) {
   _inherits(SendWriteComponent, _Component);
 
@@ -2811,6 +2849,14 @@ var SendWriteComponent = /*#__PURE__*/function (_Component) {
       this.btn = this.$el.querySelector('.write');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
+      this.$form = this.$el.querySelector('form');
+      this.$form.addEventListener('submit', submitHandler.bind(this));
+      this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
+        name: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+        email: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+        tel: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+        message: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].minLength(10)]
+      });
       this.btn.addEventListener('click', collapse.bind(this));
       this.close.addEventListener('click', collapse.bind(this));
     }
@@ -2824,6 +2870,19 @@ function collapse(e) {
   var parent = target.closest('#write');
   var collapse = parent.querySelector('.js-collapse');
   collapse.classList.toggle('collapse');
+}
+
+function submitHandler(e) {
+  e.preventDefault();
+  var parent = e.target.closest('.js-collapse');
+
+  if (this.submit.isValid()) {
+    var formData = _objectSpread({}, this.submit.value());
+
+    this.submit.clear();
+    parent.classList.add('collapse');
+    console.log(formData);
+  }
 }
 
 /***/ }),
@@ -2871,6 +2930,110 @@ var Component = /*#__PURE__*/function () {
 
   return Component;
 }();
+
+/***/ }),
+
+/***/ "./resources/js/core/form.js":
+/*!***********************************!*\
+  !*** ./resources/js/core/form.js ***!
+  \***********************************/
+/*! exports provided: Form */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Form", function() { return Form; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Form = /*#__PURE__*/function () {
+  function Form(form, controls) {
+    _classCallCheck(this, Form);
+
+    this.form = form;
+    this.controls = controls;
+  }
+
+  _createClass(Form, [{
+    key: "value",
+    value: function value() {
+      var _this = this;
+
+      var value = {};
+      Object.keys(this.controls).forEach(function (control) {
+        value[control] = _this.form[control].value;
+      });
+      return value;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      var _this2 = this;
+
+      Object.keys(this.controls).forEach(function (control) {
+        _this2.form[control].value = '';
+      });
+    }
+  }, {
+    key: "isValid",
+    value: function isValid() {
+      var _this3 = this;
+
+      var isFormValid = true;
+      Object.keys(this.controls).forEach(function (control) {
+        var validators = _this3.controls[control];
+        var isValid = true;
+        if (!_this3.form[control]) return;
+        var errors = '';
+        validators.forEach(function (validator) {
+          var val = validator(_this3.form[control].value);
+          if (val.msg) errors += val.msg + '<br/>';
+          isValid = val.valid && isValid;
+        });
+
+        if (!isValid) {
+          setError(_this3.form[control], errors);
+        } else {
+          clearError(_this3.form[control]);
+        }
+
+        isFormValid = isFormValid && isValid;
+      });
+      return isFormValid;
+    }
+  }, {
+    key: "serverValidateErrors",
+    value: function serverValidateErrors(errors) {
+      var _this4 = this;
+
+      Object.keys(errors).forEach(function (control) {
+        var error = errors[control].join('<br/>');
+        setError(_this4.form[control], error);
+      });
+    }
+  }]);
+
+  return Form;
+}();
+
+function setError($control) {
+  var errorName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Введите корректное значение';
+  clearError($control);
+  var error = "<p class=\"validation-error\">".concat(errorName, "</p>");
+  $control.classList.add('invalid');
+  $control.insertAdjacentHTML('afterend', error);
+}
+
+function clearError($control) {
+  $control.classList.remove('invalid');
+
+  if ($control.nextElementSibling && $control.nextElementSibling.classList.contains('validation-error')) {
+    $control.nextElementSibling.remove();
+  }
+}
 
 /***/ }),
 
@@ -2980,6 +3143,71 @@ function objToFormData(data) {
 
   return form;
 }
+
+/***/ }),
+
+/***/ "./resources/js/core/validators.js":
+/*!*****************************************!*\
+  !*** ./resources/js/core/validators.js ***!
+  \*****************************************/
+/*! exports provided: Validators */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Validators", function() { return Validators; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Validators = /*#__PURE__*/function () {
+  function Validators() {
+    _classCallCheck(this, Validators);
+  }
+
+  _createClass(Validators, null, [{
+    key: "required",
+    value: function required() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var res = value === value && value.trim() ? {
+        valid: true
+      } : {
+        valid: false,
+        msg: 'Необходимо заполнить поле'
+      };
+      return res;
+    }
+  }, {
+    key: "minLength",
+    value: function minLength(length) {
+      return function (value) {
+        return value.length >= length ? {
+          valid: true
+        } : {
+          valid: false,
+          msg: "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043D\u0435 \u043C\u0435\u043D\u0435\u0435 ".concat(length, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432")
+        };
+      };
+    }
+  }, {
+    key: "confirmField",
+    value: function confirmField(field) {
+      return function (value) {
+        var res = value === field.value ? {
+          valid: true
+        } : {
+          valid: false,
+          msg: 'Пароли не совпадают'
+        };
+        return res;
+      };
+    }
+  }]);
+
+  return Validators;
+}();
 
 /***/ }),
 

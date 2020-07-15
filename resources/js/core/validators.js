@@ -5,9 +5,11 @@ export class Validators {
     }
 
     static minLength(length){
+
         return value => {
-            return  value.length >= length;
+            return value.length >= length ? {valid:true} : {valid:false,msg:`Сообщение должно содержать не менее ${length} символов`};
         }
+
     }
 
     static confirmField(field){
