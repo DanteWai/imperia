@@ -20,12 +20,12 @@ class OrdersRepository extends Repository {
         if(!$data['email']) $data['email'] = 'Не указано';
 
 
-        $data['status'] = json_encode([
+        $data['status'] = [
             'active' => [
                 'name' => 'awaiting',
                 'date' => Carbon::now()->format('d-m-Y')
             ]
-        ]);
+        ];
 
         $options = [
             'payment' => $data['payment'],
@@ -44,8 +44,7 @@ class OrdersRepository extends Repository {
 
 
 
-        $data['options'] = json_encode($options);
-        $data['basket'] = json_encode($data['basket']);
+        $data['options'] = $options;
 
         unset($data['name'],$data['email'],$data['phone'],$data['address'],$data['getting'],$data['payment']);
 

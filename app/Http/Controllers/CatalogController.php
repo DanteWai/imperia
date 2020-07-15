@@ -86,7 +86,7 @@ class CatalogController extends SiteController
         return $this->renderOutput();
     }
 
-    public function checkout(){
+    public function checkout(){ // страница оформления заказа
 
         $content = view('catalog.checkout')->render();
         $this->vars = Arr::add($this->vars,'content',$content);
@@ -95,21 +95,16 @@ class CatalogController extends SiteController
         return $this->renderOutput();
     }
 
-    public function checkout_output(Request $request, OrdersRepository $order_rep){
+    public function checkout_output(Request $request, OrdersRepository $order_rep){ //добавление заказа
 
         $data = $request->except('_token','image');
-
-
-
-
-
         $this->order_rep = $order_rep;
         $result = $this->order_rep->addOrder($data);
         return response()->json($result);
 
     }
 
-    public function switchCategory(Request $request) {
+    public function switchCategory(Request $request) { // формирует html для отображения к другой категории
 
         $post['name'] = $request->category_id;
 
@@ -141,7 +136,7 @@ class CatalogController extends SiteController
         return response()->json($data);
     }
 
-    public function productList(Request $request) {
+    public function productList(Request $request) { // Фоормирует список товаров для каталога
         $post = $request->all();
 
         if(isset($post['base_option']) && isset($post['json_option'])){
@@ -153,7 +148,7 @@ class CatalogController extends SiteController
 
 
 
-    public function basketList(Request $request) {
+    public function basketList(Request $request) { // Формирует список товаров в корзине
 
         $post = $request->all();
         $options = array_keys($post);
