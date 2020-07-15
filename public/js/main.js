@@ -1580,6 +1580,7 @@ var BasketComponent = /*#__PURE__*/function (_Component) {
       this.token = document.querySelector('[name="_token"]').value;
       this.json = localStorage.getItem('basket');
       this.body = this.$el.querySelector('.basket-list');
+      this.icon = this.$el.querySelector('.basket-icon');
       this.count = 0;
       this.$count = this.$el.querySelector('.basket-count-p');
       this.json && this.fill(); //выполнить fill если есть json
@@ -1643,6 +1644,8 @@ function collapse(e) {
   if (tr) {
     this.$el.classList.toggle('small');
     this.$el.classList.toggle('big');
+    var icon = this.$el.classList.contains('big') ? 'x' : 'basket';
+    tr.innerHTML = "<use xlink:href=\"public/images/sprite.svg#".concat(icon, "\"></use>");
   }
 }
 
@@ -1668,6 +1671,7 @@ function deleteElement(e) {
       localStorage.removeItem('basket');
       this.$el.classList.add('small');
       this.$el.classList.remove('big');
+      this.icon.innerHTML = "<use xlink:href=\"public/images/sprite.svg#basket\"></use>";
       this.body.innerHTML = '<li class="basket-empty">Пока товаров нет</li>';
       this.hide();
     }
@@ -2268,7 +2272,12 @@ function addBasket(e) {
   if (el && !el.disabled) {
     el.disabled = true;
     el.innerHTML = "<span>Товар в корзине</span>";
-    addBasketJson(el.dataset.optionId, el.previousElementSibling.value);
+    var value = Math.floor(Number(el.previousElementSibling.value));
+    value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1), 10); //Проверка на nan и на диапазон
+
+    addBasketJson(el.dataset.optionId, value);
+    el.previousElementSibling.value = 1; // Возвращаем input в исходное значение
+
     this.$el.dispatchEvent(this.event);
   }
 }

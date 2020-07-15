@@ -12,6 +12,7 @@ export class BasketComponent extends Component {
         this.token = document.querySelector('[name="_token"]').value
         this.json = localStorage.getItem('basket')
         this.body = this.$el.querySelector('.basket-list')
+        this.icon = this.$el.querySelector('.basket-icon');
         this.count = 0;
         this.$count = this.$el.querySelector('.basket-count-p')
 
@@ -61,9 +62,13 @@ export class BasketComponent extends Component {
 
 function collapse(e){
     let tr = e.target.closest('.basket-icon')
+    
     if(tr){
-        this.$el.classList.toggle('small')
-        this.$el.classList.toggle('big')
+        this.$el.classList.toggle('small');
+        this.$el.classList.toggle('big');
+        const icon = (this.$el.classList.contains('big')) ? 'x' : 'basket';
+
+        tr.innerHTML = `<use xlink:href="public/images/sprite.svg#${icon}"></use>`;
     }
 }
 function deleteElement(e){
@@ -89,6 +94,7 @@ function deleteElement(e){
             localStorage.removeItem('basket');
             this.$el.classList.add('small');
             this.$el.classList.remove('big');
+            this.icon.innerHTML = `<use xlink:href="public/images/sprite.svg#basket"></use>`;
             this.body.innerHTML = '<li class="basket-empty">Пока товаров нет</li>';
             this.hide();
         }

@@ -97,7 +97,12 @@ function addBasket(e){
     if(el && !el.disabled){
         el.disabled = true
         el.innerHTML = "<span>Товар в корзине</span>"
-        addBasketJson(el.dataset.optionId , el.previousElementSibling.value)
+
+        let value = Math.floor(Number(el.previousElementSibling.value));
+        value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1) , 10) //Проверка на nan и на диапазон
+
+        addBasketJson(el.dataset.optionId , value);
+        el.previousElementSibling.value = 1;        // Возвращаем input в исходное значение
         this.$el.dispatchEvent(this.event)
     }
 }
