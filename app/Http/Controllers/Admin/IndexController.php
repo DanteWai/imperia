@@ -20,23 +20,16 @@ class IndexController extends AdminController
 
     public function index() {
         $this->title = 'Панель администратора';
-
         $orders = $this->order_rep->get();
-
-
+        dump($orders);
         $this->content = view('admin.mainPageContent',compact('orders'))->render();
-
         return $this->renderOutput();
 
     }
 
-    public function update() {
+    public function update() { // временно
         $this->title = 'Обновления';
-
         $this->content = view('admin.update')->render();
-
-
         return $this->renderOutput();
-
     }
 }

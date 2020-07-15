@@ -1,13 +1,10 @@
-import './../../scss/admin/adminStyle.scss';
+import '@scss/admin/adminStyle.scss';
 import "regenerator-runtime/runtime";
 import Server from './servers';
 import Tabs from './tabs';
-import {PriceToParse} from "./components/priceToParse";
+import {PriceToParse} from "./components/priceToParse"; //временный компонент
+import {OrdersComponents} from "@js/admin/components/mainPage/ordersComponent";
 
-
-//import route from './../route';
-
-//
 //import Lang from './../lang';
 //console.log(route('productPage',['3','6'],[4]))
 //console.log(Lang.get('auth.failed',{email:'email'}))
@@ -17,39 +14,33 @@ import {PriceToParse} from "./components/priceToParse";
 
 window.addEventListener('load',() => {
 
+    new OrdersComponents('main-orders-component')
+
+
 
     new PriceToParse('parse')
-
-    new Tabs({
-        parent:'.tabs-contaiter',
-    });
-
+    new Tabs({parent:'.tabs-contaiter'})
     let server = new Server();
 
 
     // Вешаем на файловые инпуты обработку текста
+    let files = document.querySelectorAll('.inputFile')
+    for(let el of files){
+        el.addEventListener('change', (e) =>{
+            let that = e.target
+            that.nextElementSibling.innerHTML = that.value.substr(that.value.lastIndexOf("\\")+1,that.length);
+        })
+    }
 
-
-    // todo переписать на чистый js
-    /*$('.inputFile').on('change',function(){
-        this.nextElementSibling.innerHTML = this.value.substr(this.value.lastIndexOf("\\")+1,this.length);
-    });
-
-
-
-    $('.category_selector').on('change',function () {
-        server.get(this.dataset.href + '?id=' + this.value,{
-            'X-CSRF-TOKEN':$('input[name="_token"]').val(),
+    // смена категории во время добавления товара
+    let category_selector =document.querySelector('.category_selector')
+    category_selector && category_selector.addEventListener('change', async function () {
+        let answer  = await server.get(this.dataset.href + '?id=' + this.value,{
+            'X-CSRF-TOKEN':document.querySelector('input[name="_token"]'.value),
             "X-Requested-With": "XMLHttpRequest",
-        }).then(answer=>{
-            console.log(answer);
-            if(answer.html){
-                $('.product-options').html(answer.html)
-            }
-
-        });
-    });*/
-
+        })
+        answer.html && (document.querySelector('.product-options').innerHTML = answer.html)
+    })
 });
 
 

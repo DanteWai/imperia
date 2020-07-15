@@ -17,7 +17,7 @@
 </ul>
 
 <h2 class="section-title">Новые заказы</h2>
-<table class="table-elements">
+<table class="table-elements" id="main-orders-component">
     <thead>
     <tr>
         <td>Номер</td>
@@ -26,6 +26,7 @@
         <td>Доставка</td>
         <td>Цена</td>
         <td>Дата</td>
+        <td>Дополнительно</td>
     </tr>
     </thead>
     <tbody>
@@ -37,6 +38,7 @@
             <td>{{$item->options['getting']}}</td>
             <td>{{$item->price}}</td>
             <td>{{$item->status['active']['date']}}</td>
+            <td><a class="full-order" href="#">Открыть</a></td>
         </tr>
     @endforeach
     </tbody>

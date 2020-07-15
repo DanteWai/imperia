@@ -1685,17 +1685,12 @@ function changeCount(e) {
     var parent = target.parentElement;
     var priceElement = parent.querySelector('.basket-list-body-price');
     var json = JSON.parse(this.json);
-    var value = Number.parseInt(Number(target.value));
+    var value = Math.floor(Number(target.value));
+    value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1), 10); //Проверка на nan и на диапазон
 
-    if (Number.isNaN(value) || value < 1) {
-      target.value = 1;
-      value = 1;
-    } else target.value = Math.floor(target.value);
-
-    json[parent.dataset.optionId] = target.value;
-    json = JSON.stringify(json);
-    localStorage.setItem('basket', json);
-    this.json = json;
+    json[parent.dataset.optionId] = target.value = value;
+    this.json = JSON.stringify(json);
+    localStorage.setItem('basket', this.json);
     priceElement.textContent = +priceElement.dataset.productPrice * value;
   }
 }

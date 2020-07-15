@@ -848,20 +848,31 @@ module.exports = function (module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _scss_admin_adminStyle_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../scss/admin/adminStyle.scss */ "./resources/scss/admin/adminStyle.scss");
+/* harmony import */ var _scss_admin_adminStyle_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @scss/admin/adminStyle.scss */ "./resources/scss/admin/adminStyle.scss");
 /* harmony import */ var _scss_admin_adminStyle_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_admin_adminStyle_scss__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! regenerator-runtime/runtime */ "./node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./servers */ "./resources/js/admin/servers.js");
 /* harmony import */ var _tabs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tabs */ "./resources/js/admin/tabs.js");
 /* harmony import */ var _components_priceToParse__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/priceToParse */ "./resources/js/admin/components/priceToParse.js");
+/* harmony import */ var _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @js/admin/components/mainPage/ordersComponent */ "./resources/js/admin/components/mainPage/ordersComponent.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 
 
 
- //import route from './../route';
-//
-//import Lang from './../lang';
+
+ //временный компонент
+
+ //import Lang from './../lang';
 //console.log(route('productPage',['3','6'],[4]))
 //console.log(Lang.get('auth.failed',{email:'email'}))
 //Lang.setLocale('ru')
@@ -869,28 +880,121 @@ __webpack_require__.r(__webpack_exports__);
 //Lang.choice('auth.failed',10,{email:'email'})
 
 window.addEventListener('load', function () {
+  new _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__["OrdersComponents"]('main-orders-component');
   new _components_priceToParse__WEBPACK_IMPORTED_MODULE_4__["PriceToParse"]('parse');
   new _tabs__WEBPACK_IMPORTED_MODULE_3__["default"]({
     parent: '.tabs-contaiter'
   });
   var server = new _servers__WEBPACK_IMPORTED_MODULE_2__["default"](); // Вешаем на файловые инпуты обработку текста
-  // todo переписать на чистый js
 
-  /*$('.inputFile').on('change',function(){
-      this.nextElementSibling.innerHTML = this.value.substr(this.value.lastIndexOf("\\")+1,this.length);
-  });
-     $('.category_selector').on('change',function () {
-      server.get(this.dataset.href + '?id=' + this.value,{
-          'X-CSRF-TOKEN':$('input[name="_token"]').val(),
-          "X-Requested-With": "XMLHttpRequest",
-      }).then(answer=>{
-          console.log(answer);
-          if(answer.html){
-              $('.product-options').html(answer.html)
-          }
-       });
-  });*/
+  var files = document.querySelectorAll('.inputFile');
+
+  var _iterator = _createForOfIteratorHelper(files),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var el = _step.value;
+      el.addEventListener('change', function (e) {
+        var that = e.target;
+        that.nextElementSibling.innerHTML = that.value.substr(that.value.lastIndexOf("\\") + 1, that.length);
+      });
+    } // смена категории во время добавления товара
+
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  var category_selector = document.querySelector('.category_selector');
+  category_selector && category_selector.addEventListener('change', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var answer;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return server.get(this.dataset.href + '?id=' + this.value, {
+              'X-CSRF-TOKEN': document.querySelector('input[name="_token"]'.value),
+              "X-Requested-With": "XMLHttpRequest"
+            });
+
+          case 2:
+            answer = _context.sent;
+            answer.html && (document.querySelector('.product-options').innerHTML = answer.html);
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  })));
 });
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/mainPage/ordersComponent.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/admin/components/mainPage/ordersComponent.js ***!
+  \*******************************************************************/
+/*! exports provided: OrdersComponents */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrdersComponents", function() { return OrdersComponents; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+var OrdersComponents = /*#__PURE__*/function (_Component) {
+  _inherits(OrdersComponents, _Component);
+
+  var _super = _createSuper(OrdersComponents);
+
+  function OrdersComponents(id) {
+    _classCallCheck(this, OrdersComponents);
+
+    return _super.call(this, id);
+  }
+
+  _createClass(OrdersComponents, [{
+    key: "init",
+    value: function init() {
+      this.fullOrderLink = document.querySelectorAll('.full-order');
+      this.fullOrderLink.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          console.log('clck');
+        });
+      });
+    }
+  }]);
+
+  return OrdersComponents;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /***/ }),
 
