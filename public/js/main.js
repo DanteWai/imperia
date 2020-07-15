@@ -1586,6 +1586,7 @@ var BasketComponent = /*#__PURE__*/function (_Component) {
 
       this.$el.addEventListener('click', collapse.bind(this));
       this.$el.addEventListener('click', deleteElement.bind(this));
+      this.$el.addEventListener('change', changeCount.bind(this));
     }
   }, {
     key: "fill",
@@ -1608,7 +1609,8 @@ var BasketComponent = /*#__PURE__*/function (_Component) {
                 this.countRender();
                 this.show();
                 this.body.innerHTML = answer.map(function (el) {
-                  return "\n            <li data-option-id=\"".concat(el.option_id, "\">\n                <img src=\"/images/test/koleso.png\" alt=\"\">\n                <div class=\"basket-list-body\">\n                <a href=\"\" class=\"basket-list-body-name\">\n                    ").concat(el.brand, " ").concat(el.model, "\n                </a>\n                <p class=\"basket-list-body-param\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</p>\n                </div>\n                <input type=\"text\" value=\"").concat(el.count, "\">\n                <span class=\"basket-list-body-count\">\u0448\u0442</span>\n                <span data-product-price=\"4700\" class=\"basket-list-body-price\">").concat(el.price * el.count, "</span>\n                <span class=\"basket-list-body-delete\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n            </li>\n            ");
+                  var linkName = el.model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
+                  return "\n            <li data-option-id=\"".concat(el.option_id, "\">\n                <img src=\"/images/test/koleso.png\" alt=\"\">\n                <div class=\"basket-list-body\">\n                <a href=\"catalog/").concat(linkName, "/").concat(el.option_id, "\" class=\"basket-list-body-name\">\n                    ").concat(el.brand, " ").concat(el.model, "\n                </a>\n                <p class=\"basket-list-body-param\">\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0442\u043E\u0432\u0430\u0440\u0430</p>\n                </div>\n                <input class=\"product-count\" type=\"text\" value=\"").concat(el.count, "\">\n                <span class=\"basket-list-body-count\">\u0448\u0442</span>\n                <span data-product-price=\"").concat(el.price, "\" class=\"basket-list-body-price\">").concat(el.price * el.count, "</span>\n                <span class=\"basket-list-body-delete\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</span>\n            </li>\n            ");
                 }).join('');
 
               case 7:
@@ -1651,6 +1653,13 @@ function deleteElement(e) {
     var parent = tr.parentElement;
     var json = JSON.parse(this.json);
     delete json[parent.dataset.optionId];
+    var button = document.querySelector(".add-basket[data-option-id=\"".concat(parent.dataset.optionId, "\"]"));
+
+    if (button) {
+      button.disabled = false;
+      button.querySelector('span').textContent = 'Добавить в корзину';
+    }
+
     localStorage.setItem('basket', JSON.stringify(json));
     this.json = JSON.stringify(json);
     parent.remove(); // Если корзина пустая - скрыть ее
@@ -1662,6 +1671,21 @@ function deleteElement(e) {
 
     this.count = this.count - 1;
     this.countRender();
+  }
+} // Пересчет корзины
+
+
+function changeCount(e) {
+  var target = e.target.closest('.product-count');
+
+  if (target) {
+    var parent = target.parentElement;
+    var priceElement = parent.querySelector('.basket-list-body-price');
+    var json = JSON.parse(this.json);
+    json[parent.dataset.optionId] = target.value;
+    localStorage.setItem('basket', JSON.stringify(json));
+    this.json = JSON.stringify(json);
+    priceElement.textContent = +priceElement.dataset.productPrice * +target.value;
   }
 }
 

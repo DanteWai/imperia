@@ -19,6 +19,7 @@ export class BasketComponent extends Component {
 
         this.$el.addEventListener('click',collapse.bind(this))
         this.$el.addEventListener('click',deleteElement.bind(this))
+        this.$el.addEventListener('change', changeCount.bind(this));
     }
 
     async fill() {
@@ -32,19 +33,20 @@ export class BasketComponent extends Component {
 
         this.body.innerHTML = answer.map(el => {
 
+            const linkName = el.model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
 
             return `
             <li data-option-id="${el.option_id}">
                 <img src="/images/test/koleso.png" alt="">
                 <div class="basket-list-body">
-                <a href="" class="basket-list-body-name">
+                <a href="catalog/${linkName}/${el.option_id}" class="basket-list-body-name">
                     ${el.brand} ${el.model}
                 </a>
                 <p class="basket-list-body-param">Параметры товара</p>
                 </div>
-                <input type="text" value="${el.count}">
+                <input class="product-count" type="text" value="${el.count}">
                 <span class="basket-list-body-count">шт</span>
-                <span data-product-price="4700" class="basket-list-body-price">${el.price * el.count}</span>
+                <span data-product-price="${el.price}" class="basket-list-body-price">${el.price * el.count}</span>
                 <span class="basket-list-body-delete">Удалить</span>
             </li>
             `
@@ -72,6 +74,14 @@ function deleteElement(e){
         let parent = tr.parentElement
         let json = JSON.parse(this.json)
         delete json[parent.dataset.optionId]
+
+        const button = document.querySelector(`.add-basket[data-option-id="${parent.dataset.optionId}"]`);
+
+        if (button) {
+            button.disabled = false;
+            button.querySelector('span').textContent = 'Добавить в корзину';
+        }
+
         localStorage.setItem('basket',JSON.stringify(json))
         this.json = JSON.stringify(json);
         parent.remove()
@@ -84,5 +94,20 @@ function deleteElement(e){
 
         this.count = this.count -1
         this.countRender()
+    }
+}
+
+// Пересчет корзины
+function changeCount(e) {
+    const target = e.target.closest('.product-count');
+
+    if (target) {
+        const parent = target.parentElement;
+        const priceElement = parent.querySelector('.basket-list-body-price');
+        const json = JSON.parse(this.json);
+        json[parent.dataset.optionId] = target.value;
+        localStorage.setItem('basket',JSON.stringify(json))
+        this.json = JSON.stringify(json);
+        priceElement.textContent = +priceElement.dataset.productPrice * +target.value;
     }
 }
