@@ -18,11 +18,12 @@ footer {
     }
 
     .f-button {
+
         font-family: Arial;
         font-weight: bold;
         position: relative;
         cursor: pointer;
-        
+
         border: none;
         color: $mainColorText;
         background-color: $footerButtons;
@@ -44,7 +45,7 @@ footer {
         }
 
         &.active {
- 
+
             transition: 0.3;
             cursor: default;
 
@@ -55,44 +56,26 @@ footer {
             }
         }
 
+        >div{
 
-        >div {
-            
-            display: flex;
-            flex-direction: column;
-            padding: 1em;
-            max-width: 500px;
-            max-height: 600px;
-            transition: 1.5s;
-            overflow: hidden;
-            opacity: 1;
-            box-sizing: content-box;
 
-            input,textarea{
-                padding: 0.5em;
-                border:3px solid #141a46;
-                color:#141a46;
-                &:focus{
-                    border-color:#3948b7;
+            form{
+                display: flex;
+                flex-direction: column;
+                padding: 1em;
+                max-width: 500px;
+                max-height: 600px;
+                transition: 1.5s;
+                overflow: hidden;
+                opacity: 1;
+                box-sizing: content-box;
+
+                >* {
+                    margin-top: 1em;
                 }
             }
 
-            >* {
-                margin-top: 1em;
-            }
-
-            &.collapse {
-                padding: 0;
-                opacity: 0;
-                max-width: 0;
-                max-height: 0;
-
-                transition: max-height $DeployTime;
-
-                
-            }
-
-            >button {
+            button {
                 padding: 1em 0;
                 border: none;
                 color: #ecc45e;
@@ -104,9 +87,31 @@ footer {
                     transition: 0.2s;
                     background-color: #232f88;
                 }
-
-                
             }
+
+            input,textarea{
+                padding: 0.5em;
+                border:3px solid #141a46;
+                color:#141a46;
+                &:focus{
+                    border-color:#3948b7;
+                }
+            }
+
+
+
+            &.collapse {
+                padding: 0;
+                opacity: 0;
+                max-width: 0;
+                max-height: 0;
+
+                transition: max-height $DeployTime;
+
+
+            }
+
+
 
             .f-btn-close {
                 width: 20px;

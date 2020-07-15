@@ -10,7 +10,7 @@
         <div class="basket-footer">
             <a href="/catalog/checkout" class="basket-confirm"><span>Подтвердить</span></a>
             <svg class="basket-icon ">
-                <use xlink:href="{{asset(env('THEME'))}}/images/sprite.svg#basket"></use>
+                <use xlink:href="/images/sprite.svg#basket"></use>
             </svg>
         </div>
     </div>
