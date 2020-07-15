@@ -7,14 +7,22 @@
                     <svg class="f-btn-close">
                         <use xlink:href="/images/sprite.svg#x"></use>
                     </svg>
-                    <label for="FIO">ФИО</label>
-                    <input type="text" name="name" id="">
-                    <label for="email">E-mail</label>
-                    <input type="email" name="email" id="">
-                    <label for="tel">Номер телефона:</label>
-                    <input type="tel" name="tel" id="">
-                    <label for="message">Сообщение</label>
-                    <textarea name="message" id="" cols="30" rows="10"></textarea>
+                    <div class="form-row">
+                        <label for="FIO">ФИО</label>
+                        <input type="text" name="name" id="">
+                    </div>
+                    <div class="form-row">
+                        <label for="email">E-mail</label>
+                        <input type="email" name="email" id="">
+                    </div>
+                    <div class="form-row">
+                        <label for="tel">Номер телефона:</label>
+                        <input type="tel" name="tel" id="">
+                    </div>
+                    <div class="form-row">
+                        <label for="message">Сообщение</label>
+                        <textarea name="message" id="" cols="30" rows="10"></textarea>
+                    </div>
                     <button type="submit" class="send">Отправить</button>
                 </form>
             </div>
@@ -26,8 +34,10 @@
                     <svg class="f-btn-close">
                         <use xlink:href="/images/sprite.svg#x"></use>
                     </svg>
-                    <label for="">Укажите номер телефона:</label>
-                    <input type="tel" name="tel" id="">
+                    <div class="form-row">
+                        <label for="">Укажите номер телефона:</label>
+                        <input type="tel" name="tel" id="">
+                    </div>
                     <button type="submit" class="send">Отправить</button>
                 </form>
             </div>
