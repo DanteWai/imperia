@@ -3,7 +3,7 @@
         <div class="basket-body">
             <div class="basket-header">Товары</div>
             <ul class="basket-list">
-
+                <li class="basket-empty">Пока товаров нет</li>
             </ul>
             <span class="price-sum"></span>
         </div>
