@@ -44,7 +44,11 @@ Route::group(['prefix'=>env('APP_ADMIN_URL', 'imperia_admin_panel')], function()
     Route::post('/product/edit/{product}',['uses'=>'Admin\ProductsController@edit'])->name('product_edit');
     Route::post('/product/destroy/{product}',['uses'=>'Admin\ProductsController@destroy'])->name('product_destroy');
 
-    Route::get('/update',['uses'=>'Admin\IndexController@update'])->name('update');
+    Route::get('/update',['uses'=>'Admin\IndexController@update'])->name('update'); //на удаление
+
+    Route::post('/send_mail',['uses'=>'EmailController@footerMessages']);
+
+
     Route::resources([
         'brands' => 'Admin\BrandsController',
         'pages' => 'Admin\PagesController',

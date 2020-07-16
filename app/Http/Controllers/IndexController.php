@@ -10,6 +10,7 @@ use App\Models\Product_category;
 use App\Repositories\MenusRepository;
 use App\Repositories\CategoriesRepository;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Mail;
 use PhpParser\Node\Expr\Array_;
 
 class IndexController extends SiteController
@@ -28,6 +29,11 @@ class IndexController extends SiteController
      * @throws \Throwable
      */
     public function Index() {
+
+
+
+
+
 
 
         $brands = $this->b_rep->getBrands(['brand_id','brand_name']);
