@@ -10,21 +10,22 @@ export class SendCallComponent extends Component {
    }
 
    init() {
-      
+
       this.btn = this.$el.querySelector('.call');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
       this.$form = this.$el.querySelector('form');
+      this.token = this.$el.querySelector('[name="_token"]').value
 
       this.$form.addEventListener('submit', submitHandler.bind(this));
 
       this.submit = new Form(this.$form, {
-         tel: [Validators.required]
+         phone: [Validators.required]
       });
 
       this.btn.addEventListener('click', collapse.bind(this));
       this.close.addEventListener('click', collapse.bind(this));
-   
+
    }
 
 }
@@ -50,7 +51,9 @@ function submitHandler(e) {
       this.submit.clear();
       parent.classList.add('collapse');
 
-      console.log(formData);
+
+
+
 
    }
 

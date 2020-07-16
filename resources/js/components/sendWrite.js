@@ -10,22 +10,26 @@ export class SendWriteComponent extends Component {
    }
 
    init() {
-      
+
+       this.server = new Server();
       this.btn = this.$el.querySelector('.write');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
       this.$form = this.$el.querySelector('form');
+      this.token = this.$el.querySelector('[name="_token"]').value
 
       this.$form.addEventListener('submit', submitHandler.bind(this));
 
       this.submit = new Form(this.$form, {
-         name: [Validators.required],
+         fio: [Validators.required],
          email: [Validators.required],
-         tel: [Validators.required],
+         phone: [Validators.required],
          message: [Validators.required, Validators.minLength(10)]
       });
-      
-      this.btn.addEventListener('click', collapse.bind(this));
+
+
+
+       this.btn.addEventListener('click', collapse.bind(this));
       this.close.addEventListener('click', collapse.bind(this));
 
    }
@@ -47,13 +51,21 @@ function submitHandler(e) {
    if (this.submit.isValid()) {
 
       const formData = {
-         ...this.submit.value()
+         ...this.submit.value(),
+          type:'f_message'
       }
 
       this.submit.clear();
       parent.classList.add('collapse');
 
-      console.log(formData);
+       this.server.post('send_mail', JSON.stringify(formData), {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
+           console.log(answer)
+           if(answer.success){
+               //
+           } else{
+               //
+           }
+       })
 
    }
 

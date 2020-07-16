@@ -35,7 +35,6 @@ export default class Server {
             "X-Requested-With": "XMLHttpRequest",
         }, headers)
 
-
         return makeRequest(this.baseURL+url, {
             method: 'POST',
             body: data,

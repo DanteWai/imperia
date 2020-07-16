@@ -11,8 +11,8 @@ class EmailController extends SiteController
 {
 
     public function footerMessages(Request $request){
-        $post = $request->except('type');
-        $type = $request->only('type');
+        $post = $request->except('type','_token');
+        $type = $request->only('type')['type'];
 
         if(!$type) return response()->json(['error'=>"no tip"]);
         switch ($type) {

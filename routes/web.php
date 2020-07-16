@@ -31,6 +31,9 @@ Route::post('/catalog/switch','CatalogController@switchCategory')->name('switchC
 Route::post('/catalog/list','CatalogController@productList')->name('productList'); //json с товарами с учетом параметров
 Route::post('/catalog/basket','CatalogController@basketList')->name('basket');
 
+
+Route::post('/send_mail',['uses'=>'EmailController@footerMessages'])->name('footerMessages');
+
 /*Админка*/
 
 
@@ -46,7 +49,7 @@ Route::group(['prefix'=>env('APP_ADMIN_URL', 'imperia_admin_panel')], function()
 
     Route::get('/update',['uses'=>'Admin\IndexController@update'])->name('update'); //на удаление
 
-    Route::post('/send_mail',['uses'=>'EmailController@footerMessages']);
+
 
 
     Route::resources([
