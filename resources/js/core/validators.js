@@ -15,4 +15,10 @@ export class Validators {
         }
     }
 
+    static phoneValid(value = '') {
+        const template = /^\d[\d\(\)\ -]{4,14}\d$/;
+        const result = template.test(value);
+        return result ? {valid: true} : {valid: false, msg: 'Телефон введен неверно'};
+    }
+
 }

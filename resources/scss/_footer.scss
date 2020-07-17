@@ -92,6 +92,7 @@ footer {
                         font-weight: 400;
                         color: #c62727;
                         font-size: 10.5px;
+                        white-space: nowrap;
                     }
                 }
             }
@@ -117,6 +118,10 @@ footer {
                 &:focus{
                     border-color:#3948b7;
                 }
+            }
+
+            textarea {
+                resize: none;
             }
 
             input.invalid, textarea.invalid {

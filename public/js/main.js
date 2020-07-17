@@ -2748,6 +2748,7 @@ var SendCallComponent = /*#__PURE__*/function (_Component) {
   _createClass(SendCallComponent, [{
     key: "init",
     value: function init() {
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
       this.btn = this.$el.querySelector('.call');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
@@ -2755,7 +2756,7 @@ var SendCallComponent = /*#__PURE__*/function (_Component) {
       this.token = this.$el.querySelector('[name="_token"]').value;
       this.$form.addEventListener('submit', submitHandler.bind(this));
       this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
-        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]
+        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].phoneValid]
       });
       this.btn.addEventListener('click', collapse.bind(this));
       this.close.addEventListener('click', collapse.bind(this));
@@ -2777,10 +2778,21 @@ function submitHandler(e) {
   var parent = e.target.closest('.js-collapse');
 
   if (this.submit.isValid()) {
-    var formData = _objectSpread({}, this.submit.value());
+    var formData = _objectSpread(_objectSpread({}, this.submit.value()), {}, {
+      type: 'f_phone'
+    });
 
     this.submit.clear();
     parent.classList.add('collapse');
+    this.server.post('send_mail', JSON.stringify(formData), {
+      'Content-Type': 'application/json;charset=utf-8'
+    }, this.token).then(function (answer) {
+      console.log(answer);
+
+      if (answer.success) {//
+      } else {//
+        }
+    });
   }
 }
 
@@ -2856,7 +2868,7 @@ var SendWriteComponent = /*#__PURE__*/function (_Component) {
       this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
         fio: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
         email: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
-        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].phoneValid],
         message: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].minLength(10)]
       });
       this.btn.addEventListener('click', collapse.bind(this));
@@ -2885,7 +2897,6 @@ function submitHandler(e) {
 
     this.submit.clear();
     parent.classList.add('collapse');
-    console.log(formData);
     this.server.post('send_mail', JSON.stringify(formData), {
       'Content-Type': 'application/json;charset=utf-8'
     }, this.token).then(function (answer) {
@@ -3213,6 +3224,19 @@ var Validators = /*#__PURE__*/function () {
           valid: false,
           msg: 'Пароли не совпадают'
         };
+      };
+    }
+  }, {
+    key: "phoneValid",
+    value: function phoneValid() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var template = /^\d[\d\(\)\ -]{4,14}\d$/;
+      var result = template.test(value);
+      return result ? {
+        valid: true
+      } : {
+        valid: false,
+        msg: 'Телефон введен неверно'
       };
     }
   }]);

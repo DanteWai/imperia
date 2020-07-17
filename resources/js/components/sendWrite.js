@@ -11,7 +11,7 @@ export class SendWriteComponent extends Component {
 
    init() {
 
-       this.server = new Server();
+      this.server = new Server();
       this.btn = this.$el.querySelector('.write');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
@@ -23,13 +23,13 @@ export class SendWriteComponent extends Component {
       this.submit = new Form(this.$form, {
          fio: [Validators.required],
          email: [Validators.required],
-         phone: [Validators.required],
+         phone: [Validators.required, Validators.phoneValid],
          message: [Validators.required, Validators.minLength(10)]
       });
 
 
 
-       this.btn.addEventListener('click', collapse.bind(this));
+      this.btn.addEventListener('click', collapse.bind(this));
       this.close.addEventListener('click', collapse.bind(this));
 
    }
@@ -58,7 +58,7 @@ function submitHandler(e) {
       this.submit.clear();
       parent.classList.add('collapse');
 
-       this.server.post('send_mail', JSON.stringify(formData), {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
+      this.server.post('send_mail', JSON.stringify(formData), {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
            console.log(answer)
            if(answer.success){
                //

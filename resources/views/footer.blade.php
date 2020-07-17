@@ -3,7 +3,7 @@
     <div class="btn-wrap">
         <div class="f-button" id="write">
             <div class="js-collapse collapse">
-                {!! Form::open(['url'=>route('footerMessages'),'method'=>'POST']) !!}
+                {!! Form::open(['url'=>route('footerMessages'),'method'=>'POST', 'novalidate' => true]) !!}
                     <svg class="f-btn-close">
                         <use xlink:href="/images/sprite.svg#x"></use>
                     </svg>

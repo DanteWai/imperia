@@ -11,6 +11,7 @@ export class SendCallComponent extends Component {
 
    init() {
 
+      this.server = new Server();
       this.btn = this.$el.querySelector('.call');
       this.send = this.$el.querySelector('.send');
       this.close = this.$el.querySelector('.f-btn-close');
@@ -20,7 +21,7 @@ export class SendCallComponent extends Component {
       this.$form.addEventListener('submit', submitHandler.bind(this));
 
       this.submit = new Form(this.$form, {
-         phone: [Validators.required]
+         phone: [Validators.required, Validators.phoneValid]
       });
 
       this.btn.addEventListener('click', collapse.bind(this));
@@ -45,15 +46,21 @@ function submitHandler(e) {
    if (this.submit.isValid()) {
 
       const formData = {
-         ...this.submit.value()
+         ...this.submit.value(),
+         type: 'f_phone'
       }
 
       this.submit.clear();
       parent.classList.add('collapse');
 
-
-
-
+      this.server.post('send_mail', JSON.stringify(formData), {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
+         console.log(answer);
+         if (answer.success) {
+            //
+         } else {
+            //
+         }
+      })
 
    }
 
