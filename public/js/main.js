@@ -1941,7 +1941,8 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
         loader: this.loader
       });
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
-      this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
+      this.token = this.$el.querySelector('[name="_token"]').value;
+      console.log('catalog-list', this.catalog); //Смена категории в шапке
 
       this.header.$el.addEventListener('change-category', changeCategory.bind(this)); //Смена параметра поиска товара
 
@@ -1979,12 +1980,13 @@ function _changeCategory() {
           case 0:
             //посылает запрос при смене основной категории и получает новый html
             this.loader.show();
-            _context.next = 3;
+            this.catalog.$el.classList.add('hide');
+            _context.next = 4;
             return this.server.post('catalog/switch', {
               category_id: this.header.category_id
             }, {}, this.token);
 
-          case 3:
+          case 4:
             answer = _context.sent;
 
             if (answer.option_panel && answer.list) {
@@ -1993,9 +1995,10 @@ function _changeCategory() {
               this.catalog.$el.innerHTML = answer.list; //?
 
               this.loader.hide();
+              this.catalog.$el.classList.remove('hide');
             }
 
-          case 5:
+          case 6:
           case "end":
             return _context.stop();
         }

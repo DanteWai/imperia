@@ -1,11 +1,5 @@
 <footer>
 
-    <!-- loader -->
-    <div class="loader-wrap hide" id="loader">
-        <div class="lds-ripple"><div></div><div></div></div>
-    </div>
-    <!-- /loader-->
-
     <span> © «Империя шин» 2016 — 2019</span>
     <div class="btn-wrap">
         <div class="f-button" id="write">

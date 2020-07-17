@@ -19,6 +19,8 @@ export class CatalogContentComponent extends Component {
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
 
+        console.log('catalog-list', this.catalog);
+
 
         //Смена категории в шапке
         this.header.$el.addEventListener('change-category', changeCategory.bind(this))
@@ -47,11 +49,13 @@ function changeBasket() {
 async function changeCategory(){
     //посылает запрос при смене основной категории и получает новый html
     this.loader.show();
+    this.catalog.$el.classList.add('hide');
     let answer = await this.server.post('catalog/switch',{category_id:this.header.category_id},{},this.token)
     if(answer.option_panel && answer.list){
         this.header.optionPanel.innerHTML = answer.option_panel //смена доступных для товара опций
         this.catalog.$el.innerHTML = answer.list //?
         this.loader.hide();
+        this.catalog.$el.classList.remove('hide');
     }
 }
 function clickBrand(e){
