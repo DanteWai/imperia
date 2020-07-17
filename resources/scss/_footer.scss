@@ -57,6 +57,11 @@ footer {
         }
 
         >div{
+            max-width: 500px;
+            max-height: 660px;
+            transition: 1s;
+            opacity: 1;
+            overflow: hidden;
 
 
             form{
