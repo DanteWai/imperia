@@ -6,15 +6,16 @@ import Server from "@core/servers";
 
 
 export class CatalogContentComponent extends Component {
-    constructor(id, basket) {
+    constructor(id, basket, {loader}) {
         super(id, false)
-        this.basket = basket
-        this.$el && this.init()
+        this.basket = basket;
+        this.loader = loader;
+        this.$el && this.init();
     }
 
     init(){
         this.header = new CatalogHeaderComponent('header')
-        this.catalog = new CatalogProductsComponent('product-list')
+        this.catalog = new CatalogProductsComponent('product-list', {loader: this.loader})
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
 
@@ -45,10 +46,12 @@ function changeBasket() {
 
 async function changeCategory(){
     //посылает запрос при смене основной категории и получает новый html
+    this.loader.show();
     let answer = await this.server.post('catalog/switch',{category_id:this.header.category_id},{},this.token)
     if(answer.option_panel && answer.list){
         this.header.optionPanel.innerHTML = answer.option_panel //смена доступных для товара опций
         this.catalog.$el.innerHTML = answer.list //?
+        this.loader.hide();
     }
 }
 function clickBrand(e){

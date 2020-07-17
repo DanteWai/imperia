@@ -3,8 +3,9 @@ import Server from "@core/servers";
 import Lang from '@js/lang/lang';
 
 export class CatalogProductsComponent extends Component {
-    constructor(id) {
-        super(id)
+    constructor(id, {loader}) {
+        super(id);
+        this.loader = loader;
     }
 
     init(){
@@ -16,22 +17,23 @@ export class CatalogProductsComponent extends Component {
         this.event = new Event('showBasket',{bubbles: false, cancelable: false});
     }
 
-    send(json, token){
+    async send(json, token){
+        this.loader.show();
         this.json = json;
-        this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
+        await this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
             //console.log('answer', answer)
 
             if(answer.data){
                 this.$el.innerHTML = productsRender(answer);
             }
         })
+        this.loader.hide();
     }
 }
 
 function productsRender(object){ // рендер шаблона
 
     let pagination = '';
-
     // рендер кнопок пагинации
     if (object.last_page > 1) {
         for (let i = 1; i <= object.last_page && i <= 20; i++) {
