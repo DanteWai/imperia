@@ -68,21 +68,41 @@ function collapse(e){
         this.$el.classList.toggle('big');
         const icon = (this.$el.classList.contains('big')) ? 'x' : 'basket';
 
-        tr.innerHTML = `<use xlink:href="public/images/sprite.svg#${icon}"></use>`;
+        tr.innerHTML = `<use xlink:href="/public/images/sprite.svg#${icon}"></use>`;
     }
 }
-function deleteElement(e){
-    let tr = e.target.closest('.basket-list-body-delete')
+export function deleteElement(e){
+    let tr = e.target.closest('.basket-list-body-delete') || e.target.closest('.remove-basket');
     if(tr){
-        let parent = tr.parentElement
+        const optionId = tr.dataset.optionId ? tr.dataset.optionId : tr.parentElement.dataset.optionId;
+        let parent = this.$el.querySelector(`li[data-option-id="${optionId}"]`);
         let json = JSON.parse(this.json)
         delete json[parent.dataset.optionId]
 
+        // Меняем надпись у кнопки в карточке товара КАТАЛОГА
         const button = document.querySelector(`.add-basket[data-option-id="${parent.dataset.optionId}"]`);
+        const input = button ? button.previousElementSibling : null;
 
         if (button) {
             button.disabled = false;
             button.querySelector('span').textContent = 'Добавить в корзину';
+            input.classList.remove('hide');
+        }
+
+        // Скрываем кнопку "удалить" на странице товара
+        const removeButton = document.querySelector('.remove-basket');
+        const countLabel = document.querySelector('.basket-count');
+        const addButton = document.querySelector('.add-basket');
+
+        if (removeButton && countLabel) {
+            removeButton.classList.add('hide');
+            countLabel.classList.remove('hide');
+            addButton.innerHTML = `
+            <svg class="basket-icon">
+                <use xlink:href="/public/images/sprite.svg#basket"></use>
+            </svg>
+            <span>Добавить в корзину</span>
+            `;
         }
 
         localStorage.setItem('basket',JSON.stringify(json))
@@ -94,7 +114,7 @@ function deleteElement(e){
             localStorage.removeItem('basket');
             this.$el.classList.add('small');
             this.$el.classList.remove('big');
-            this.icon.innerHTML = `<use xlink:href="public/images/sprite.svg#basket"></use>`;
+            this.icon.innerHTML = `<use xlink:href="/public/images/sprite.svg#basket"></use>`;
             this.body.innerHTML = '<li class="basket-empty">Пока товаров нет</li>';
             this.hide();
         }

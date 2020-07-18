@@ -50,10 +50,13 @@
 }
 
 .basket-count {
-    margin-top: 1em;
     color: #999;
     font-size: 0.9em;
 
+}
+
+.product-preview .price-four {
+    margin-bottom: 1em;
 }
 
 .product-list .basket-block{
@@ -92,6 +95,7 @@
         font-size: 1.4em;
         transition: 0.4s;
         text-align: center;
+        margin-right: 0.5em;
 
         &:hover {
 
@@ -105,7 +109,6 @@
     .add-basket {
         font-family: tahoma;
         font-weight: bold;
-        margin-left: 0.5em;
         padding: 1em 2em;
         border: none;
         background: $mainColor;
@@ -133,6 +136,32 @@
         }
         &:disabled{
             background: #ffe8ac;
+        }
+    }
+
+    .remove-basket {
+        font-family: tahoma;
+        font-weight: bold;
+        padding: 1em 2em;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e74848;
+        margin-left: 0.5em;
+
+        .basket-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        &.hide {
+            display: none;
+        }
+
+        &:hover {
+            background-color: #e37070;
         }
     }
 }

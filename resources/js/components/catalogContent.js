@@ -28,7 +28,7 @@ export class CatalogContentComponent extends Component {
         //смена страницы
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
         //показ корзины
-        this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this))
+        this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
 
 
         checkJSON.call(this)
@@ -36,7 +36,7 @@ export class CatalogContentComponent extends Component {
 
 }
 
-function changeBasket() {
+export function changeBasket() {
     //рендерит корзину
     this.basket.json = localStorage.getItem('basket');
     this.basket.fill();

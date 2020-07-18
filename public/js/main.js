@@ -1509,6 +1509,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_sendWrite__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/sendWrite */ "./resources/js/components/sendWrite.js");
 /* harmony import */ var _components_sendCall__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/sendCall */ "./resources/js/components/sendCall.js");
 /* harmony import */ var _components_loader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/loader */ "./resources/js/components/loader.js");
+/* harmony import */ var _components_productPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/productPage */ "./resources/js/components/productPage.js");
+
 
 
 
@@ -1529,6 +1531,7 @@ window.addEventListener('load', function () {
   new _components_order__WEBPACK_IMPORTED_MODULE_5__["OrderComponent"]('order');
   new _components_sendWrite__WEBPACK_IMPORTED_MODULE_6__["SendWriteComponent"]('write');
   new _components_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
+  new _components_productPage__WEBPACK_IMPORTED_MODULE_9__["ProductPageComponent"]('product-page', basket);
 });
 
 /***/ }),
@@ -1537,12 +1540,13 @@ window.addEventListener('load', function () {
 /*!*******************************************!*\
   !*** ./resources/js/components/basket.js ***!
   \*******************************************/
-/*! exports provided: BasketComponent */
+/*! exports provided: BasketComponent, deleteElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BasketComponent", function() { return BasketComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteElement", function() { return deleteElement; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -1656,22 +1660,37 @@ function collapse(e) {
     this.$el.classList.toggle('small');
     this.$el.classList.toggle('big');
     var icon = this.$el.classList.contains('big') ? 'x' : 'basket';
-    tr.innerHTML = "<use xlink:href=\"public/images/sprite.svg#".concat(icon, "\"></use>");
+    tr.innerHTML = "<use xlink:href=\"/public/images/sprite.svg#".concat(icon, "\"></use>");
   }
 }
 
 function deleteElement(e) {
-  var tr = e.target.closest('.basket-list-body-delete');
+  var tr = e.target.closest('.basket-list-body-delete') || e.target.closest('.remove-basket');
 
   if (tr) {
-    var parent = tr.parentElement;
+    var optionId = tr.dataset.optionId ? tr.dataset.optionId : tr.parentElement.dataset.optionId;
+    var parent = this.$el.querySelector("li[data-option-id=\"".concat(optionId, "\"]"));
     var json = JSON.parse(this.json);
-    delete json[parent.dataset.optionId];
+    delete json[parent.dataset.optionId]; // Меняем надпись у кнопки в карточке товара КАТАЛОГА
+
     var button = document.querySelector(".add-basket[data-option-id=\"".concat(parent.dataset.optionId, "\"]"));
+    var input = button ? button.previousElementSibling : null;
 
     if (button) {
       button.disabled = false;
       button.querySelector('span').textContent = 'Добавить в корзину';
+      input.classList.remove('hide');
+    } // Скрываем кнопку "удалить" на странице товара
+
+
+    var removeButton = document.querySelector('.remove-basket');
+    var countLabel = document.querySelector('.basket-count');
+    var addButton = document.querySelector('.add-basket');
+
+    if (removeButton && countLabel) {
+      removeButton.classList.add('hide');
+      countLabel.classList.remove('hide');
+      addButton.innerHTML = "\n            <svg class=\"basket-icon\">\n                <use xlink:href=\"/public/images/sprite.svg#basket\"></use>\n            </svg>\n            <span>\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443</span>\n            ";
     }
 
     localStorage.setItem('basket', JSON.stringify(json));
@@ -1682,7 +1701,7 @@ function deleteElement(e) {
       localStorage.removeItem('basket');
       this.$el.classList.add('small');
       this.$el.classList.remove('big');
-      this.icon.innerHTML = "<use xlink:href=\"public/images/sprite.svg#basket\"></use>";
+      this.icon.innerHTML = "<use xlink:href=\"/public/images/sprite.svg#basket\"></use>";
       this.body.innerHTML = '<li class="basket-empty">Пока товаров нет</li>';
       this.hide();
     }
@@ -1691,7 +1710,6 @@ function deleteElement(e) {
     this.countRender();
   }
 } // Пересчет корзины
-
 
 function changeCount(e) {
   var target = e.target.closest('.product-count');
@@ -1873,12 +1891,13 @@ function jsonRequestDate() {
 /*!***************************************************!*\
   !*** ./resources/js/components/catalogContent.js ***!
   \***************************************************/
-/*! exports provided: CatalogContentComponent */
+/*! exports provided: CatalogContentComponent, changeBasket */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogContentComponent", function() { return CatalogContentComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeBasket", function() { return changeBasket; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _catalogHeader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogHeader */ "./resources/js/components/catalogHeader.js");
 /* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalogProducts.js");
@@ -1958,7 +1977,6 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 
   return CatalogContentComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
 function changeBasket() {
   //рендерит корзину
   this.basket.json = localStorage.getItem('basket');
@@ -2186,12 +2204,13 @@ function dataId(e) {
 /*!****************************************************!*\
   !*** ./resources/js/components/catalogProducts.js ***!
   \****************************************************/
-/*! exports provided: CatalogProductsComponent, addBasketJson */
+/*! exports provided: CatalogProductsComponent, addBasket, addBasketJson */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogProductsComponent", function() { return CatalogProductsComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasket", function() { return addBasket; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasketJson", function() { return addBasketJson; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
@@ -2319,7 +2338,7 @@ function productsRender(object) {
     var id = item.option_id;
     return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
       return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
-    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
+    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
   }).join(''); // рендер всего шаблона
 
   return "\n        <section class=\"content-filter\">\n            <div class=\"filter\">\n                <!--<p class=\"filter-trigger\">\u0424\u0438\u043B\u044C\u0442\u0440</p>-->\n            </div>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
@@ -2327,10 +2346,18 @@ function productsRender(object) {
 
 function addBasket(e) {
   var el = e.target.closest('.add-basket');
+  var input = el ? el.previousElementSibling : null;
 
   if (el && !el.disabled) {
     el.disabled = true;
     el.innerHTML = "<span>Товар в корзине</span>";
+    input.classList.add('hide'); //Страница товара
+
+    this.$countLabel ? this.$countLabel.classList.add('hide') : ''; // Удаляем надпись "количество" при добавлении товара в корзину из карточки
+
+    this.$removeBtn ? this.$removeBtn.classList.remove('hide') : ''; // Показываем кнопку "удалить" в карточке товара
+    //
+
     var value = Math.floor(Number(el.previousElementSibling.value));
     value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1), 10); //Проверка на nan и на диапазон
 
@@ -2340,7 +2367,6 @@ function addBasket(e) {
     this.$el.dispatchEvent(this.event);
   }
 }
-
 function addBasketJson(id, count) {
   var basket = localStorage.getItem('basket');
   var data = {};
@@ -2784,6 +2810,97 @@ function ValidDPickup() {
   document.getElementById('pickup_p').checked = true;
   document.getElementById('pickup_p').checked = true;
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/productPage.js":
+/*!************************************************!*\
+  !*** ./resources/js/components/productPage.js ***!
+  \************************************************/
+/*! exports provided: ProductPageComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductPageComponent", function() { return ProductPageComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalogProducts.js");
+/* harmony import */ var _catalogContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogContent */ "./resources/js/components/catalogContent.js");
+/* harmony import */ var _basket__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./basket */ "./resources/js/components/basket.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var ProductPageComponent = /*#__PURE__*/function (_Component) {
+  _inherits(ProductPageComponent, _Component);
+
+  var _super = _createSuper(ProductPageComponent);
+
+  function ProductPageComponent(id, basket) {
+    var _this;
+
+    _classCallCheck(this, ProductPageComponent);
+
+    _this = _super.call(this, id, false);
+    _this.basket = basket;
+    _this.$el && _this.init();
+    return _this;
+  }
+
+  _createClass(ProductPageComponent, [{
+    key: "init",
+    value: function init() {
+      this.$addBtn = this.$el.querySelector('.add-basket');
+      this.$removeBtn = this.$el.querySelector('.remove-basket');
+      this.$countLabel = this.$el.querySelector('.basket-count');
+      this.$input = this.$el.querySelector('.basket-block > input');
+      this.event = new Event('showBasket', {
+        bubbles: false,
+        cancelable: false
+      });
+      this.id = this.$addBtn.dataset.optionId;
+      this.json = localStorage.getItem('basket');
+      this.$addBtn.addEventListener('click', _catalogProducts__WEBPACK_IMPORTED_MODULE_1__["addBasket"].bind(this));
+      this.$el.addEventListener('showBasket', _catalogContent__WEBPACK_IMPORTED_MODULE_2__["changeBasket"].bind(this));
+      this.$removeBtn.addEventListener('click', _basket__WEBPACK_IMPORTED_MODULE_3__["deleteElement"].bind(this.basket));
+
+      if (this.basket.json && Object.keys(JSON.parse(this.basket.json)).includes(this.id)) {
+        this.$countLabel.classList.add('hide'); // скрываем надпись
+
+        this.$input.classList.add('hide'); // скрываем инпут
+
+        this.$addBtn.disabled = true; // блокируем кнопку
+
+        this.$addBtn.innerHTML = "\n            <span>\u0422\u043E\u0432\u0430\u0440 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0435</span>\n         ";
+        this.$removeBtn.classList.remove('hide'); // показываем кнопку удаления
+      }
+    }
+  }]);
+
+  return ProductPageComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /***/ }),
 

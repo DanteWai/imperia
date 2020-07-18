@@ -7,6 +7,7 @@ import {OrderComponent} from "./components/order";
 import {SendWriteComponent} from "./components/sendWrite";
 import {SendCallComponent} from './components/sendCall';
 import {LoaderComponent} from './components/loader';
+import {ProductPageComponent} from './components/productPage';
 
 
 window.addEventListener('load',() => {
@@ -17,4 +18,5 @@ window.addEventListener('load',() => {
     new OrderComponent('order')
     new SendWriteComponent('write');
     new SendCallComponent('call');
+    new ProductPageComponent('product-page', basket);
 });

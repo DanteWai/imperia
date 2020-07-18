@@ -70,7 +70,7 @@ function productsRender(object){ // рендер шаблона
                 </ul>
                 <p class="product-list-price">${item.price} P</p>
                 <span class="basket-block">
-                    <input type="text" value="1">
+                    <input type="text" value="1" ${(basket.includes(id.toString())) ? 'class="hide"' : ''}>
                     <button data-option-id="${id}" class="add-basket" ${ (basket.includes(id.toString())) ? 'disabled' : '' }>
                         ${ (basket.includes(id.toString())) ?
                             '<span>Товар в корзине</span>' :
@@ -96,11 +96,18 @@ function productsRender(object){ // рендер шаблона
     `;
 }
 
-function addBasket(e){
+export function addBasket(e){
     let el = e.target.closest('.add-basket');
+    const input = el ? el.previousElementSibling : null;
     if(el && !el.disabled){
         el.disabled = true
         el.innerHTML = "<span>Товар в корзине</span>"
+        input.classList.add('hide');
+
+        //Страница товара
+        this.$countLabel ? this.$countLabel.classList.add('hide') : '';     // Удаляем надпись "количество" при добавлении товара в корзину из карточки
+        this.$removeBtn ? this.$removeBtn.classList.remove('hide') : '';    // Показываем кнопку "удалить" в карточке товара
+        //
 
         let value = Math.floor(Number(el.previousElementSibling.value));
         value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1) , 10) //Проверка на nan и на диапазон

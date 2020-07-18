@@ -1,5 +1,5 @@
 
-<section class="catalog content">
+<section class="catalog content" id="product-page">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <section class="header">
         <h2>Каталог</h2>
@@ -19,7 +19,7 @@
             <span class="product-preview-options">{{($product->options['width'] ?? '').'/'.($product->options['height'] ?? '').' R'.($product->options['radius'] ?? '')}}</span>
             <img class="b-image" src="{{asset(env('THEME'))}}/images//test/bridgestone.png" alt="">
             <p>Цена <span>{{$product->price.' Р'}}</span> за <span>1шт</span></p>
-            <p>Цена <span>{{($product->price * 4).' Р'}}</span> за <span>4шт</span></p>
+            <p class="price-four">Цена <span>{{($product->price * 4).' Р'}}</span> за <span>4шт</span></p>
             <span class="basket-count">Количество</span>
             <span class="basket-block">
                 <input type="text" value="1">
@@ -28,6 +28,11 @@
                         <use xlink:href="{{asset(env('THEME'))}}//images/sprite.svg#basket"></use>
                     </svg>
                     <span>Добавить в корзину</span>
+                </button>
+                <button class="remove-basket hide" title="Удалить" data-option-id="{{$product->option_id}}">
+                    <svg class="basket-icon">
+                        <use xlink:href="{{asset(env('THEME'))}}//images/sprite.svg#delete"></use>
+                    </svg>
                 </button>
             </span>
         </div>
