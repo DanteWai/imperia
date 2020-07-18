@@ -57,6 +57,7 @@ export default class Modal {
         this.$modal = _createModal(options)
         this.closing = false
         this.destroyed = false
+        this.destroyAfterClose = options.destroyAfterClose
 
         this.onClose = (typeof options.onClose === 'function') ? options.onClose : function () {}
         this.onOpen = (typeof options.onOpen === 'function') ? options.onOpen : function () {}
@@ -69,6 +70,11 @@ export default class Modal {
         this.$modal.addEventListener('click', closeModal.bind(this))
     }
 
+    appendClasses(str){
+        let $window = this.$modal.querySelector('.modal-window')
+        str.split(' ').forEach(el => {$window.classList.add(el)})
+    }
+
     open() {
         if(!this.destroyed){
             this.$modal.classList.add('open')
@@ -78,7 +84,8 @@ export default class Modal {
         }
     }
     async close() {
-        if(!!this.beforeClose()){
+        if(!!this.beforeClose() && !this.destroyed && !this.closing){
+
             this.closing = true
             this.$modal.classList.add('hidden')
             this.$modal.classList.remove('open')
@@ -91,8 +98,6 @@ export default class Modal {
                     resolve()
                 }, ANIMATION_SPEED)
             })
-
-
         }
     }
     destroy() {

@@ -2644,59 +2644,29 @@ function submitHandler(e) {
       'Content-Type': 'application/json;charset=utf-8'
     }, this.token).then(function (answer) {
       console.log(answer);
+      var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
+        showHeader: false,
+        onOpen: function onOpen() {
+          setTimeout(function () {
+            return modal.close();
+          }, 2000);
+        },
+        //Обработчик на открытие (закрывает окно)
+        onClose: function onClose() {
+          modal.destroy();
+        } // обработчик на закрытие
+
+      });
 
       if (answer.success) {
-        //Конфигурация модального окна
-        var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
-          showHeader: false,
-          //Не показывать title
-          onOpen: function onOpen() {
-            //Действия при открытии окна
-            //Подождать 2 секунды и закрыть окно
-            setTimeout(function () {
-              //окно закрывается асинхронно
-              modal.close().then(function () {
-                //После того как оно закрылось уничтожить html
-                modal.destroy();
-              });
-            }, 2000);
-          }
-        });
-        setTimeout(function () {
-          //Вставить контент в сообщение
-          modal.$modal.querySelector('.modal-window').classList.add('success');
-          modal.setContent("\n                        <p>\n                           <svg class=\"modal-icon\">\n                              <use xlink:href=\"/images/sprite.svg#success\"></use>\n                           </svg>\n                           <span class=\"modal-message\">\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</span>\n                        </p>\n                     "); //Открыть окно
-
-          modal.open();
-        }, 2000);
+        modal.appendClasses('success');
+        modal.setContent("\n                        <p>\n                           <svg class=\"modal-icon\"><use xlink:href=\"/images/sprite.svg#success\"></use></svg>\n                           <span class=\"modal-message\">\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</span>\n                        </p>");
       } else {
-        //Конфигурация модального окна
-        var _modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
-          showHeader: false,
-          //Не показывать title
-          onOpen: function onOpen() {
-            //Действия при открытии окна
-            //Подождать 2 секунды и закрыть окно
-            setTimeout(function () {
-              //окно закрывается асинхронно
-              _modal.close().then(function () {
-                //После того как оно закрылось уничтожить html
-                _modal.destroy();
-              });
-            }, 2000);
-          }
-        });
-
-        setTimeout(function () {
-          //Вставить контент в сообщение
-          _modal.$modal.querySelector('.modal-window').classList.add('danger');
-
-          _modal.setContent("\n                        <p>\n                           <svg class=\"modal-icon\">\n                              <use xlink:href=\"/images/sprite.svg#danger\"></use>\n                           </svg>\n                           <span class=\"modal-message\">\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A :(</span>\n                        </p>\n                     "); //Открыть окно
-
-
-          _modal.open();
-        }, 2000);
+        modal.appendClasses('danger');
+        modal.setContent("\n                        <p>\n                           <svg class=\"modal-icon\"><use xlink:href=\"/images/sprite.svg#danger\"></use></svg>\n                           <span class=\"modal-message\">\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A :(</span>\n                        </p>");
       }
+
+      modal.open();
     });
   }
 }
@@ -3454,6 +3424,7 @@ var Modal = /*#__PURE__*/function () {
     this.$modal = _createModal(options);
     this.closing = false;
     this.destroyed = false;
+    this.destroyAfterClose = options.destroyAfterClose;
     this.onClose = typeof options.onClose === 'function' ? options.onClose : function () {};
     this.onOpen = typeof options.onOpen === 'function' ? options.onOpen : function () {};
     this.beforeClose = typeof options.beforeClose === 'function' ? options.beforeClose : function () {
@@ -3466,6 +3437,14 @@ var Modal = /*#__PURE__*/function () {
     key: "init",
     value: function init() {
       this.$modal.addEventListener('click', closeModal.bind(this));
+    }
+  }, {
+    key: "appendClasses",
+    value: function appendClasses(str) {
+      var $window = this.$modal.querySelector('.modal-window');
+      str.split(' ').forEach(function (el) {
+        $window.classList.add(el);
+      });
     }
   }, {
     key: "open",
@@ -3487,7 +3466,7 @@ var Modal = /*#__PURE__*/function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.beforeClose()) {
+                if (!(!!this.beforeClose() && !this.destroyed && !this.closing)) {
                   _context.next = 6;
                   break;
                 }
