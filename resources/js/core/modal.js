@@ -83,11 +83,16 @@ export default class Modal {
             this.$modal.classList.add('hidden')
             this.$modal.classList.remove('open')
 
-            await setTimeout( () => {
-                this.$modal.classList.remove('hidden')
-                this.onClose()
-                this.closing = false
-            }, ANIMATION_SPEED)
+            await new Promise((resolve, reject) => {
+                setTimeout( () => {
+                    this.$modal.classList.remove('hidden')
+                    this.closing = false
+                    this.onClose()
+                    resolve()
+                }, ANIMATION_SPEED)
+            })
+
+
         }
     }
     destroy() {

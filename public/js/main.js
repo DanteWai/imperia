@@ -1537,19 +1537,27 @@ window.addEventListener('load', function () {
   new _components_order_order__WEBPACK_IMPORTED_MODULE_5__["OrderComponent"]('order');
   new _components_footer_sendWrite__WEBPACK_IMPORTED_MODULE_6__["SendWriteComponent"]('write');
   new _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
-  new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket);
+  new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket); //Конфигурация модального окна
+
   var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_9__["default"]({
     showHeader: false,
+    //Не показывать title
     onOpen: function onOpen() {
+      //Действия при открытии окна
+      //Подождать 2 секунды и закрыть окно
       setTimeout(function () {
+        //окно закрывается асинхронно
         modal.close().then(function () {
+          //После того как оно закрылось уничтожить html
           modal.destroy();
         });
       }, 2000);
     }
   });
   setTimeout(function () {
-    modal.setContent("<p>\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</p>");
+    //Вставить контент в сообщение
+    modal.setContent("<p>\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</p>"); //Открыть окно
+
     modal.open();
   }, 2000);
 });
@@ -3408,13 +3416,17 @@ var Modal = /*#__PURE__*/function () {
                 this.$modal.classList.add('hidden');
                 this.$modal.classList.remove('open');
                 _context.next = 6;
-                return setTimeout(function () {
-                  _this.$modal.classList.remove('hidden');
+                return new Promise(function (resolve, reject) {
+                  setTimeout(function () {
+                    _this.$modal.classList.remove('hidden');
 
-                  _this.onClose();
+                    _this.closing = false;
 
-                  _this.closing = false;
-                }, ANIMATION_SPEED);
+                    _this.onClose();
+
+                    resolve();
+                  }, ANIMATION_SPEED);
+                });
 
               case 6:
               case "end":
