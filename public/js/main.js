@@ -1537,29 +1537,7 @@ window.addEventListener('load', function () {
   new _components_order_order__WEBPACK_IMPORTED_MODULE_5__["OrderComponent"]('order');
   new _components_footer_sendWrite__WEBPACK_IMPORTED_MODULE_6__["SendWriteComponent"]('write');
   new _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
-  new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket); //Конфигурация модального окна
-
-  var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_9__["default"]({
-    showHeader: false,
-    //Не показывать title
-    onOpen: function onOpen() {
-      //Действия при открытии окна
-      //Подождать 2 секунды и закрыть окно
-      setTimeout(function () {
-        //окно закрывается асинхронно
-        modal.close().then(function () {
-          //После того как оно закрылось уничтожить html
-          modal.destroy();
-        });
-      }, 2000);
-    }
-  });
-  setTimeout(function () {
-    //Вставить контент в сообщение
-    modal.setContent("<p>\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</p>"); //Открыть окно
-
-    modal.open();
-  }, 2000);
+  new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket);
 });
 
 /***/ }),
@@ -2414,6 +2392,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
 /* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
+/* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -2441,6 +2420,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -2501,9 +2481,58 @@ function submitHandler(e) {
     }, this.token).then(function (answer) {
       console.log(answer);
 
-      if (answer.success) {//
-      } else {//
-        }
+      if (answer.success) {
+        //Конфигурация модального окна
+        var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
+          showHeader: false,
+          //Не показывать title
+          onOpen: function onOpen() {
+            //Действия при открытии окна
+            //Подождать 2 секунды и закрыть окно
+            setTimeout(function () {
+              //окно закрывается асинхронно
+              modal.close().then(function () {
+                //После того как оно закрылось уничтожить html
+                modal.destroy();
+              });
+            }, 2000);
+          }
+        });
+        setTimeout(function () {
+          //Вставить контент в сообщение
+          modal.$modal.querySelector('.modal-window').classList.add('success');
+          modal.setContent("\n                     <p>\n                        <svg class=\"modal-icon\">\n                           <use xlink:href=\"/images/sprite.svg#success\"></use>\n                        </svg>\n                        <span class=\"modal-message\">\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</span>\n                     </p>\n                  "); //Открыть окно
+
+          modal.open();
+        }, 2000);
+      } else {
+        //Конфигурация модального окна
+        var _modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
+          showHeader: false,
+          //Не показывать title
+          onOpen: function onOpen() {
+            //Действия при открытии окна
+            //Подождать 2 секунды и закрыть окно
+            setTimeout(function () {
+              //окно закрывается асинхронно
+              _modal.close().then(function () {
+                //После того как оно закрылось уничтожить html
+                _modal.destroy();
+              });
+            }, 2000);
+          }
+        });
+
+        setTimeout(function () {
+          //Вставить контент в сообщение
+          _modal.$modal.querySelector('.modal-window').classList.add('danger');
+
+          _modal.setContent("\n                     <p>\n                        <svg class=\"modal-icon\">\n                           <use xlink:href=\"/images/sprite.svg#danger\"></use>\n                        </svg>\n                        <span class=\"modal-message\">\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A :(</span>\n                     </p>\n                  "); //Открыть окно
+
+
+          _modal.open();
+        }, 2000);
+      }
     });
   }
 }
@@ -2524,6 +2553,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
 /* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
+/* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -2551,6 +2581,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -2614,9 +2645,58 @@ function submitHandler(e) {
     }, this.token).then(function (answer) {
       console.log(answer);
 
-      if (answer.success) {//
-      } else {//
-        }
+      if (answer.success) {
+        //Конфигурация модального окна
+        var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
+          showHeader: false,
+          //Не показывать title
+          onOpen: function onOpen() {
+            //Действия при открытии окна
+            //Подождать 2 секунды и закрыть окно
+            setTimeout(function () {
+              //окно закрывается асинхронно
+              modal.close().then(function () {
+                //После того как оно закрылось уничтожить html
+                modal.destroy();
+              });
+            }, 2000);
+          }
+        });
+        setTimeout(function () {
+          //Вставить контент в сообщение
+          modal.$modal.querySelector('.modal-window').classList.add('success');
+          modal.setContent("\n                        <p>\n                           <svg class=\"modal-icon\">\n                              <use xlink:href=\"/images/sprite.svg#success\"></use>\n                           </svg>\n                           <span class=\"modal-message\">\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</span>\n                        </p>\n                     "); //Открыть окно
+
+          modal.open();
+        }, 2000);
+      } else {
+        //Конфигурация модального окна
+        var _modal = new _core_modal__WEBPACK_IMPORTED_MODULE_4__["default"]({
+          showHeader: false,
+          //Не показывать title
+          onOpen: function onOpen() {
+            //Действия при открытии окна
+            //Подождать 2 секунды и закрыть окно
+            setTimeout(function () {
+              //окно закрывается асинхронно
+              _modal.close().then(function () {
+                //После того как оно закрылось уничтожить html
+                _modal.destroy();
+              });
+            }, 2000);
+          }
+        });
+
+        setTimeout(function () {
+          //Вставить контент в сообщение
+          _modal.$modal.querySelector('.modal-window').classList.add('danger');
+
+          _modal.setContent("\n                        <p>\n                           <svg class=\"modal-icon\">\n                              <use xlink:href=\"/images/sprite.svg#danger\"></use>\n                           </svg>\n                           <span class=\"modal-message\">\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A :(</span>\n                        </p>\n                     "); //Открыть окно
+
+
+          _modal.open();
+        }, 2000);
+      }
     });
   }
 }

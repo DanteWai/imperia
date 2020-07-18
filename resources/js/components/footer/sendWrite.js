@@ -2,6 +2,7 @@ import {Component} from "@core/component";
 import Server from "@core/servers";
 import {Form} from "@core/form";
 import {Validators} from "@core/validators";
+import Modal from "@core/modal";
 
 export class SendWriteComponent extends Component {
 
@@ -59,13 +60,72 @@ function submitHandler(e) {
       parent.classList.add('collapse');
 
       this.server.post('send_mail', JSON.stringify(formData), {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
-           console.log(answer)
-           if(answer.success){
-               //
-           } else{
-               //
-           }
-       })
+         
+         console.log(answer)
+            if(answer.success){
+            
+               //Конфигурация модального окна
+               const modal = new Modal({
+                  showHeader:false, //Не показывать title
+                  onOpen(){ //Действия при открытии окна
+                     //Подождать 2 секунды и закрыть окно
+                     setTimeout(() =>{
+                        //окно закрывается асинхронно
+                        modal.close().then(() => {
+                           //После того как оно закрылось уничтожить html
+                           modal.destroy()
+                        })
+                     },2000)
+                  }
+               })
+
+               setTimeout(function () {
+                     //Вставить контент в сообщение
+                     modal.$modal.querySelector('.modal-window').classList.add('success');
+                     modal.setContent(`
+                        <p>
+                           <svg class="modal-icon">
+                              <use xlink:href="/images/sprite.svg#success"></use>
+                           </svg>
+                           <span class="modal-message">Ваше сообщение успешно отправлено</span>
+                        </p>
+                     `)
+                     //Открыть окно
+                     modal.open()
+               }, 2000)
+
+            } else{
+               //Конфигурация модального окна
+               const modal = new Modal({
+                  showHeader:false, //Не показывать title
+                  onOpen(){ //Действия при открытии окна
+                     //Подождать 2 секунды и закрыть окно
+                     setTimeout(() =>{
+                        //окно закрывается асинхронно
+                        modal.close().then(() => {
+                           //После того как оно закрылось уничтожить html
+                           modal.destroy()
+                        })
+                     },2000)
+                  }
+               })
+
+               setTimeout(function () {
+                     //Вставить контент в сообщение
+                     modal.$modal.querySelector('.modal-window').classList.add('danger');
+                     modal.setContent(`
+                        <p>
+                           <svg class="modal-icon">
+                              <use xlink:href="/images/sprite.svg#danger"></use>
+                           </svg>
+                           <span class="modal-message">Что-то пошло не так :(</span>
+                        </p>
+                     `)
+                     //Открыть окно
+                     modal.open()
+               }, 2000)
+            }
+         })
 
    }
 
