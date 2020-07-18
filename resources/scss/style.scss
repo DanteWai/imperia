@@ -103,6 +103,7 @@ body {
 
 
 
+@import "core/modal";
 @import "v-menu";
 @import "info";
 @import "catalog";
@@ -156,11 +157,11 @@ html .deploy{
 
 // loader
 .loader-wrap {
+
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
+
 
     z-index: 8888;
     //position: fixed;
@@ -171,23 +172,45 @@ html .deploy{
     &.hide {
         display: none;
     }
+
+    > * {
+        display: none;
+    }
 }
 
-.lds-ripple {
+.lds-ring {
     display: inline-block;
     position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
     width: 64px;
     height: 64px;
-
-    div {
-        position: absolute;
-        border: 4px solid #4caf50;
-        opacity: 1;
-        border-radius: 50%;
-        animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    margin: 8px;
+    border: 8px solid #5a65c9;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #5a65c9 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
     }
-        div:nth-child(2) {
-        animation-delay: -0.5s;
+    100% {
+        transform: rotate(360deg);
     }
 }
 

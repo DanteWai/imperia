@@ -1,7 +1,5 @@
 import {Component} from "@core/component";
 
-
-
 export class MainChoiceMenuComponent extends Component{
     constructor(id){
         super(id)
@@ -9,16 +7,12 @@ export class MainChoiceMenuComponent extends Component{
         this.category_id = 1;
     }
 
-
     init(){
-
         let elements = this.$el.querySelectorAll('.category-header');
         elements.forEach(el => { el.addEventListener('click',changeTabs.bind(this))})
     }
 
-
 }
-
 export function changeTabs(e){
     let target = e.target.closest('.category-header')
     if(target){

@@ -71,11 +71,10 @@ class CatalogController extends SiteController
         return $this->renderOutput();
     }
 
-    public function productPage($model,$id){
+    public function productPage($model, $id){
 
         $product = $this->o_rep->getProduct($id);
         $analogProduct = $this->o_rep->getAnalog($product,5);
-
         $content = view('catalog.mainProductPage',compact('product','analogProduct'))->render();
         $this->vars = Arr::add($this->vars,'content',$content);
 

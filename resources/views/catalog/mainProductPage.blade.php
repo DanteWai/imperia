@@ -10,14 +10,14 @@
     </section>
 
     <section class="product">
-
-        <div class="product-preview">
+        <div class="product-preview loader-wrap">
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             @if(isset($product->options['season']))
-                @include(env('THEME').'.catalog.productIcons')
+                @include('catalog.productIcons')
             @endif
-            <img class="p-image" src="{{asset(env('THEME'))}}/images//test/koleso.png" alt="">
+            <img class="p-image" src="/images//test/koleso.png" alt="">
             <span class="product-preview-options">{{($product->options['width'] ?? '').'/'.($product->options['height'] ?? '').' R'.($product->options['radius'] ?? '')}}</span>
-            <img class="b-image" src="{{asset(env('THEME'))}}/images//test/bridgestone.png" alt="">
+            <img class="b-image" src="/images//test/bridgestone.png" alt="">
             <p>Цена <span>{{$product->price.' Р'}}</span> за <span>1шт</span></p>
             <p class="price-four">Цена <span>{{($product->price * 4).' Р'}}</span> за <span>4шт</span></p>
             <span class="basket-count">Количество</span>
@@ -25,13 +25,13 @@
                 <input type="text" value="1">
                 <button data-option-id="{{$product->option_id}}" class="add-basket">
                     <svg class="basket-icon">
-                        <use xlink:href="{{asset(env('THEME'))}}//images/sprite.svg#basket"></use>
+                        <use xlink:href="/images/sprite.svg#basket"></use>
                     </svg>
                     <span>Добавить в корзину</span>
                 </button>
                 <button class="remove-basket hide" title="Удалить" data-option-id="{{$product->option_id}}">
                     <svg class="basket-icon">
-                        <use xlink:href="{{asset(env('THEME'))}}//images/sprite.svg#delete"></use>
+                        <use xlink:href="/images/sprite.svg#delete"></use>
                     </svg>
                 </button>
             </span>

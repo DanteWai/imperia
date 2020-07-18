@@ -1509,6 +1509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_footer_sendWrite__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/footer/sendWrite */ "./resources/js/components/footer/sendWrite.js");
 /* harmony import */ var _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/footer/sendCall */ "./resources/js/components/footer/sendCall.js");
 /* harmony import */ var _components_all_basket__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/all/basket */ "./resources/js/components/all/basket.js");
+/* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
 //Подключение стилей
  //Подключение полифилов
 
@@ -1525,9 +1526,9 @@ __webpack_require__.r(__webpack_exports__);
  //Общее
 
 
+
 window.addEventListener('load', function () {
   var basket = new _components_all_basket__WEBPACK_IMPORTED_MODULE_8__["BasketComponent"]('basket');
-  var loader = new LoaderComponent();
   new _components_mainPage_calculateParam__WEBPACK_IMPORTED_MODULE_2__["CalculateParamComponent"]('main-content'); //компонет подборщика на главной странице
 
   new _components_catalog_catalogContent__WEBPACK_IMPORTED_MODULE_3__["CatalogContentComponent"]('catalog-content', {
@@ -1537,6 +1538,20 @@ window.addEventListener('load', function () {
   new _components_footer_sendWrite__WEBPACK_IMPORTED_MODULE_6__["SendWriteComponent"]('write');
   new _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
   new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket);
+  var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_9__["default"]({
+    showHeader: false,
+    onOpen: function onOpen() {
+      setTimeout(function () {
+        modal.close().then(function () {
+          modal.destroy();
+        });
+      }, 2000);
+    }
+  });
+  setTimeout(function () {
+    modal.setContent("<p>\u0412\u0430\u0448\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E</p>");
+    modal.open();
+  }, 2000);
 });
 
 /***/ }),
@@ -1753,22 +1768,26 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var LoaderComponent = /*#__PURE__*/function () {
   function LoaderComponent() {
+    var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
     _classCallCheck(this, LoaderComponent);
 
-    this.$target = null;
+    this.$target = target;
   }
 
   _createClass(LoaderComponent, [{
     key: "mount",
     value: function mount($target) {
       $target.classList.add('loader-wrap');
-      $target.innerHTML = '<div class="lds-ripple"><div></div><div></div></div>';
+      $target.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
       this.$target = $target;
     }
   }, {
     key: "unmount",
     value: function unmount() {
       this.$target.classList.remove('loader-wrap');
+      var lds = this.$target.querySelector('.lds-ring');
+      lds && lds.parentNode.removeChild(lds);
     }
   }]);
 
@@ -2291,6 +2310,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalog/catalogProducts.js");
 /* harmony import */ var _catalogContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogContent */ "./resources/js/components/catalog/catalogContent.js");
 /* harmony import */ var _all_basket__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../all/basket */ "./resources/js/components/all/basket.js");
+/* harmony import */ var _js_components_all_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @js/components/all/loader */ "./resources/js/components/all/loader.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2317,6 +2337,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var ProductPageComponent = /*#__PURE__*/function (_Component) {
   _inherits(ProductPageComponent, _Component);
 
@@ -2336,6 +2357,7 @@ var ProductPageComponent = /*#__PURE__*/function (_Component) {
   _createClass(ProductPageComponent, [{
     key: "init",
     value: function init() {
+      this.$productPreview = this.$el.querySelector('.product-preview');
       this.$addBtn = this.$el.querySelector('.add-basket');
       this.$removeBtn = this.$el.querySelector('.remove-basket');
       this.$countLabel = this.$el.querySelector('.basket-count');
@@ -2360,6 +2382,8 @@ var ProductPageComponent = /*#__PURE__*/function (_Component) {
         this.$addBtn.innerHTML = "\n            <span>\u0422\u043E\u0432\u0430\u0440 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0435</span>\n         ";
         this.$removeBtn.classList.remove('hide'); // показываем кнопку удаления
       }
+
+      new _js_components_all_loader__WEBPACK_IMPORTED_MODULE_4__["LoaderComponent"](this.$productPreview).unmount();
     }
   }]);
 
@@ -3269,6 +3293,166 @@ function clearError($control) {
     $control.nextElementSibling.remove();
   }
 }
+
+/***/ }),
+
+/***/ "./resources/js/core/modal.js":
+/*!************************************!*\
+  !*** ./resources/js/core/modal.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createFooter(buttons) {
+  if (buttons && buttons.length > 0) {
+    var $footer = document.createElement('div');
+    $footer.classList.add('modal-footer');
+    buttons.forEach(function (b) {
+      var $button = document.createElement('button');
+      $button.textContent = b.text;
+      $button.classList.add('btn');
+      $button.classList.add("btn-".concat(b.type || 'secondary'));
+      $button.addEventListener('click', b.handler || function () {});
+      $footer.appendChild($button);
+    });
+    return $footer;
+  }
+
+  return false;
+}
+
+function _createModal(options) {
+  var modal = document.createElement('div');
+  modal.classList.add('dmodal');
+  var header = !options.showHeader ? '' : "<div class=\"modal-header\">\n            <span class=\"modal-title\">".concat(options.title || 'Модальное окно', "</span>\n            ").concat(options.closable ? '<span class="modal-close" data-modal-close>x</span>' : '', "\n        </div>");
+  var html = "\n    <div class=\"modal-overlay\" data-modal-close>\n        <div class=\"modal-window\" style=\"width: ".concat(options.width || '700px', ";\">\n            ").concat(header, "\n            <div class=\"modal-body\" data-content>\n                ").concat(options.content ? options.content : '', "\n            </div>\n        </div>\n    </div>\n    ");
+  modal.insertAdjacentHTML('afterbegin', html);
+
+  var footer = _createFooter(options.footerButtons);
+
+  if (footer) {
+    var content = modal.querySelector('[data-content]'); // вставка элемента после определенного элемента
+
+    content.parentNode.insertBefore(footer, content.nextSibling);
+  }
+
+  document.body.appendChild(modal);
+  return modal;
+}
+
+var ANIMATION_SPEED = 200;
+
+var closeModal = function closeModal(e) {
+  if (typeof e.target.dataset.modalClose !== 'undefined') this.close();
+};
+
+var Modal = /*#__PURE__*/function () {
+  function Modal(options) {
+    _classCallCheck(this, Modal);
+
+    this.$modal = _createModal(options);
+    this.closing = false;
+    this.destroyed = false;
+    this.onClose = typeof options.onClose === 'function' ? options.onClose : function () {};
+    this.onOpen = typeof options.onOpen === 'function' ? options.onOpen : function () {};
+    this.beforeClose = typeof options.beforeClose === 'function' ? options.beforeClose : function () {
+      return true;
+    };
+    this.init();
+  }
+
+  _createClass(Modal, [{
+    key: "init",
+    value: function init() {
+      this.$modal.addEventListener('click', closeModal.bind(this));
+    }
+  }, {
+    key: "open",
+    value: function open() {
+      if (!this.destroyed) {
+        this.$modal.classList.add('open');
+        this.onOpen();
+      } else {
+        return console.log('modal destroyed');
+      }
+    }
+  }, {
+    key: "close",
+    value: function () {
+      var _close = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var _this = this;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!this.beforeClose()) {
+                  _context.next = 6;
+                  break;
+                }
+
+                this.closing = true;
+                this.$modal.classList.add('hidden');
+                this.$modal.classList.remove('open');
+                _context.next = 6;
+                return setTimeout(function () {
+                  _this.$modal.classList.remove('hidden');
+
+                  _this.onClose();
+
+                  _this.closing = false;
+                }, ANIMATION_SPEED);
+
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function close() {
+        return _close.apply(this, arguments);
+      }
+
+      return close;
+    }()
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.$modal.removeEventListener('click', closeModal);
+      this.$modal.parentNode.removeChild(this.$modal);
+      this.destroyed = true;
+    }
+  }, {
+    key: "setContent",
+    value: function setContent(html) {
+      this.$modal.querySelector('.modal-body').innerHTML = html;
+    }
+  }, {
+    key: "setTitle",
+    value: function setTitle(html) {
+      this.$modal.querySelector('.modal-title').innerHTML = html;
+    }
+  }]);
+
+  return Modal;
+}();
+
+
 
 /***/ }),
 

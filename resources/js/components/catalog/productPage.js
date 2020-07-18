@@ -2,16 +2,18 @@ import {Component} from '@core/component';
 import {addBasket} from './catalogProducts';
 import {changeBasket} from './catalogContent';
 import {deleteElement} from '../all/basket';
+import {LoaderComponent} from "@js/components/all/loader";
 
 export class ProductPageComponent extends Component {
    constructor (id, basket) {
       super(id, false);
       this.basket = basket;
       this.$el && this.init();
+
    }
 
    init() {
-
+       this.$productPreview = this.$el.querySelector('.product-preview')
       this.$addBtn = this.$el.querySelector('.add-basket');
       this.$removeBtn = this.$el.querySelector('.remove-basket');
       this.$countLabel = this.$el.querySelector('.basket-count');
@@ -35,5 +37,7 @@ export class ProductPageComponent extends Component {
          `;
          this.$removeBtn.classList.remove('hide'); // показываем кнопку удаления
       }
+
+       new LoaderComponent(this.$productPreview).unmount()
    }
 }
