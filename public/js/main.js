@@ -1941,8 +1941,7 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
         loader: this.loader
       });
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
-      this.token = this.$el.querySelector('[name="_token"]').value;
-      console.log('catalog-list', this.catalog); //Смена категории в шапке
+      this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
 
       this.header.$el.addEventListener('change-category', changeCategory.bind(this)); //Смена параметра поиска товара
 
@@ -2266,22 +2265,25 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                this.$el.classList.add('hide');
                 this.loader.show();
                 this.json = json;
-                _context.next = 4;
+                _context.next = 5;
                 return this.server.post('catalog/list', json, {
                   'Content-Type': 'application/json;charset=utf-8'
                 }, token).then(function (answer) {
                   //console.log('answer', answer)
                   if (answer.data) {
                     _this2.$el.innerHTML = productsRender(answer);
+
+                    _this2.$el.classList.remove('hide');
                   }
                 });
 
-              case 4:
+              case 5:
                 this.loader.hide();
 
-              case 5:
+              case 6:
               case "end":
                 return _context.stop();
             }

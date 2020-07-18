@@ -19,9 +19,6 @@ export class CatalogContentComponent extends Component {
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
 
-        console.log('catalog-list', this.catalog);
-
-
         //Смена категории в шапке
         this.header.$el.addEventListener('change-category', changeCategory.bind(this))
         //Смена параметра поиска товара

@@ -18,6 +18,7 @@ export class CatalogProductsComponent extends Component {
     }
 
     async send(json, token){
+        this.$el.classList.add('hide');
         this.loader.show();
         this.json = json;
         await this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
@@ -25,6 +26,7 @@ export class CatalogProductsComponent extends Component {
 
             if(answer.data){
                 this.$el.innerHTML = productsRender(answer);
+                this.$el.classList.remove('hide');
             }
         })
         this.loader.hide();
