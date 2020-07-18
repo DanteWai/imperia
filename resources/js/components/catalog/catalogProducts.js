@@ -1,11 +1,12 @@
 import {Component} from "@core/component";
 import Server from "@core/servers";
 import Lang from '@js/lang/lang';
+import {LoaderComponent} from "@js/components/all/loader";
 
 export class CatalogProductsComponent extends Component {
-    constructor(id, {loader}) {
+    constructor(id) {
         super(id);
-        this.loader = loader;
+        this.loader = new LoaderComponent();
     }
 
     init(){
@@ -18,18 +19,15 @@ export class CatalogProductsComponent extends Component {
     }
 
     async send(json, token){
-        this.$el.classList.add('hide');
-        this.loader.show();
+        this.loader.mount(this.$el)
         this.json = json;
         await this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
-            //console.log('answer', answer)
-
             if(answer.data){
                 this.$el.innerHTML = productsRender(answer);
-                this.$el.classList.remove('hide');
+                this.loader.unmount(this.$el)
             }
         })
-        this.loader.hide();
+
     }
 }
 

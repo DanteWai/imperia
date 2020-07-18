@@ -12,10 +12,5 @@
    @yield('body')
 </body>
 
-<!-- loader -->
-<div class="loader-wrap hide" id="loader">
-    <div class="lds-ripple"><div></div><div></div></div>
-</div>
-<!-- /loader-->
 <script type="text/javascript" src="/js/main.js"></script>
 </html>

@@ -6,10 +6,9 @@ import Server from "@core/servers";
 
 
 export class CatalogContentComponent extends Component {
-    constructor(id, basket, {loader}) {
+    constructor(id, {basket}) {
         super(id, false)
         this.basket = basket;
-        this.loader = loader;
         this.$el && this.init();
     }
 

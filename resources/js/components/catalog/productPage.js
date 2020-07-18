@@ -1,7 +1,7 @@
 import {Component} from '@core/component';
 import {addBasket} from './catalogProducts';
 import {changeBasket} from './catalogContent';
-import {deleteElement} from './basket';
+import {deleteElement} from '../all/basket';
 
 export class ProductPageComponent extends Component {
    constructor (id, basket) {

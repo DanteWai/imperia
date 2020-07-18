@@ -1,5 +1,5 @@
 import {Component} from "@core/component";
-import {changeTabs} from "./mainChoiceMenu";
+import {changeTabs} from "../mainPage/mainChoiceMenu";
 
 export class CatalogHeaderComponent extends Component {
     constructor(id) {

@@ -1502,44 +1502,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss_style__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_style__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! regenerator-runtime/runtime */ "./node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_calculateParam__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/calculateParam */ "./resources/js/components/calculateParam.js");
-/* harmony import */ var _components_catalogContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/catalogContent */ "./resources/js/components/catalogContent.js");
-/* harmony import */ var _components_basket__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/basket */ "./resources/js/components/basket.js");
-/* harmony import */ var _components_order__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/order */ "./resources/js/components/order.js");
-/* harmony import */ var _components_sendWrite__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/sendWrite */ "./resources/js/components/sendWrite.js");
-/* harmony import */ var _components_sendCall__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/sendCall */ "./resources/js/components/sendCall.js");
-/* harmony import */ var _components_loader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/loader */ "./resources/js/components/loader.js");
-/* harmony import */ var _components_productPage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/productPage */ "./resources/js/components/productPage.js");
+/* harmony import */ var _components_mainPage_calculateParam__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/mainPage/calculateParam */ "./resources/js/components/mainPage/calculateParam.js");
+/* harmony import */ var _components_catalog_catalogContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/catalog/catalogContent */ "./resources/js/components/catalog/catalogContent.js");
+/* harmony import */ var _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/catalog/productPage */ "./resources/js/components/catalog/productPage.js");
+/* harmony import */ var _components_order_order__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/order/order */ "./resources/js/components/order/order.js");
+/* harmony import */ var _components_footer_sendWrite__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/footer/sendWrite */ "./resources/js/components/footer/sendWrite.js");
+/* harmony import */ var _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/footer/sendCall */ "./resources/js/components/footer/sendCall.js");
+/* harmony import */ var _components_all_basket__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/all/basket */ "./resources/js/components/all/basket.js");
+//Подключение стилей
+ //Подключение полифилов
+
+ //Главная страница
+
+ //Каталог
 
 
+ //Оформление заказа
+
+ //Отправка писем в футере
 
 
-
-
-
-
+ //Общее
 
 
 window.addEventListener('load', function () {
-  var basket = new _components_basket__WEBPACK_IMPORTED_MODULE_4__["BasketComponent"]('basket');
-  var loader = new _components_loader__WEBPACK_IMPORTED_MODULE_8__["LoaderComponent"]('loader');
-  new _components_calculateParam__WEBPACK_IMPORTED_MODULE_2__["CalculateParamComponent"]('main-content'); //компонет подборщика на главной странице
+  var basket = new _components_all_basket__WEBPACK_IMPORTED_MODULE_8__["BasketComponent"]('basket');
+  var loader = new LoaderComponent();
+  new _components_mainPage_calculateParam__WEBPACK_IMPORTED_MODULE_2__["CalculateParamComponent"]('main-content'); //компонет подборщика на главной странице
 
-  new _components_catalogContent__WEBPACK_IMPORTED_MODULE_3__["CatalogContentComponent"]('catalog-content', basket, {
-    loader: loader
+  new _components_catalog_catalogContent__WEBPACK_IMPORTED_MODULE_3__["CatalogContentComponent"]('catalog-content', {
+    basket: basket
   });
-  new _components_order__WEBPACK_IMPORTED_MODULE_5__["OrderComponent"]('order');
-  new _components_sendWrite__WEBPACK_IMPORTED_MODULE_6__["SendWriteComponent"]('write');
-  new _components_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
-  new _components_productPage__WEBPACK_IMPORTED_MODULE_9__["ProductPageComponent"]('product-page', basket);
+  new _components_order_order__WEBPACK_IMPORTED_MODULE_5__["OrderComponent"]('order');
+  new _components_footer_sendWrite__WEBPACK_IMPORTED_MODULE_6__["SendWriteComponent"]('write');
+  new _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
+  new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket);
 });
 
 /***/ }),
 
-/***/ "./resources/js/components/basket.js":
-/*!*******************************************!*\
-  !*** ./resources/js/components/basket.js ***!
-  \*******************************************/
+/***/ "./resources/js/components/all/basket.js":
+/*!***********************************************!*\
+  !*** ./resources/js/components/all/basket.js ***!
+  \***********************************************/
 /*! exports provided: BasketComponent, deleteElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1730,10 +1735,866 @@ function changeCount(e) {
 
 /***/ }),
 
-/***/ "./resources/js/components/calculateParam.js":
-/*!***************************************************!*\
-  !*** ./resources/js/components/calculateParam.js ***!
-  \***************************************************/
+/***/ "./resources/js/components/all/loader.js":
+/*!***********************************************!*\
+  !*** ./resources/js/components/all/loader.js ***!
+  \***********************************************/
+/*! exports provided: LoaderComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoaderComponent", function() { return LoaderComponent; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var LoaderComponent = /*#__PURE__*/function () {
+  function LoaderComponent() {
+    _classCallCheck(this, LoaderComponent);
+
+    this.$target = null;
+  }
+
+  _createClass(LoaderComponent, [{
+    key: "mount",
+    value: function mount($target) {
+      $target.classList.add('loader-wrap');
+      $target.innerHTML = '<div class="lds-ripple"><div></div><div></div></div>';
+      this.$target = $target;
+    }
+  }, {
+    key: "unmount",
+    value: function unmount() {
+      this.$target.classList.remove('loader-wrap');
+    }
+  }]);
+
+  return LoaderComponent;
+}();
+
+/***/ }),
+
+/***/ "./resources/js/components/catalog/catalogContent.js":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/catalog/catalogContent.js ***!
+  \***********************************************************/
+/*! exports provided: CatalogContentComponent, changeBasket */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogContentComponent", function() { return CatalogContentComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeBasket", function() { return changeBasket; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _catalogHeader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogHeader */ "./resources/js/components/catalog/catalogHeader.js");
+/* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalog/catalogProducts.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+//Главный компонент отображения каталога
+
+
+
+
+var CatalogContentComponent = /*#__PURE__*/function (_Component) {
+  _inherits(CatalogContentComponent, _Component);
+
+  var _super = _createSuper(CatalogContentComponent);
+
+  function CatalogContentComponent(id, _ref) {
+    var _this;
+
+    var basket = _ref.basket;
+
+    _classCallCheck(this, CatalogContentComponent);
+
+    _this = _super.call(this, id, false);
+    _this.basket = basket;
+    _this.$el && _this.init();
+    return _this;
+  }
+
+  _createClass(CatalogContentComponent, [{
+    key: "init",
+    value: function init() {
+      this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
+      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list', {
+        loader: this.loader
+      });
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
+      this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
+
+      this.header.$el.addEventListener('change-category', changeCategory.bind(this)); //Смена параметра поиска товара
+
+      this.header.$el.addEventListener('change-param', changeParam.bind(this)); //Клик по карточке производителя
+
+      this.catalog.$el.addEventListener('click', clickBrand.bind(this)); //смена страницы
+
+      this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
+
+      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
+      checkJSON.call(this);
+    }
+  }]);
+
+  return CatalogContentComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+function changeBasket() {
+  //рендерит корзину
+  this.basket.json = localStorage.getItem('basket');
+  this.basket.fill();
+  this.basket.show();
+}
+
+function changeCategory() {
+  return _changeCategory.apply(this, arguments);
+}
+
+function _changeCategory() {
+  _changeCategory = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var answer;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            //посылает запрос при смене основной категории и получает новый html
+            this.loader.show();
+            this.catalog.$el.classList.add('hide');
+            _context.next = 4;
+            return this.server.post('catalog/switch', {
+              category_id: this.header.category_id
+            }, {}, this.token);
+
+          case 4:
+            answer = _context.sent;
+
+            if (answer.option_panel && answer.list) {
+              this.header.optionPanel.innerHTML = answer.option_panel; //смена доступных для товара опций
+
+              this.catalog.$el.innerHTML = answer.list; //?
+
+              this.loader.hide();
+              this.catalog.$el.classList.remove('hide');
+            }
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+  return _changeCategory.apply(this, arguments);
+}
+
+function clickBrand(e) {
+  var target = e.target.closest('.category-item');
+
+  if (target) {
+    var data = {
+      base_option: {
+        category_id: this.header.category_id,
+        brand_id: target.dataset.brand
+      },
+      json_option: false,
+      page: 1
+    };
+    this.catalog.send(JSON.stringify(data), this.token);
+  }
+}
+
+function changeParam(e) {
+  var data = {
+    base_option: {
+      category_id: this.header.category_id
+    },
+    json_option: {},
+    page: e.detail
+  };
+  var json_option = document.querySelectorAll('[data-option-filter="json_option"]');
+  json_option.forEach(function (j_el) {
+    var activeOptions = j_el.querySelectorAll('.active');
+
+    if (activeOptions.length) {
+      var mass = [];
+      activeOptions.forEach(function (opt) {
+        mass.push(opt.dataset.id);
+      });
+      data.json_option[j_el.dataset.filter] = mass;
+    }
+  });
+  console.log(data); //console.log(data)
+
+  this.catalog.send(JSON.stringify(data), this.token);
+}
+
+function checkJSON() {
+  var data = localStorage.getItem('product_parameters_complete');
+
+  if (data) {
+    data = JSON.parse(data);
+    delete data.params;
+    data.page = '1';
+    this.catalog.send(JSON.stringify(data), this.token);
+    localStorage.removeItem('product_parameters_complete');
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/catalog/catalogHeader.js":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/catalog/catalogHeader.js ***!
+  \**********************************************************/
+/*! exports provided: CatalogHeaderComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogHeaderComponent", function() { return CatalogHeaderComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _mainPage_mainChoiceMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mainPage/mainChoiceMenu */ "./resources/js/components/mainPage/mainChoiceMenu.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var CatalogHeaderComponent = /*#__PURE__*/function (_Component) {
+  _inherits(CatalogHeaderComponent, _Component);
+
+  var _super = _createSuper(CatalogHeaderComponent);
+
+  function CatalogHeaderComponent(id) {
+    var _this;
+
+    _classCallCheck(this, CatalogHeaderComponent);
+
+    _this = _super.call(this, id);
+    _this.event = new Event('change-category');
+    _this.category_id = 1;
+    return _this;
+  }
+
+  _createClass(CatalogHeaderComponent, [{
+    key: "init",
+    value: function init() {
+      this.menu = this.$el.querySelectorAll('.category-header');
+
+      var _iterator = _createForOfIteratorHelper(this.menu),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var el = _step.value;
+          el.addEventListener('click', _mainPage_mainChoiceMenu__WEBPACK_IMPORTED_MODULE_1__["changeTabs"].bind(this));
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      this.optionPanel = this.$el.querySelector('.options-panel');
+      this.optionPanel.addEventListener('click', dataId.bind(this));
+    }
+  }]);
+
+  return CatalogHeaderComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function dataId(e) {
+  var el = e.target.closest('[data-id]');
+
+  if (el) {
+    var select = el.closest('SELECT');
+
+    if (select) {
+      var activeInSelect = select.querySelectorAll('.active');
+
+      if (activeInSelect) {
+        var _iterator2 = _createForOfIteratorHelper(activeInSelect),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var act = _step2.value;
+            act.classList.remove('active');
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+      }
+    }
+
+    el.classList.toggle('active');
+    this.$el.dispatchEvent(new CustomEvent('change-param', {
+      detail: "1"
+    }));
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/catalog/catalogProducts.js":
+/*!************************************************************!*\
+  !*** ./resources/js/components/catalog/catalogProducts.js ***!
+  \************************************************************/
+/*! exports provided: CatalogProductsComponent, addBasket, addBasketJson */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogProductsComponent", function() { return CatalogProductsComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasket", function() { return addBasket; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasketJson", function() { return addBasketJson; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _js_lang_lang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @js/lang/lang */ "./resources/js/lang/lang.js");
+/* harmony import */ var _js_components_all_loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @js/components/all/loader */ "./resources/js/components/all/loader.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
+  _inherits(CatalogProductsComponent, _Component);
+
+  var _super = _createSuper(CatalogProductsComponent);
+
+  function CatalogProductsComponent(id) {
+    var _this;
+
+    _classCallCheck(this, CatalogProductsComponent);
+
+    _this = _super.call(this, id);
+    _this.loader = new _js_components_all_loader__WEBPACK_IMPORTED_MODULE_3__["LoaderComponent"]();
+    return _this;
+  }
+
+  _createClass(CatalogProductsComponent, [{
+    key: "init",
+    value: function init() {
+      this.json = '';
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
+      this.page = 1;
+      this.$el.addEventListener('click', pagination.bind(this));
+      this.$el.addEventListener('click', addBasket.bind(this));
+      this.event = new Event('showBasket', {
+        bubbles: false,
+        cancelable: false
+      });
+    }
+  }, {
+    key: "send",
+    value: function () {
+      var _send = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(json, token) {
+        var _this2 = this;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.loader.mount(this.$el);
+                this.json = json;
+                _context.next = 4;
+                return this.server.post('catalog/list', json, {
+                  'Content-Type': 'application/json;charset=utf-8'
+                }, token).then(function (answer) {
+                  if (answer.data) {
+                    _this2.$el.innerHTML = productsRender(answer);
+
+                    _this2.loader.unmount(_this2.$el);
+                  }
+                });
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function send(_x, _x2) {
+        return _send.apply(this, arguments);
+      }
+
+      return send;
+    }()
+  }]);
+
+  return CatalogProductsComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function productsRender(object) {
+  // рендер шаблона
+  var pagination = ''; // рендер кнопок пагинации
+
+  if (object.last_page > 1) {
+    for (var i = 1; i <= object.last_page && i <= 20; i++) {
+      pagination += "<a ".concat(object.current_page === i ? 'class="active"' : '', " data-page=\"").concat(i, "\"></a>");
+    }
+  }
+
+  var basket = localStorage.getItem('basket') ? Object.keys(JSON.parse(localStorage.getItem('basket'))) : []; // рендер карточек товаров
+
+  var products = object.data.map(function (item) {
+    var brandName = item.product.product_model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
+    var id = item.option_id;
+    return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
+      return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
+    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
+  }).join(''); // рендер всего шаблона
+
+  return "\n        <section class=\"content-filter\">\n            <div class=\"filter\">\n                <!--<p class=\"filter-trigger\">\u0424\u0438\u043B\u044C\u0442\u0440</p>-->\n            </div>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
+}
+
+function addBasket(e) {
+  var el = e.target.closest('.add-basket');
+  var input = el ? el.previousElementSibling : null;
+
+  if (el && !el.disabled) {
+    el.disabled = true;
+    el.innerHTML = "<span>Товар в корзине</span>";
+    input.classList.add('hide'); //Страница товара
+
+    this.$countLabel ? this.$countLabel.classList.add('hide') : ''; // Удаляем надпись "количество" при добавлении товара в корзину из карточки
+
+    this.$removeBtn ? this.$removeBtn.classList.remove('hide') : ''; // Показываем кнопку "удалить" в карточке товара
+    //
+
+    var value = Math.floor(Number(el.previousElementSibling.value));
+    value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1), 10); //Проверка на nan и на диапазон
+
+    addBasketJson(el.dataset.optionId, value);
+    el.previousElementSibling.value = 1; // Возвращаем input в исходное значение
+
+    this.$el.dispatchEvent(this.event);
+  }
+}
+function addBasketJson(id, count) {
+  var basket = localStorage.getItem('basket');
+  var data = {};
+  if (basket) data = JSON.parse(basket);
+  data[id] = count;
+  localStorage.setItem('basket', JSON.stringify(data));
+}
+
+function pagination(e) {
+  var el = e.target.closest('[data-page]');
+
+  if (el && !el.classList.contains('active')) {
+    var paginations = this.$el.querySelectorAll('.pagination a.active');
+    paginations.forEach(function (el) {
+      el.classList.remove('active');
+    });
+    el.classList.add('active');
+    this.page = el.dataset.page;
+    this.$el.dispatchEvent(new CustomEvent('change-page', {
+      detail: this.page
+    }));
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/catalog/productPage.js":
+/*!********************************************************!*\
+  !*** ./resources/js/components/catalog/productPage.js ***!
+  \********************************************************/
+/*! exports provided: ProductPageComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductPageComponent", function() { return ProductPageComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalog/catalogProducts.js");
+/* harmony import */ var _catalogContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogContent */ "./resources/js/components/catalog/catalogContent.js");
+/* harmony import */ var _all_basket__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../all/basket */ "./resources/js/components/all/basket.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var ProductPageComponent = /*#__PURE__*/function (_Component) {
+  _inherits(ProductPageComponent, _Component);
+
+  var _super = _createSuper(ProductPageComponent);
+
+  function ProductPageComponent(id, basket) {
+    var _this;
+
+    _classCallCheck(this, ProductPageComponent);
+
+    _this = _super.call(this, id, false);
+    _this.basket = basket;
+    _this.$el && _this.init();
+    return _this;
+  }
+
+  _createClass(ProductPageComponent, [{
+    key: "init",
+    value: function init() {
+      this.$addBtn = this.$el.querySelector('.add-basket');
+      this.$removeBtn = this.$el.querySelector('.remove-basket');
+      this.$countLabel = this.$el.querySelector('.basket-count');
+      this.$input = this.$el.querySelector('.basket-block > input');
+      this.event = new Event('showBasket', {
+        bubbles: false,
+        cancelable: false
+      });
+      this.id = this.$addBtn.dataset.optionId;
+      this.json = localStorage.getItem('basket');
+      this.$addBtn.addEventListener('click', _catalogProducts__WEBPACK_IMPORTED_MODULE_1__["addBasket"].bind(this));
+      this.$el.addEventListener('showBasket', _catalogContent__WEBPACK_IMPORTED_MODULE_2__["changeBasket"].bind(this));
+      this.$removeBtn.addEventListener('click', _all_basket__WEBPACK_IMPORTED_MODULE_3__["deleteElement"].bind(this.basket));
+
+      if (this.basket.json && Object.keys(JSON.parse(this.basket.json)).includes(this.id)) {
+        this.$countLabel.classList.add('hide'); // скрываем надпись
+
+        this.$input.classList.add('hide'); // скрываем инпут
+
+        this.$addBtn.disabled = true; // блокируем кнопку
+
+        this.$addBtn.innerHTML = "\n            <span>\u0422\u043E\u0432\u0430\u0440 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0435</span>\n         ";
+        this.$removeBtn.classList.remove('hide'); // показываем кнопку удаления
+      }
+    }
+  }]);
+
+  return ProductPageComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/***/ }),
+
+/***/ "./resources/js/components/footer/sendCall.js":
+/*!****************************************************!*\
+  !*** ./resources/js/components/footer/sendCall.js ***!
+  \****************************************************/
+/*! exports provided: SendCallComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendCallComponent", function() { return SendCallComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
+/* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var SendCallComponent = /*#__PURE__*/function (_Component) {
+  _inherits(SendCallComponent, _Component);
+
+  var _super = _createSuper(SendCallComponent);
+
+  function SendCallComponent(id) {
+    _classCallCheck(this, SendCallComponent);
+
+    return _super.call(this, id);
+  }
+
+  _createClass(SendCallComponent, [{
+    key: "init",
+    value: function init() {
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
+      this.btn = this.$el.querySelector('.call');
+      this.send = this.$el.querySelector('.send');
+      this.close = this.$el.querySelector('.f-btn-close');
+      this.$form = this.$el.querySelector('form');
+      this.token = this.$el.querySelector('[name="_token"]').value;
+      this.$form.addEventListener('submit', submitHandler.bind(this));
+      this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
+        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].phoneValid]
+      });
+      this.btn.addEventListener('click', collapse.bind(this));
+      this.close.addEventListener('click', collapse.bind(this));
+    }
+  }]);
+
+  return SendCallComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function collapse(e) {
+  var target = e.target;
+  var parent = target.closest('#call');
+  var collapse = parent.querySelector('.js-collapse');
+  collapse.classList.toggle('collapse');
+}
+
+function submitHandler(e) {
+  e.preventDefault();
+  var parent = e.target.closest('.js-collapse');
+
+  if (this.submit.isValid()) {
+    var formData = _objectSpread(_objectSpread({}, this.submit.value()), {}, {
+      type: 'f_phone'
+    });
+
+    this.submit.clear();
+    parent.classList.add('collapse');
+    this.server.post('send_mail', JSON.stringify(formData), {
+      'Content-Type': 'application/json;charset=utf-8'
+    }, this.token).then(function (answer) {
+      console.log(answer);
+
+      if (answer.success) {//
+      } else {//
+        }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/footer/sendWrite.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/footer/sendWrite.js ***!
+  \*****************************************************/
+/*! exports provided: SendWriteComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendWriteComponent", function() { return SendWriteComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
+/* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var SendWriteComponent = /*#__PURE__*/function (_Component) {
+  _inherits(SendWriteComponent, _Component);
+
+  var _super = _createSuper(SendWriteComponent);
+
+  function SendWriteComponent(id) {
+    _classCallCheck(this, SendWriteComponent);
+
+    return _super.call(this, id);
+  }
+
+  _createClass(SendWriteComponent, [{
+    key: "init",
+    value: function init() {
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
+      this.btn = this.$el.querySelector('.write');
+      this.send = this.$el.querySelector('.send');
+      this.close = this.$el.querySelector('.f-btn-close');
+      this.$form = this.$el.querySelector('form');
+      this.token = this.$el.querySelector('[name="_token"]').value;
+      this.$form.addEventListener('submit', submitHandler.bind(this));
+      this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
+        fio: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+        email: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].phoneValid],
+        message: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].minLength(10)]
+      });
+      this.btn.addEventListener('click', collapse.bind(this));
+      this.close.addEventListener('click', collapse.bind(this));
+    }
+  }]);
+
+  return SendWriteComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function collapse(e) {
+  var target = e.target;
+  var parent = target.closest('#write');
+  var collapse = parent.querySelector('.js-collapse');
+  collapse.classList.toggle('collapse');
+}
+
+function submitHandler(e) {
+  e.preventDefault();
+  var parent = e.target.closest('.js-collapse');
+
+  if (this.submit.isValid()) {
+    var formData = _objectSpread(_objectSpread({}, this.submit.value()), {}, {
+      type: 'f_message'
+    });
+
+    this.submit.clear();
+    parent.classList.add('collapse');
+    this.server.post('send_mail', JSON.stringify(formData), {
+      'Content-Type': 'application/json;charset=utf-8'
+    }, this.token).then(function (answer) {
+      console.log(answer);
+
+      if (answer.success) {//
+      } else {//
+        }
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/mainPage/calculateParam.js":
+/*!************************************************************!*\
+  !*** ./resources/js/components/mainPage/calculateParam.js ***!
+  \************************************************************/
 /*! exports provided: CalculateParamComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1741,8 +2602,8 @@ function changeCount(e) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalculateParamComponent", function() { return CalculateParamComponent; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _mainChoiceMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mainChoiceMenu */ "./resources/js/components/mainChoiceMenu.js");
-/* harmony import */ var _mainChoiceList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mainChoiceList */ "./resources/js/components/mainChoiceList.js");
+/* harmony import */ var _mainChoiceMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mainChoiceMenu */ "./resources/js/components/mainPage/mainChoiceMenu.js");
+/* harmony import */ var _mainChoiceList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mainChoiceList */ "./resources/js/components/mainPage/mainChoiceList.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -1887,562 +2748,10 @@ function jsonRequestDate() {
 
 /***/ }),
 
-/***/ "./resources/js/components/catalogContent.js":
-/*!***************************************************!*\
-  !*** ./resources/js/components/catalogContent.js ***!
-  \***************************************************/
-/*! exports provided: CatalogContentComponent, changeBasket */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogContentComponent", function() { return CatalogContentComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeBasket", function() { return changeBasket; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _catalogHeader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogHeader */ "./resources/js/components/catalogHeader.js");
-/* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalogProducts.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-//Главный компонент отображения каталога
-
-
-
-
-var CatalogContentComponent = /*#__PURE__*/function (_Component) {
-  _inherits(CatalogContentComponent, _Component);
-
-  var _super = _createSuper(CatalogContentComponent);
-
-  function CatalogContentComponent(id, basket, _ref) {
-    var _this;
-
-    var loader = _ref.loader;
-
-    _classCallCheck(this, CatalogContentComponent);
-
-    _this = _super.call(this, id, false);
-    _this.basket = basket;
-    _this.loader = loader;
-    _this.$el && _this.init();
-    return _this;
-  }
-
-  _createClass(CatalogContentComponent, [{
-    key: "init",
-    value: function init() {
-      this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
-      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list', {
-        loader: this.loader
-      });
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
-      this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
-
-      this.header.$el.addEventListener('change-category', changeCategory.bind(this)); //Смена параметра поиска товара
-
-      this.header.$el.addEventListener('change-param', changeParam.bind(this)); //Клик по карточке производителя
-
-      this.catalog.$el.addEventListener('click', clickBrand.bind(this)); //смена страницы
-
-      this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
-
-      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
-      checkJSON.call(this);
-    }
-  }]);
-
-  return CatalogContentComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-function changeBasket() {
-  //рендерит корзину
-  this.basket.json = localStorage.getItem('basket');
-  this.basket.fill();
-  this.basket.show();
-}
-
-function changeCategory() {
-  return _changeCategory.apply(this, arguments);
-}
-
-function _changeCategory() {
-  _changeCategory = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var answer;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            //посылает запрос при смене основной категории и получает новый html
-            this.loader.show();
-            this.catalog.$el.classList.add('hide');
-            _context.next = 4;
-            return this.server.post('catalog/switch', {
-              category_id: this.header.category_id
-            }, {}, this.token);
-
-          case 4:
-            answer = _context.sent;
-
-            if (answer.option_panel && answer.list) {
-              this.header.optionPanel.innerHTML = answer.option_panel; //смена доступных для товара опций
-
-              this.catalog.$el.innerHTML = answer.list; //?
-
-              this.loader.hide();
-              this.catalog.$el.classList.remove('hide');
-            }
-
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-  return _changeCategory.apply(this, arguments);
-}
-
-function clickBrand(e) {
-  var target = e.target.closest('.category-item');
-
-  if (target) {
-    var data = {
-      base_option: {
-        category_id: this.header.category_id,
-        brand_id: target.dataset.brand
-      },
-      json_option: false,
-      page: 1
-    };
-    this.catalog.send(JSON.stringify(data), this.token);
-  }
-}
-
-function changeParam(e) {
-  var data = {
-    base_option: {
-      category_id: this.header.category_id
-    },
-    json_option: {},
-    page: e.detail
-  };
-  var json_option = document.querySelectorAll('[data-option-filter="json_option"]');
-  json_option.forEach(function (j_el) {
-    var activeOptions = j_el.querySelectorAll('.active');
-
-    if (activeOptions.length) {
-      var mass = [];
-      activeOptions.forEach(function (opt) {
-        mass.push(opt.dataset.id);
-      });
-      data.json_option[j_el.dataset.filter] = mass;
-    }
-  });
-  console.log(data); //console.log(data)
-
-  this.catalog.send(JSON.stringify(data), this.token);
-}
-
-function checkJSON() {
-  var data = localStorage.getItem('product_parameters_complete');
-
-  if (data) {
-    data = JSON.parse(data);
-    delete data.params;
-    data.page = '1';
-    this.catalog.send(JSON.stringify(data), this.token);
-    localStorage.removeItem('product_parameters_complete');
-  }
-}
-
-/***/ }),
-
-/***/ "./resources/js/components/catalogHeader.js":
-/*!**************************************************!*\
-  !*** ./resources/js/components/catalogHeader.js ***!
-  \**************************************************/
-/*! exports provided: CatalogHeaderComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogHeaderComponent", function() { return CatalogHeaderComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _mainChoiceMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mainChoiceMenu */ "./resources/js/components/mainChoiceMenu.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var CatalogHeaderComponent = /*#__PURE__*/function (_Component) {
-  _inherits(CatalogHeaderComponent, _Component);
-
-  var _super = _createSuper(CatalogHeaderComponent);
-
-  function CatalogHeaderComponent(id) {
-    var _this;
-
-    _classCallCheck(this, CatalogHeaderComponent);
-
-    _this = _super.call(this, id);
-    _this.event = new Event('change-category');
-    _this.category_id = 1;
-    return _this;
-  }
-
-  _createClass(CatalogHeaderComponent, [{
-    key: "init",
-    value: function init() {
-      this.menu = this.$el.querySelectorAll('.category-header');
-
-      var _iterator = _createForOfIteratorHelper(this.menu),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var el = _step.value;
-          el.addEventListener('click', _mainChoiceMenu__WEBPACK_IMPORTED_MODULE_1__["changeTabs"].bind(this));
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      this.optionPanel = this.$el.querySelector('.options-panel');
-      this.optionPanel.addEventListener('click', dataId.bind(this));
-    }
-  }]);
-
-  return CatalogHeaderComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-function dataId(e) {
-  var el = e.target.closest('[data-id]');
-
-  if (el) {
-    var select = el.closest('SELECT');
-
-    if (select) {
-      var activeInSelect = select.querySelectorAll('.active');
-
-      if (activeInSelect) {
-        var _iterator2 = _createForOfIteratorHelper(activeInSelect),
-            _step2;
-
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var act = _step2.value;
-            act.classList.remove('active');
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
-        }
-      }
-    }
-
-    el.classList.toggle('active');
-    this.$el.dispatchEvent(new CustomEvent('change-param', {
-      detail: "1"
-    }));
-  }
-}
-
-/***/ }),
-
-/***/ "./resources/js/components/catalogProducts.js":
-/*!****************************************************!*\
-  !*** ./resources/js/components/catalogProducts.js ***!
-  \****************************************************/
-/*! exports provided: CatalogProductsComponent, addBasket, addBasketJson */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CatalogProductsComponent", function() { return CatalogProductsComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasket", function() { return addBasket; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBasketJson", function() { return addBasketJson; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-/* harmony import */ var _js_lang_lang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @js/lang/lang */ "./resources/js/lang/lang.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
-  _inherits(CatalogProductsComponent, _Component);
-
-  var _super = _createSuper(CatalogProductsComponent);
-
-  function CatalogProductsComponent(id, _ref) {
-    var _this;
-
-    var loader = _ref.loader;
-
-    _classCallCheck(this, CatalogProductsComponent);
-
-    _this = _super.call(this, id);
-    _this.loader = loader;
-    return _this;
-  }
-
-  _createClass(CatalogProductsComponent, [{
-    key: "init",
-    value: function init() {
-      this.json = '';
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
-      this.page = 1;
-      this.$el.addEventListener('click', pagination.bind(this));
-      this.$el.addEventListener('click', addBasket.bind(this));
-      this.event = new Event('showBasket', {
-        bubbles: false,
-        cancelable: false
-      });
-    }
-  }, {
-    key: "send",
-    value: function () {
-      var _send = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(json, token) {
-        var _this2 = this;
-
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                this.$el.classList.add('hide');
-                this.loader.show();
-                this.json = json;
-                _context.next = 5;
-                return this.server.post('catalog/list', json, {
-                  'Content-Type': 'application/json;charset=utf-8'
-                }, token).then(function (answer) {
-                  //console.log('answer', answer)
-                  if (answer.data) {
-                    _this2.$el.innerHTML = productsRender(answer);
-
-                    _this2.$el.classList.remove('hide');
-                  }
-                });
-
-              case 5:
-                this.loader.hide();
-
-              case 6:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      function send(_x, _x2) {
-        return _send.apply(this, arguments);
-      }
-
-      return send;
-    }()
-  }]);
-
-  return CatalogProductsComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-function productsRender(object) {
-  // рендер шаблона
-  var pagination = ''; // рендер кнопок пагинации
-
-  if (object.last_page > 1) {
-    for (var i = 1; i <= object.last_page && i <= 20; i++) {
-      pagination += "<a ".concat(object.current_page === i ? 'class="active"' : '', " data-page=\"").concat(i, "\"></a>");
-    }
-  }
-
-  var basket = localStorage.getItem('basket') ? Object.keys(JSON.parse(localStorage.getItem('basket'))) : []; // рендер карточек товаров
-
-  var products = object.data.map(function (item) {
-    var brandName = item.product.product_model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
-    var id = item.option_id;
-    return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
-      return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
-    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
-  }).join(''); // рендер всего шаблона
-
-  return "\n        <section class=\"content-filter\">\n            <div class=\"filter\">\n                <!--<p class=\"filter-trigger\">\u0424\u0438\u043B\u044C\u0442\u0440</p>-->\n            </div>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
-}
-
-function addBasket(e) {
-  var el = e.target.closest('.add-basket');
-  var input = el ? el.previousElementSibling : null;
-
-  if (el && !el.disabled) {
-    el.disabled = true;
-    el.innerHTML = "<span>Товар в корзине</span>";
-    input.classList.add('hide'); //Страница товара
-
-    this.$countLabel ? this.$countLabel.classList.add('hide') : ''; // Удаляем надпись "количество" при добавлении товара в корзину из карточки
-
-    this.$removeBtn ? this.$removeBtn.classList.remove('hide') : ''; // Показываем кнопку "удалить" в карточке товара
-    //
-
-    var value = Math.floor(Number(el.previousElementSibling.value));
-    value = Number.isNaN(value) ? 1 : Math.min(Math.max(value, 1), 10); //Проверка на nan и на диапазон
-
-    addBasketJson(el.dataset.optionId, value);
-    el.previousElementSibling.value = 1; // Возвращаем input в исходное значение
-
-    this.$el.dispatchEvent(this.event);
-  }
-}
-function addBasketJson(id, count) {
-  var basket = localStorage.getItem('basket');
-  var data = {};
-  if (basket) data = JSON.parse(basket);
-  data[id] = count;
-  localStorage.setItem('basket', JSON.stringify(data));
-}
-
-function pagination(e) {
-  var el = e.target.closest('[data-page]');
-
-  if (el && !el.classList.contains('active')) {
-    var paginations = this.$el.querySelectorAll('.pagination a.active');
-    paginations.forEach(function (el) {
-      el.classList.remove('active');
-    });
-    el.classList.add('active');
-    this.page = el.dataset.page;
-    this.$el.dispatchEvent(new CustomEvent('change-page', {
-      detail: this.page
-    }));
-  }
-}
-
-/***/ }),
-
-/***/ "./resources/js/components/loader.js":
-/*!*******************************************!*\
-  !*** ./resources/js/components/loader.js ***!
-  \*******************************************/
-/*! exports provided: LoaderComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoaderComponent", function() { return LoaderComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-var LoaderComponent = /*#__PURE__*/function (_Component) {
-  _inherits(LoaderComponent, _Component);
-
-  var _super = _createSuper(LoaderComponent);
-
-  function LoaderComponent(id) {
-    _classCallCheck(this, LoaderComponent);
-
-    return _super.call(this, id);
-  }
-
-  return LoaderComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/***/ }),
-
-/***/ "./resources/js/components/mainChoiceList.js":
-/*!***************************************************!*\
-  !*** ./resources/js/components/mainChoiceList.js ***!
-  \***************************************************/
+/***/ "./resources/js/components/mainPage/mainChoiceList.js":
+/*!************************************************************!*\
+  !*** ./resources/js/components/mainPage/mainChoiceList.js ***!
+  \************************************************************/
 /*! exports provided: MainChoiceListComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2583,10 +2892,10 @@ function dataId(e) {
 
 /***/ }),
 
-/***/ "./resources/js/components/mainChoiceMenu.js":
-/*!***************************************************!*\
-  !*** ./resources/js/components/mainChoiceMenu.js ***!
-  \***************************************************/
+/***/ "./resources/js/components/mainPage/mainChoiceMenu.js":
+/*!************************************************************!*\
+  !*** ./resources/js/components/mainPage/mainChoiceMenu.js ***!
+  \************************************************************/
 /*! exports provided: MainChoiceMenuComponent, changeTabs */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2663,10 +2972,10 @@ function changeTabs(e) {
 
 /***/ }),
 
-/***/ "./resources/js/components/order.js":
-/*!******************************************!*\
-  !*** ./resources/js/components/order.js ***!
-  \******************************************/
+/***/ "./resources/js/components/order/order.js":
+/*!************************************************!*\
+  !*** ./resources/js/components/order/order.js ***!
+  \************************************************/
 /*! exports provided: OrderComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2809,320 +3118,6 @@ function ValidDPickup() {
   this.complete.disabled = false;
   document.getElementById('pickup_p').checked = true;
   document.getElementById('pickup_p').checked = true;
-}
-
-/***/ }),
-
-/***/ "./resources/js/components/productPage.js":
-/*!************************************************!*\
-  !*** ./resources/js/components/productPage.js ***!
-  \************************************************/
-/*! exports provided: ProductPageComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductPageComponent", function() { return ProductPageComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalogProducts.js");
-/* harmony import */ var _catalogContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogContent */ "./resources/js/components/catalogContent.js");
-/* harmony import */ var _basket__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./basket */ "./resources/js/components/basket.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-
-var ProductPageComponent = /*#__PURE__*/function (_Component) {
-  _inherits(ProductPageComponent, _Component);
-
-  var _super = _createSuper(ProductPageComponent);
-
-  function ProductPageComponent(id, basket) {
-    var _this;
-
-    _classCallCheck(this, ProductPageComponent);
-
-    _this = _super.call(this, id, false);
-    _this.basket = basket;
-    _this.$el && _this.init();
-    return _this;
-  }
-
-  _createClass(ProductPageComponent, [{
-    key: "init",
-    value: function init() {
-      this.$addBtn = this.$el.querySelector('.add-basket');
-      this.$removeBtn = this.$el.querySelector('.remove-basket');
-      this.$countLabel = this.$el.querySelector('.basket-count');
-      this.$input = this.$el.querySelector('.basket-block > input');
-      this.event = new Event('showBasket', {
-        bubbles: false,
-        cancelable: false
-      });
-      this.id = this.$addBtn.dataset.optionId;
-      this.json = localStorage.getItem('basket');
-      this.$addBtn.addEventListener('click', _catalogProducts__WEBPACK_IMPORTED_MODULE_1__["addBasket"].bind(this));
-      this.$el.addEventListener('showBasket', _catalogContent__WEBPACK_IMPORTED_MODULE_2__["changeBasket"].bind(this));
-      this.$removeBtn.addEventListener('click', _basket__WEBPACK_IMPORTED_MODULE_3__["deleteElement"].bind(this.basket));
-
-      if (this.basket.json && Object.keys(JSON.parse(this.basket.json)).includes(this.id)) {
-        this.$countLabel.classList.add('hide'); // скрываем надпись
-
-        this.$input.classList.add('hide'); // скрываем инпут
-
-        this.$addBtn.disabled = true; // блокируем кнопку
-
-        this.$addBtn.innerHTML = "\n            <span>\u0422\u043E\u0432\u0430\u0440 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0435</span>\n         ";
-        this.$removeBtn.classList.remove('hide'); // показываем кнопку удаления
-      }
-    }
-  }]);
-
-  return ProductPageComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/***/ }),
-
-/***/ "./resources/js/components/sendCall.js":
-/*!*********************************************!*\
-  !*** ./resources/js/components/sendCall.js ***!
-  \*********************************************/
-/*! exports provided: SendCallComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendCallComponent", function() { return SendCallComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-/* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
-/* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-
-var SendCallComponent = /*#__PURE__*/function (_Component) {
-  _inherits(SendCallComponent, _Component);
-
-  var _super = _createSuper(SendCallComponent);
-
-  function SendCallComponent(id) {
-    _classCallCheck(this, SendCallComponent);
-
-    return _super.call(this, id);
-  }
-
-  _createClass(SendCallComponent, [{
-    key: "init",
-    value: function init() {
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
-      this.btn = this.$el.querySelector('.call');
-      this.send = this.$el.querySelector('.send');
-      this.close = this.$el.querySelector('.f-btn-close');
-      this.$form = this.$el.querySelector('form');
-      this.token = this.$el.querySelector('[name="_token"]').value;
-      this.$form.addEventListener('submit', submitHandler.bind(this));
-      this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
-        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].phoneValid]
-      });
-      this.btn.addEventListener('click', collapse.bind(this));
-      this.close.addEventListener('click', collapse.bind(this));
-    }
-  }]);
-
-  return SendCallComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-function collapse(e) {
-  var target = e.target;
-  var parent = target.closest('#call');
-  var collapse = parent.querySelector('.js-collapse');
-  collapse.classList.toggle('collapse');
-}
-
-function submitHandler(e) {
-  e.preventDefault();
-  var parent = e.target.closest('.js-collapse');
-
-  if (this.submit.isValid()) {
-    var formData = _objectSpread(_objectSpread({}, this.submit.value()), {}, {
-      type: 'f_phone'
-    });
-
-    this.submit.clear();
-    parent.classList.add('collapse');
-    this.server.post('send_mail', JSON.stringify(formData), {
-      'Content-Type': 'application/json;charset=utf-8'
-    }, this.token).then(function (answer) {
-      console.log(answer);
-
-      if (answer.success) {//
-      } else {//
-        }
-    });
-  }
-}
-
-/***/ }),
-
-/***/ "./resources/js/components/sendWrite.js":
-/*!**********************************************!*\
-  !*** ./resources/js/components/sendWrite.js ***!
-  \**********************************************/
-/*! exports provided: SendWriteComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SendWriteComponent", function() { return SendWriteComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-/* harmony import */ var _core_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/form */ "./resources/js/core/form.js");
-/* harmony import */ var _core_validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/validators */ "./resources/js/core/validators.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-
-var SendWriteComponent = /*#__PURE__*/function (_Component) {
-  _inherits(SendWriteComponent, _Component);
-
-  var _super = _createSuper(SendWriteComponent);
-
-  function SendWriteComponent(id) {
-    _classCallCheck(this, SendWriteComponent);
-
-    return _super.call(this, id);
-  }
-
-  _createClass(SendWriteComponent, [{
-    key: "init",
-    value: function init() {
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
-      this.btn = this.$el.querySelector('.write');
-      this.send = this.$el.querySelector('.send');
-      this.close = this.$el.querySelector('.f-btn-close');
-      this.$form = this.$el.querySelector('form');
-      this.token = this.$el.querySelector('[name="_token"]').value;
-      this.$form.addEventListener('submit', submitHandler.bind(this));
-      this.submit = new _core_form__WEBPACK_IMPORTED_MODULE_2__["Form"](this.$form, {
-        fio: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
-        email: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
-        phone: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].phoneValid],
-        message: [_core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _core_validators__WEBPACK_IMPORTED_MODULE_3__["Validators"].minLength(10)]
-      });
-      this.btn.addEventListener('click', collapse.bind(this));
-      this.close.addEventListener('click', collapse.bind(this));
-    }
-  }]);
-
-  return SendWriteComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-function collapse(e) {
-  var target = e.target;
-  var parent = target.closest('#write');
-  var collapse = parent.querySelector('.js-collapse');
-  collapse.classList.toggle('collapse');
-}
-
-function submitHandler(e) {
-  e.preventDefault();
-  var parent = e.target.closest('.js-collapse');
-
-  if (this.submit.isValid()) {
-    var formData = _objectSpread(_objectSpread({}, this.submit.value()), {}, {
-      type: 'f_message'
-    });
-
-    this.submit.clear();
-    parent.classList.add('collapse');
-    this.server.post('send_mail', JSON.stringify(formData), {
-      'Content-Type': 'application/json;charset=utf-8'
-    }, this.token).then(function (answer) {
-      console.log(answer);
-
-      if (answer.success) {//
-      } else {//
-        }
-    });
-  }
 }
 
 /***/ }),
