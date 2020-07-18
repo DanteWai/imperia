@@ -26,18 +26,26 @@ window.addEventListener('load',() => {
     new SendCallComponent('call');
     new ProductPageComponent('product-page', basket);
 
+
+    //Конфигурация модального окна
     const modal = new Modal({
-        showHeader:false,
-        onOpen(){
+        showHeader:false, //Не показывать title
+        onOpen(){ //Действия при открытии окна
+            //Подождать 2 секунды и закрыть окно
             setTimeout(() =>{
+                //окно закрывается асинхронно
                 modal.close().then(() => {
+                    //После того как оно закрылось уничтожить html
                     modal.destroy()
                 })
             },2000)
         }
     })
+
     setTimeout(function () {
+        //Вставить контент в сообщение
         modal.setContent(`<p>Ваше сообщение успешно отправлено</p>`)
+        //Открыть окно
         modal.open()
     }, 2000)
 
