@@ -83,9 +83,11 @@ function productsRender(object){ // рендер шаблона
     // рендер всего шаблона
     return `
         <section class="content-filter">
-            <div class="filter">
-                <!--<p class="filter-trigger">Фильтр</p>-->
-            </div>
+            <button class="filter">
+                <svg class="filter-icon">
+                    <use xlink:href="/public/images/sprite.svg#filter"></use>
+                </svg>
+            </button>
             <div class="pagination">
                 ${pagination}
             </div>

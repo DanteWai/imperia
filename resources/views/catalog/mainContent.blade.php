@@ -14,7 +14,7 @@
             {!! $option_panel !!}
         </div>
     </section>
-    <section class="filter-panel">
+    <section class="filter-panel" id="filter-panel">
         {!! $filter_panel !!}
     </section>
     <section class="product-list" id="product-list">

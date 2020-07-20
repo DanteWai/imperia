@@ -1736,6 +1736,82 @@ function changeCount(e) {
 
 /***/ }),
 
+/***/ "./resources/js/components/all/filter.js":
+/*!***********************************************!*\
+  !*** ./resources/js/components/all/filter.js ***!
+  \***********************************************/
+/*! exports provided: FilterComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FilterComponent", function() { return FilterComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var FilterComponent = /*#__PURE__*/function (_Component) {
+  _inherits(FilterComponent, _Component);
+
+  var _super = _createSuper(FilterComponent);
+
+  function FilterComponent(id) {
+    _classCallCheck(this, FilterComponent);
+
+    return _super.call(this, id);
+  }
+
+  _createClass(FilterComponent, [{
+    key: "init",
+    value: function init() {
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
+      this.event = new Event('showFilter', {
+        bubbles: false,
+        cancelable: false
+      });
+      this.$catalog = document.getElementById('catalog-content');
+      this.$catalog.addEventListener('click', collapse.bind(this));
+    }
+  }]);
+
+  return FilterComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function collapse(e) {
+  var target = e.target.closest('.filter');
+
+  if (target) {
+    this.$el.classList.toggle('active');
+    var icon = this.$el.classList.contains('active') ? 'arrow-left' : 'filter';
+    target.innerHTML = "\n      <svg class=\"filter-icon\">\n         <use xlink:href=\"/public/images/sprite.svg#".concat(icon, "\"></use>\n      </svg>\n      ");
+    this.$el.dispatchEvent(this.event);
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/components/all/loader.js":
 /*!***********************************************!*\
   !*** ./resources/js/components/all/loader.js ***!
@@ -1798,6 +1874,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalog/catalogProducts.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _js_components_all_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @js/components/all/loader */ "./resources/js/components/all/loader.js");
+/* harmony import */ var _all_filter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../all/filter */ "./resources/js/components/all/filter.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1830,6 +1907,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var CatalogContentComponent = /*#__PURE__*/function (_Component) {
   _inherits(CatalogContentComponent, _Component);
 
@@ -1854,6 +1932,7 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
     value: function init() {
       this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
       this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list');
+      this.filter = new _all_filter__WEBPACK_IMPORTED_MODULE_5__["FilterComponent"]('filter-panel');
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
       this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
 
@@ -1865,13 +1944,21 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 
       this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
 
-      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
+      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this)); // показ фильтра
+
+      this.$el.addEventListener('showFilter', showFilter.bind(this));
       checkJSON.call(this);
     }
   }]);
 
   return CatalogContentComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function showFilter(e) {
+  console.log('filter', this.filter);
+  this.filter.collapse();
+}
+
 function changeBasket() {
   //рендерит корзину
   this.basket.json = localStorage.getItem('basket');
@@ -2229,7 +2316,7 @@ function productsRender(object) {
     }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
   }).join(''); // рендер всего шаблона
 
-  return "\n        <section class=\"content-filter\">\n            <div class=\"filter\">\n                <!--<p class=\"filter-trigger\">\u0424\u0438\u043B\u044C\u0442\u0440</p>-->\n            </div>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
+  return "\n        <section class=\"content-filter\">\n            <button class=\"filter\">\n                <svg class=\"filter-icon\">\n                    <use xlink:href=\"/public/images/sprite.svg#filter\"></use>\n                </svg>\n            </button>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
 }
 
 function addBasket(e) {
@@ -2910,7 +2997,7 @@ var MainChoiceListComponent = /*#__PURE__*/function (_Component) {
                 answer = _context.sent;
 
                 if (answer.status) {
-                  _context.next = 12;
+                  _context.next = 11;
                   break;
                 }
 
@@ -2923,13 +3010,13 @@ var MainChoiceListComponent = /*#__PURE__*/function (_Component) {
 
                 for (i = 0; i < this.$el.children.length; i++) {
                   this.$el.children[i].classList.add('run');
-                }
+                } //jQuery('.scrollbar-inner').scrollbar();
 
-                jQuery('.scrollbar-inner').scrollbar();
+
                 this.$el.style.opacity = "";
                 myLoop(this.$el.children, 0, "run");
 
-              case 12:
+              case 11:
               case "end":
                 return _context.stop();
             }

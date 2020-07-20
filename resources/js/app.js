@@ -18,7 +18,7 @@ import Modal from "@core/modal";
 
 
 window.addEventListener('load',() => {
-    const basket = new BasketComponent('basket')
+    const basket = new BasketComponent('basket');
     new CalculateParamComponent('main-content') //компонет подборщика на главной странице
     new CatalogContentComponent('catalog-content',  {basket})
     new OrderComponent('order')

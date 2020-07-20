@@ -29,7 +29,7 @@ export class MainChoiceListComponent extends Component{
             for(let i = 0; i < this.$el.children.length;i++){
                 this.$el.children[i].classList.add('run')
             }
-            jQuery('.scrollbar-inner').scrollbar();
+            //jQuery('.scrollbar-inner').scrollbar();
             this.$el.style.opacity = "";
             myLoop(this.$el.children, 0, "run");
         }

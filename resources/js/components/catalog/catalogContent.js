@@ -4,6 +4,7 @@ import {CatalogHeaderComponent} from "./catalogHeader";
 import {CatalogProductsComponent} from "./catalogProducts";
 import Server from "@core/servers";
 import {LoaderComponent} from "@js/components/all/loader";
+import {FilterComponent} from './../all/filter';
 
 
 export class CatalogContentComponent extends Component {
@@ -16,7 +17,8 @@ export class CatalogContentComponent extends Component {
 
     init(){
         this.header = new CatalogHeaderComponent('header')
-        this.catalog = new CatalogProductsComponent('product-list')
+        this.catalog = new CatalogProductsComponent('product-list');
+        this.filter = new FilterComponent('filter-panel');
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
 
@@ -30,11 +32,18 @@ export class CatalogContentComponent extends Component {
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
         //показ корзины
         this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
+        // показ фильтра
+        this.$el.addEventListener('showFilter', showFilter.bind(this));
 
 
         checkJSON.call(this)
     }
 
+}
+
+function showFilter(e) {
+    console.log('filter', this.filter);
+    this.filter.collapse();
 }
 
 export function changeBasket() {
