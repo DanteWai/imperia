@@ -1797,6 +1797,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _catalogHeader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./catalogHeader */ "./resources/js/components/catalog/catalogHeader.js");
 /* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalog/catalogProducts.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _js_components_all_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @js/components/all/loader */ "./resources/js/components/all/loader.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1828,6 +1829,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var CatalogContentComponent = /*#__PURE__*/function (_Component) {
   _inherits(CatalogContentComponent, _Component);
 
@@ -1842,6 +1844,7 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, id, false);
     _this.basket = basket;
+    _this.loader = new _js_components_all_loader__WEBPACK_IMPORTED_MODULE_4__["LoaderComponent"]();
     _this.$el && _this.init();
     return _this;
   }
@@ -1850,9 +1853,7 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
     key: "init",
     value: function init() {
       this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
-      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list', {
-        loader: this.loader
-      });
+      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list');
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
       this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
 
@@ -1890,14 +1891,13 @@ function _changeCategory() {
         switch (_context.prev = _context.next) {
           case 0:
             //посылает запрос при смене основной категории и получает новый html
-            this.loader.show();
-            this.catalog.$el.classList.add('hide');
-            _context.next = 4;
+            this.loader.mount(this.catalog.$el);
+            _context.next = 3;
             return this.server.post('catalog/switch', {
               category_id: this.header.category_id
             }, {}, this.token);
 
-          case 4:
+          case 3:
             answer = _context.sent;
 
             if (answer.option_panel && answer.list) {
@@ -1905,11 +1905,10 @@ function _changeCategory() {
 
               this.catalog.$el.innerHTML = answer.list; //?
 
-              this.loader.hide();
-              this.catalog.$el.classList.remove('hide');
+              this.loader.unmount(this.catalog.$el);
             }
 
-          case 6:
+          case 5:
           case "end":
             return _context.stop();
         }

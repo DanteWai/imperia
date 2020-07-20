@@ -3,18 +3,20 @@ import {Component} from "@core/component";
 import {CatalogHeaderComponent} from "./catalogHeader";
 import {CatalogProductsComponent} from "./catalogProducts";
 import Server from "@core/servers";
+import {LoaderComponent} from "@js/components/all/loader";
 
 
 export class CatalogContentComponent extends Component {
     constructor(id, {basket}) {
         super(id, false)
         this.basket = basket;
+        this.loader = new LoaderComponent();
         this.$el && this.init();
     }
 
     init(){
         this.header = new CatalogHeaderComponent('header')
-        this.catalog = new CatalogProductsComponent('product-list', {loader: this.loader})
+        this.catalog = new CatalogProductsComponent('product-list')
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
 
@@ -44,14 +46,12 @@ export function changeBasket() {
 
 async function changeCategory(){
     //посылает запрос при смене основной категории и получает новый html
-    this.loader.show();
-    this.catalog.$el.classList.add('hide');
+    this.loader.mount(this.catalog.$el);
     let answer = await this.server.post('catalog/switch',{category_id:this.header.category_id},{},this.token)
     if(answer.option_panel && answer.list){
         this.header.optionPanel.innerHTML = answer.option_panel //смена доступных для товара опций
         this.catalog.$el.innerHTML = answer.list //?
-        this.loader.hide();
-        this.catalog.$el.classList.remove('hide');
+        this.loader.unmount(this.catalog.$el);
     }
 }
 function clickBrand(e){
