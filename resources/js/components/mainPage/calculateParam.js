@@ -20,13 +20,17 @@ export class CalculateParamComponent extends Component{
         /*Подписка на событие смены категории*/
         this.choiceMenu.$el.addEventListener('change-category',()=>{
             this.choiceList.change(this.token,this.choiceMenu.category_id)
+            this.clearParams();
         })
         /*Подписка на событие смены параметра поиска*/
-        this.choiceList.$el.addEventListener('click-param',()=>{
+        this.choiceList.$el.addEventListener('click-param',async ()=>{
             let activeElements = document.querySelectorAll('[data-id].active').length;
-            this.server.post('praramlist',jsonRequestDate.call(this),{'Content-Type': 'application/json;charset=utf-8',},this.token).then(answer => {
+            this.pick.disabled = true;
+            this.clear.disabled = true;
+            await this.server.post('praramlist',jsonRequestDate.call(this),{'Content-Type': 'application/json;charset=utf-8',},this.token).then(answer => {
                 this.render(answer)
                 this.pick.disabled = activeElements === 0;
+                this.clear.disabled = activeElements === 0;
                 if(activeElements === 0) this.pick.innerHTML = 'Выберите параметр';
             })
         })
@@ -38,15 +42,16 @@ export class CalculateParamComponent extends Component{
             document.location.href = "/catalog";
         })
         /* отчистка параметров */
-        this.clear.addEventListener('click',() => {
-            localStorage.removeItem('product_parameters');
-            localStorage.removeItem('product_parameters_complete');
-            document.querySelectorAll(".content-choice .active").forEach(el => {el.classList.remove("active")});
-            this.choiceList.$el.dispatchEvent(this.choiceList.event)
-        })
+        this.clear.addEventListener('click', this.clearParams.bind(this))
 
 
+    }
 
+    clearParams() {
+        localStorage.removeItem('product_parameters');
+        localStorage.removeItem('product_parameters_complete');
+        document.querySelectorAll(".content-choice .active").forEach(el => {el.classList.remove("active")});
+        this.choiceList.$el.dispatchEvent(this.choiceList.event)
     }
 
     render(data){
