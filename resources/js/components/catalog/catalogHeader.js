@@ -22,7 +22,8 @@ export class CatalogHeaderComponent extends Component {
 }
 
 function dataId(e){
-    let el = e.target.closest('[data-id]');
+    let index = e.target.selectedIndex;     // для хрома
+    let el = index ? e.target[index] : e.target.closest('[data-id]');
     if(el) {
         let select = el.closest('SELECT')
         if(select){

@@ -2146,7 +2146,9 @@ var CatalogHeaderComponent = /*#__PURE__*/function (_Component) {
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 function dataId(e) {
-  var el = e.target.closest('[data-id]');
+  var index = e.target.selectedIndex; // для хрома
+
+  var el = index ? e.target[index] : e.target.closest('[data-id]');
 
   if (el) {
     var select = el.closest('SELECT');
