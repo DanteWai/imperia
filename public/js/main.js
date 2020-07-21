@@ -1792,7 +1792,11 @@ var FilterComponent = /*#__PURE__*/function (_Component) {
         cancelable: false
       });
       this.$catalog = document.getElementById('catalog-content');
+      this.$minPrice = document.getElementById('min-price');
+      this.$maxPrice = document.getElementById('max-price');
       this.$catalog.addEventListener('click', collapse.bind(this));
+      this.$minPrice.addEventListener('blur', changePriceFilter.bind(this));
+      this.$maxPrice.addEventListener('blur', changePriceFilter.bind(this));
     }
   }]);
 
@@ -1801,13 +1805,60 @@ var FilterComponent = /*#__PURE__*/function (_Component) {
 
 function collapse(e) {
   var target = e.target.closest('.filter');
+  var priceList = document.querySelectorAll('.product-list-price');
+  var minPrice = this.$minPrice;
+  var maxPrice = this.$maxPrice;
+  var price = [];
+  var max = 0;
+  var min = 0;
 
   if (target) {
     this.$el.classList.toggle('active');
     var icon = this.$el.classList.contains('active') ? 'arrow-left' : 'filter';
     target.innerHTML = "\n      <svg class=\"filter-icon\">\n         <use xlink:href=\"/public/images/sprite.svg#".concat(icon, "\"></use>\n      </svg>\n      ");
+
+    if (this.$el.classList.contains('active')) {
+      priceList.forEach(function (item) {
+        return price.push(Number(item.dataset.price));
+      });
+      max = Math.max.apply(null, price);
+      min = Math.min.apply(null, price);
+      minPrice.placeholder += " ".concat(min);
+      minPrice.dataset.price = min;
+      maxPrice.placeholder += " ".concat(max);
+      maxPrice.dataset.price = max;
+    } else {
+      minPrice.placeholder = 'от';
+      minPrice.dataset.price = 0;
+      maxPrice.placeholder = 'до';
+      maxPrice.dataset.price = 0;
+    }
+
     this.$el.dispatchEvent(this.event);
   }
+}
+
+function changePriceFilter(e) {
+  var target = e.target;
+  var price = Number(target.dataset.price);
+  var min = 0;
+  var max = 0;
+  var elem;
+  var value = Number(target.value);
+
+  if (target.name === 'min-price') {
+    elem = target.nextElementSibling;
+    min = price;
+    max = elem.value ? Number(elem.value) : Number(elem.dataset.price);
+  } else {
+    elem = target.previousElementSibling;
+    max = price;
+    min = elem.value ? Number(elem.value) : Number(elem.dataset.price);
+  }
+
+  value = Number.isNaN(value) ? price : Math.min(Math.max(value, min), max); //Проверка на nan и на диапазон
+
+  target.value = value;
 }
 
 /***/ }),
@@ -2315,7 +2366,7 @@ function productsRender(object) {
     var id = item.option_id;
     return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
       return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
-    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
+    }).join(''), "\n                </ul>\n                <p class=\"product-list-price\" data-price=\"").concat(item.price, "\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
   }).join(''); // рендер всего шаблона
 
   return "\n        <section class=\"content-filter\">\n            <button class=\"filter\">\n                <svg class=\"filter-icon\">\n                    <use xlink:href=\"/public/images/sprite.svg#filter\"></use>\n                </svg>\n            </button>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");

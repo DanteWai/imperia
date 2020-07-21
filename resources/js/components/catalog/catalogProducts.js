@@ -66,7 +66,7 @@ function productsRender(object){ // рендер шаблона
                         `;
                     }).join('')}
                 </ul>
-                <p class="product-list-price">${item.price} P</p>
+                <p class="product-list-price" data-price="${item.price}">${item.price} P</p>
                 <span class="basket-block">
                     <input type="text" value="1" ${(basket.includes(id.toString())) ? 'class="hide"' : ''}>
                     <button data-option-id="${id}" class="add-basket" ${ (basket.includes(id.toString())) ? 'disabled' : '' }>

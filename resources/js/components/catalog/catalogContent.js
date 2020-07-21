@@ -21,7 +21,7 @@ export class CatalogContentComponent extends Component {
         this.filter = new FilterComponent('filter-panel');
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
-
+        
         //Смена категории в шапке
         this.header.$el.addEventListener('change-category', changeCategory.bind(this))
         //Смена параметра поиска товара
