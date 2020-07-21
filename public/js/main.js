@@ -1787,6 +1787,7 @@ var FilterComponent = /*#__PURE__*/function (_Component) {
     key: "init",
     value: function init() {
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
+      this.token = document.querySelector('[name="_token"]').value;
       this.event = new Event('showFilter', {
         bubbles: false,
         cancelable: false
@@ -1795,13 +1796,36 @@ var FilterComponent = /*#__PURE__*/function (_Component) {
       this.$minPrice = document.getElementById('min-price');
       this.$maxPrice = document.getElementById('max-price');
       this.$catalog.addEventListener('click', collapse.bind(this));
+      this.$commit = this.$el.querySelector('.commit');
+      this.$reset = this.$el.querySelector('.reset');
+      this.$el.addEventListener('click', changeParam.bind(this));
       this.$minPrice.addEventListener('blur', changePriceFilter.bind(this));
-      this.$maxPrice.addEventListener('blur', changePriceFilter.bind(this));
+      this.$maxPrice.addEventListener('blur', changePriceFilter.bind(this)); // Кнопка "Показать модели"
+
+      this.$commit.addEventListener('click', function () {
+        localStorage.setItem('product_parameters_complete', localStorage.getItem('filter_parameters'));
+        localStorage.removeItem('filter_parameters');
+        document.location.href = "/catalog";
+      });
+      this.$reset.addEventListener('click', reset.bind(this));
     }
   }]);
 
   return FilterComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]); // Сброс фильтра
+
+function reset() {
+  this.$minPrice.value = '';
+  this.$maxPrice.value = '';
+  var params = this.$el.querySelectorAll('[data-id].active');
+  params.forEach(function (elem) {
+    return elem.classList.remove('active');
+  });
+  this.$commit.innerHTML = 'Выберите параметры';
+  this.$commit.disabled = true;
+  this.$reset.disabled = true;
+} // Показ/скрытие фильтра
+
 
 function collapse(e) {
   var target = e.target.closest('.filter');
@@ -1836,7 +1860,8 @@ function collapse(e) {
 
     this.$el.dispatchEvent(this.event);
   }
-}
+} // Изменение цен
+
 
 function changePriceFilter(e) {
   var target = e.target;
@@ -1859,6 +1884,67 @@ function changePriceFilter(e) {
   value = Number.isNaN(value) ? price : Math.min(Math.max(value, min), max); //Проверка на nan и на диапазон
 
   target.value = value;
+  filter.call(this);
+} // Клик по параметру
+
+
+function changeParam(e) {
+  var el = e.target.closest('[data-id]');
+
+  if (el) {
+    el.classList.toggle('active');
+    filter.call(this);
+  }
+} // Количество товара
+
+
+function filter() {
+  var _this = this;
+
+  var activeElements = this.$el.querySelectorAll('[data-id].active').length;
+
+  if (activeElements || this.$minPrice.value || this.$maxPrice.value) {
+    this.$commit.disabled = false;
+    this.$reset.disabled = false;
+  } else {
+    this.$commit.disabled = true;
+    this.$reset.disabled = true;
+  }
+
+  var id = document.querySelector('.category-header.active').dataset.cat;
+  this.server.post('praramlist', jsonRequestData.call(this, id), {
+    'Content-Type': 'application/json;charset=utf-8'
+  }, this.token).then(function (answer) {
+    console.log('answer', answer);
+
+    if (answer.count) {
+      _this.$commit.innerHTML = "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C ".concat(answer.count, " \u043C\u043E\u0434\u0435\u043B\u0435\u0439");
+    } //this.$commit.disabled = activeElements === 0;
+    //this.$reset.disabled = activeElements === 0;
+
+
+    if (activeElements === 0 && !_this.$minPrice.value && !_this.$maxPrice.value) _this.$commit.innerHTML = 'Выберите параметр';
+  });
+} // Формирование данных для запроса на сервер
+
+
+function jsonRequestData(id) {
+  var data = {
+    base_option: {
+      category_id: id
+    },
+    json_option: {},
+    params: {}
+  };
+  var brand_id = document.querySelector('[data-filter="brand_id"] .active');
+  if (brand_id) data.base_option.brand_id = brand_id.dataset.id;
+  var minPrice = this.$minPrice.value ? this.$minPrice.value : this.$minPrice.dataset.price;
+  var maxPrice = this.$maxPrice.value ? this.$maxPrice.value : this.$maxPrice.dataset.price;
+  data.base_option.price = [minPrice, maxPrice];
+  data = JSON.stringify(data);
+  console.log(data);
+  localStorage.setItem('filter_parameters', data);
+  return data;
 }
 
 /***/ }),

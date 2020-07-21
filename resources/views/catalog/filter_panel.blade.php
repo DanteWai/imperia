@@ -8,3 +8,7 @@
         <li data-id="{{ $brand['brand_id'] }}">{{$brand['brand_name']}}</li>
     @endforeach
 </ul>
+<div class="filter-buttons">
+    <button class="btn commit" disabled>Выберите параметры</button>
+    <button class="btn reset" disabled>Сбросить</button>
+</div>

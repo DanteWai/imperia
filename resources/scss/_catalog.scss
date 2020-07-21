@@ -912,6 +912,55 @@
             }
         }
     }
+
+    .filter-buttons {
+        margin: 1em 2em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #fff;
+
+        .btn {
+            display: block;
+            padding: 0.7em 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9em;
+            border-radius: 4px;
+            font-weight: 500;
+            border: 2px solid #febe0a;
+            transition: 0.2s;
+
+            &:hover:not(:disabled) {
+                opacity: 0.8;
+            }
+        }
+
+        .commit {
+            box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
+            margin-bottom: 0.5em;
+            color: #000;
+            background-color: #febe0a;
+
+            &:disabled {
+                background-color: rgba(0, 0, 0, 0.12);
+                border-color: rgba(0, 0, 0, 0.12);
+                color: rgba(0, 0, 0, 0.26);
+                cursor: default;
+            }
+        }
+
+        .reset {
+            color: #febe0a;
+            background-color: transparent;
+
+            &:disabled {
+                color: rgba(0, 0, 0, 0.26);
+                border-color: rgba(0, 0, 0, 0.26);
+                cursor: default;
+            }
+        }
+    }
 }
 
 
