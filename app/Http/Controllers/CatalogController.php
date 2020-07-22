@@ -38,29 +38,12 @@ class CatalogController extends SiteController
 
         $params = $this->getUniqueParamsForCategory('1',$brands);
 
-        $filter = [
-            'brand' => $params['brand'],
-        ];
-
-        $list = view(env('THEME').'.catalog.category_list')->with('brands',$brands)->render();
-        $option_panel = view(env('THEME').'.catalog.optionForShin')->with('params',$params)->render();
-        $filter_panel = view(env('THEME').'.catalog.filter_panel')->with('filter',$filter)->render();
-
-        /**/
-
-        /*$products = $this->o_rep->getParamOption(['category_id'=>1],false);
-        $list = view(env('THEME').'.catalog.product_list')->with(['products'=>$products,'pagesCount'=>ceil(count($products)/20)])->render();
-
-        /**/
+        $list = view('catalog.category_list')->with('brands',$brands)->render();
+        $option_panel = view('catalog.optionForShin')->with('params',$params)->render();
+        $categories = $this->getCategories();
 
 
-        $content = view(env('THEME').'.catalog.mainContent')->with([
-            'params'=>$params,
-            'list'=>$list,
-            'categories'=>$this->getCategories(),
-            'option_panel' => $option_panel,
-            'filter_panel' => $filter_panel,
-        ])->render();
+        $content = view('catalog.mainContent')->with(compact(['params', 'list', 'categories', 'option_panel']))->render();
 
         $this->vars = Arr::add($this->vars,'content',$content);
 

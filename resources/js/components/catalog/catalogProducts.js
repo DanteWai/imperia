@@ -22,6 +22,7 @@ export class CatalogProductsComponent extends Component {
         this.loader.mount(this.$el)
         this.json = json;
         await this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
+            //console.log(answer);
             if(answer.data){
                 this.$el.innerHTML = productsRender(answer);
                 this.loader.unmount(this.$el)

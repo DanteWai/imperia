@@ -28,6 +28,8 @@ export class CalculateParamComponent extends Component{
             this.pick.disabled = true;
             this.clear.disabled = true;
             await this.server.post('praramlist',jsonRequestDate.call(this),{'Content-Type': 'application/json;charset=utf-8',},this.token).then(answer => {
+
+                console.log(answer)
                 this.render(answer)
                 this.pick.disabled = activeElements === 0;
                 this.clear.disabled = activeElements === 0;
@@ -69,13 +71,15 @@ export class CalculateParamComponent extends Component{
 /*формируется объект для отправки на сервер*/
 function jsonRequestDate(){
     let data = {
-        base_option: { category_id: this.choiceMenu.category_id},
-        json_option: {},
+        products: { category_id: this.choiceMenu.category_id},
+        options: {
+            options:{}
+        },
         params: {}
     }
 
     let brand_id = document.querySelector('[data-filter="brand_id"] .active')
-    if(brand_id) data.base_option["brand_id"] = brand_id.dataset.id;
+    if(brand_id) data.products["brand_id"] = brand_id.dataset.id;
 
     let json_option = document.querySelectorAll('[data-option-filter="json_option"]')
     json_option.forEach(j_el => {
@@ -83,7 +87,7 @@ function jsonRequestDate(){
         if(activeOptions.length){
             let mass = []
             activeOptions.forEach(opt => {mass.push(opt.dataset.id)})
-            data.json_option[j_el.dataset.filter] = mass;
+            data.options.options[j_el.dataset.filter] = mass;
         }
     })
 
@@ -93,9 +97,8 @@ function jsonRequestDate(){
         massParams.push(el.dataset.filter)
     })
     data.params = massParams;
-
+    console.log(data)
     data = JSON.stringify(data)
-    //console.log(data)
     localStorage.setItem('product_parameters', data);
     return data;
 }

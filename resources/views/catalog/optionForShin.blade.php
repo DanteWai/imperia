@@ -1,7 +1,12 @@
 <ul >
-
-
-
+    <li>
+        <select  data-option-filter="base_option" data-filter="brand_id" class="select">
+            <option value="" selected disabled hidden>Производитель</option>
+            @foreach($params['brand'] as $item)
+                <option data-type="radio" data-id="{{  $item['brand_id']}}">{{$item['brand_name']}}</option>
+            @endforeach
+        </select>
+    </li>
     <li>
         <select  data-option-filter="json_option" data-filter="width" class="select">
             <option value="" selected disabled hidden>Ширина</option>

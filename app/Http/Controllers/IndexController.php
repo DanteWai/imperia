@@ -30,12 +30,6 @@ class IndexController extends SiteController
      */
     public function Index() {
 
-
-
-
-
-
-
         $brands = $this->b_rep->getBrands(['brand_id','brand_name']);
 
 
@@ -75,10 +69,13 @@ class IndexController extends SiteController
         $post = $request->all();
         //$post['params'] = ['brand_id'];
 
-        if(isset($post['base_option']) && isset($post['json_option'])) {
-            $products = $this->o_rep->getUniqueParam($post['base_option'], $post['json_option'], $post['params']);
+        if(isset($post['products']) && isset($post['options'])) {
+            $products = $this->o_rep->getUniqueParam($post['products'], $post['options'], $post['params']);
+            return response()->json($products);
         }
-        return response()->json($products);
+
+        return response()->json(['error'=>'Ошибка получения параметров']);
+
 
     }
 }

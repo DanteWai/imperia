@@ -2068,8 +2068,8 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
     key: "init",
     value: function init() {
       this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
-      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list');
-      this.filter = new _all_filter__WEBPACK_IMPORTED_MODULE_5__["FilterComponent"]('filter-panel');
+      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list'); //this.filter = new FilterComponent('filter-panel');
+
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
       this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
 
@@ -2082,30 +2082,31 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
       this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
 
       this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this)); // показ фильтра
+      //this.$el.addEventListener('showFilter', showFilter.bind(this));
 
-      this.$el.addEventListener('showFilter', showFilter.bind(this));
       checkJSON.call(this);
     }
   }]);
 
   return CatalogContentComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-function showFilter(e) {
-  console.log('filter', this.filter);
-  this.filter.collapse();
-}
+/*function showFilter(e) { на удаление
+    console.log('filter', this.filter);
+    this.filter.collapse();
+}*/
+//Событие при изменении содержимого корзины
 
 function changeBasket() {
   //рендерит корзину
   this.basket.json = localStorage.getItem('basket');
   this.basket.fill();
   this.basket.show();
-}
+} //Смена категории
 
 function changeCategory() {
   return _changeCategory.apply(this, arguments);
-}
+} //События клика по карточке бренда
+
 
 function _changeCategory() {
   _changeCategory = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -2146,42 +2147,67 @@ function clickBrand(e) {
   var target = e.target.closest('.category-item');
 
   if (target) {
-    var data = {
-      base_option: {
-        category_id: this.header.category_id,
-        brand_id: target.dataset.brand
-      },
-      json_option: false,
+    var data = creationJSON.call(this, {
+      brand_id: target.dataset.brand,
+      isJsonOptions: false,
       page: 1
-    };
+    });
     this.catalog.send(JSON.stringify(data), this.token);
   }
-}
+} //Событие смена параметра товара
+
 
 function changeParam(e) {
+  console.log(e);
+  var data = creationJSON.call(this, {
+    page: e.detail
+  });
+  this.catalog.send(JSON.stringify(data), this.token);
+} //Формирует json для отправки на сервер
+
+
+function creationJSON(_ref2) {
+  var _ref2$page = _ref2.page,
+      page = _ref2$page === void 0 ? 1 : _ref2$page,
+      _ref2$isJsonOptions = _ref2.isJsonOptions,
+      isJsonOptions = _ref2$isJsonOptions === void 0 ? true : _ref2$isJsonOptions,
+      brand_id = _ref2.brand_id;
   var data = {
-    base_option: {
+    products: {
       category_id: this.header.category_id
     },
-    json_option: {},
-    page: e.detail
-  };
-  var json_option = document.querySelectorAll('[data-option-filter="json_option"]');
-  json_option.forEach(function (j_el) {
-    var activeOptions = j_el.querySelectorAll('.active');
+    options: {
+      //price:{},
+      options: {}
+    },
+    page: page
+  }; //Смотрим бренд если не передан
 
-    if (activeOptions.length) {
-      var mass = [];
-      activeOptions.forEach(function (opt) {
-        mass.push(opt.dataset.id);
-      });
-      data.json_option[j_el.dataset.filter] = mass;
-    }
-  });
-  console.log(data); //console.log(data)
+  if (typeof brand_id === "undefined") {
+    var _brand_id = document.querySelector('[data-filter="brand_id"] .active');
 
-  this.catalog.send(JSON.stringify(data), this.token);
-}
+    if (_brand_id) data.products["brand_id"] = _brand_id.dataset.id;
+  } else {
+    data.products.brand_id = brand_id;
+  } //Смотрим остальные параметры
+
+
+  if (isJsonOptions) {
+    var json_option = document.querySelectorAll('[data-option-filter="json_option"]');
+    json_option.forEach(function (j_el) {
+      var activeOptions = j_el.querySelectorAll('.active');
+      activeOptions.length && (data.options.options[j_el.dataset.filter] = Array.from(activeOptions).map(function (opt) {
+        return opt.dataset.id;
+      }));
+    });
+  } else {
+    delete data.options.options;
+  } //TODO смотрим цену
+
+
+  return data;
+} // Парсит параметры из подборщика на главной странице
+
 
 function checkJSON() {
   var data = localStorage.getItem('product_parameters_complete');
@@ -2409,6 +2435,7 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
                 return this.server.post('catalog/list', json, {
                   'Content-Type': 'application/json;charset=utf-8'
                 }, token).then(function (answer) {
+                  //console.log(answer);
                   if (answer.data) {
                     _this2.$el.innerHTML = productsRender(answer);
 
@@ -2986,6 +3013,8 @@ var CalculateParamComponent = /*#__PURE__*/function (_Component) {
                 return _this.server.post('praramlist', jsonRequestDate.call(_this), {
                   'Content-Type': 'application/json;charset=utf-8'
                 }, _this.token).then(function (answer) {
+                  console.log(answer);
+
                   _this.render(answer);
 
                   _this.pick.disabled = activeElements === 0;
@@ -3044,14 +3073,16 @@ var CalculateParamComponent = /*#__PURE__*/function (_Component) {
 
 function jsonRequestDate() {
   var data = {
-    base_option: {
+    products: {
       category_id: this.choiceMenu.category_id
     },
-    json_option: {},
+    options: {
+      options: {}
+    },
     params: {}
   };
   var brand_id = document.querySelector('[data-filter="brand_id"] .active');
-  if (brand_id) data.base_option["brand_id"] = brand_id.dataset.id;
+  if (brand_id) data.products["brand_id"] = brand_id.dataset.id;
   var json_option = document.querySelectorAll('[data-option-filter="json_option"]');
   json_option.forEach(function (j_el) {
     var activeOptions = j_el.querySelectorAll('.active');
@@ -3061,7 +3092,7 @@ function jsonRequestDate() {
       activeOptions.forEach(function (opt) {
         mass.push(opt.dataset.id);
       });
-      data.json_option[j_el.dataset.filter] = mass;
+      data.options.options[j_el.dataset.filter] = mass;
     }
   });
   var params = this.choiceList.$el.querySelectorAll('.choice-list [data-filter]');
@@ -3070,8 +3101,8 @@ function jsonRequestDate() {
     massParams.push(el.dataset.filter);
   });
   data.params = massParams;
-  data = JSON.stringify(data); //console.log(data)
-
+  console.log(data);
+  data = JSON.stringify(data);
   localStorage.setItem('product_parameters', data);
   return data;
 }

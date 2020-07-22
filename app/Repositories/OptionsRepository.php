@@ -98,41 +98,42 @@ class OptionsRepository extends Repository {
 
 
     //Возвращает количество уникальных параметров для подборщика на главной странице
-    public function getUniqueParam($base_option,$json_option,$params){
+    public function getUniqueParam($productsTable,$optionsTable,$params){
 
-        $filter_base_mass = [];
+        //Условия для таблицы products
+        $conditionWhereIn = [];
+        $conditionWhere = [];
 
-        foreach ($base_option as $key=>$item) {
-            if(is_array($item)) {
-                $filter_base_mass[$key] = $item;
-            } else{
-                $filter_base[] = [$key,$item];
-            }
+        foreach ($productsTable as $columnName => $columnValue) { // columnValue string or array
+            is_array($columnValue) ?
+                $conditionWhereIn[$columnName] = $columnValue : // если значение столбца массив, формируем для whereIn
+                $conditionWhere[] = [$columnName,$columnValue];  // иначе под обычный where
         }
 
-        if($json_option != false){
-            $inputParam = array_merge(array_keys($base_option),array_keys($json_option));
-            foreach ($json_option as $key=>$item) {
+
+        if($optionsTable['options'] != false){
+            $inputParam = array_merge(array_keys($productsTable),array_keys($optionsTable['options']));
+            foreach ($optionsTable['options'] as $key=>$item) {
                 $filter_json_mass[$key] = $item;
             }
         }else{
-            $filter_json_mass='';
-            $inputParam = array_keys($base_option);
+            $filter_json_mass = '';
+            $inputParam = array_keys($productsTable);
         }
 
 
-
         $newParams=[];
+
 
         foreach ($params as $param) {
             if(!in_array($param, $inputParam)){
                 if($param != 'brand_id'){
 
-                    $builder = $this->model->select('options->'.$param.' as '.$param)->where('options->'.$param,'>',0)->distinct()->whereHas('Product', function ($q) use($filter_base, $filter_base_mass, $filter_json_mass){
-                        $q->where($filter_base);
+                    $builder = $this->model->select('options->'.$param.' as '.$param)->where('options->'.$param,'>',0)->distinct()->whereHas('Product', function ($q) use($conditionWhere, $conditionWhereIn){
+                        $q->where($conditionWhere);
 
-                       if(!empty($filter_base_mass)){
-                            foreach($filter_base_mass as $key=>$item){
+                       if(!empty($conditionWhereIn)){
+                            foreach($conditionWhereIn as $key=>$item){
                                 $q->whereIn($key,$item);
                             }
                         }
@@ -151,7 +152,7 @@ class OptionsRepository extends Repository {
                     },$newParams['param'][$param]);
                 }
                 else{
-                    $builder = Product::select('brand_id')->where($filter_base)->distinct()->whereHas('options',function($q) use($filter_json_mass) {
+                    $builder = Product::select('brand_id')->where($conditionWhere)->distinct()->whereHas('options',function($q) use($filter_json_mass) {
                             if(!empty($filter_json_mass)){
                                 foreach($filter_json_mass as $key=>$item){
                                     $q->whereIn('options->'.$key,$item);
@@ -172,9 +173,7 @@ class OptionsRepository extends Repository {
 
         }
 
-
-
-        $newParams['count'] = $this->getParamOption($base_option,$json_option,true);
+        $newParams['count'] = $this->getParamOption($productsTable,$optionsTable,true);
 
         return $newParams;
 
@@ -206,14 +205,14 @@ class OptionsRepository extends Repository {
 
 
 
-        if(isset($optionsTable['price'])){
+        if(isset($optionsTable['price']) && !empty($optionsTable['price'])){
             //если передана цена и это массив то смотрим в диапазоне иначе равное значение
             is_array($optionsTable['price']) ? $builder->whereBetween('price', $optionsTable['price']) : $builder->where('price',$optionsTable['price']);
         }
 
 
         //Добавление json условий
-        if($optionsTable['options'] && !empty($optionsTable['options'])){
+        if(isset($optionsTable['options']) && !empty($optionsTable['options'])){
             foreach($optionsTable['options'] as $columnName=>$columnValue){
                 $builder->whereIn('options->'.$columnName,$columnValue);
             }
