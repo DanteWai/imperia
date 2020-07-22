@@ -139,7 +139,7 @@ class CatalogController extends SiteController
         $post = $request->all();
 
         if(isset($post['products']) && isset($post['options'])){
-            $products = $this->o_rep->getParamOption($post['products'],$post['products'], false, $post['page']);
+            $products = $this->o_rep->getParamOption($post['products'],$post['options'], false, $post['page']);
             return response()->json($products);
         }
         return response()->json(['error'=>"не удалось получить товары"]);

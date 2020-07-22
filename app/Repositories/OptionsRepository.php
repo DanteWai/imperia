@@ -97,7 +97,7 @@ class OptionsRepository extends Repository {
     }
 
 
-    //тупо для подсчета количества
+    //Возвращает количество уникальных параметров для подборщика на главной странице
     public function getUniqueParam($base_option,$json_option,$params){
 
         $filter_base_mass = [];
@@ -186,10 +186,6 @@ class OptionsRepository extends Repository {
         $conditionWhereIn = [];
         $conditionWhere = [];
 
-        //Условия для таблицы options
-        //$conditionsForJsonOptions = [];
-
-
         foreach ($productsTable as $columnName => $columnValue) { // columnValue string or array
             is_array($columnValue) ?
                 $conditionWhereIn[$columnName] = $columnValue : // если значение столбца массив, формируем для whereIn
@@ -199,26 +195,21 @@ class OptionsRepository extends Repository {
 
         $builder = $this->model->select('option_id','product_id','price','options','count') //условие на ограничение таблицы с продуктами
             ->whereHas('product', function ($q) use($conditionWhere, $conditionWhereIn){
-
-                $q->where($conditionWhere);
-
-               if(!empty($conditionWhereIn)){
+                //Проверка и применение доп условий к таблице products
+                if(!empty($conditionWhere)) $q->where($conditionWhere);
+                if(!empty($conditionWhereIn)){
                     foreach($conditionWhereIn as $columnName=>$columnValue){ //$columnValue is array
                         $q->whereIn($columnName,$columnValue);
                     }
                 }
         });
 
-        if(!isset($optionsTable['price'])){
+
+
+        if(isset($optionsTable['price'])){
             //если передана цена и это массив то смотрим в диапазоне иначе равное значение
             is_array($optionsTable['price']) ? $builder->whereBetween('price', $optionsTable['price']) : $builder->where('price',$optionsTable['price']);
         }
-
-        /*if($optionsTable['options'] != false){
-            foreach ($optionsTable['options'] as $columnName=>$columnValue) {
-                $conditionsForJsonOptions[$columnName] = $columnValue;
-            }
-        }*/
 
 
         //Добавление json условий
@@ -238,9 +229,7 @@ class OptionsRepository extends Repository {
          }]);
 
 
-        Paginator::currentPageResolver(function () use ($currentPage) {
-            return $currentPage;
-        });
+        Paginator::currentPageResolver(function () use ($currentPage) { return $currentPage; });
 
         return $builder->paginate(10);
     }
