@@ -138,8 +138,8 @@ class CatalogController extends SiteController
     public function productList(Request $request) { // Фоормирует список товаров для каталога
         $post = $request->all();
 
-        if(isset($post['base_option']) && isset($post['json_option'])){
-            $products = $this->o_rep->getParamOption($post['base_option'],$post['json_option'], false, $post['page']);
+        if(isset($post['products']) && isset($post['options'])){
+            $products = $this->o_rep->getParamOption($post['products'],$post['products'], false, $post['page']);
             return response()->json($products);
         }
         return response()->json(['error'=>"не удалось получить товары"]);

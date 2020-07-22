@@ -179,58 +179,70 @@ class OptionsRepository extends Repository {
         return $newParams;
 
     }
-    public function getParamOption($base_option,$json_option,$getCount=false,$currentPage=1){
+    //Возвращает список товаров для каталога по выбранным параметрам
+    public function getParamOption($productsTable,$optionsTable,$getCount=false,$currentPage=1){
 
-        $filter_base_mass = [];
+        //Условия для таблицы products
+        $conditionWhereIn = [];
+        $conditionWhere = [];
 
-        foreach ($base_option as $key=>$item) {
-            if(is_array($item)) {
-                $filter_base_mass[$key] = $item;
-            } else{
-                $filter_base[] = [$key,$item];
-            }
-        }
+        //Условия для таблицы options
+        //$conditionsForJsonOptions = [];
 
-        if($json_option != false){
-            foreach ($json_option as $key=>$item) {
-                $filter_json_mass[$key] = $item;
-            }
-        }else{
-            $filter_json_mass='';
+
+        foreach ($productsTable as $columnName => $columnValue) { // columnValue string or array
+            is_array($columnValue) ?
+                $conditionWhereIn[$columnName] = $columnValue : // если значение столбца массив, формируем для whereIn
+                $conditionWhere[] = [$columnName,$columnValue];  // иначе под обычный where
         }
 
 
-        $builder = $this->model->select('option_id','product_id','price','options','count')->whereHas('product', function ($q) use($filter_base, $filter_base_mass, $filter_json_mass){
-            $q->where($filter_base);
+        $builder = $this->model->select('option_id','product_id','price','options','count') //условие на ограничение таблицы с продуктами
+            ->whereHas('product', function ($q) use($conditionWhere, $conditionWhereIn){
 
-           if(!empty($filter_base_mass)){
-                foreach($filter_base_mass as $key=>$item){
-                    $q->whereIn($key,$item);
+                $q->where($conditionWhere);
+
+               if(!empty($conditionWhereIn)){
+                    foreach($conditionWhereIn as $columnName=>$columnValue){ //$columnValue is array
+                        $q->whereIn($columnName,$columnValue);
+                    }
                 }
-            }
         });
 
+        if(!isset($optionsTable['price'])){
+            //если передана цена и это массив то смотрим в диапазоне иначе равное значение
+            is_array($optionsTable['price']) ? $builder->whereBetween('price', $optionsTable['price']) : $builder->where('price',$optionsTable['price']);
+        }
 
-        if(!empty($filter_json_mass)){
-            foreach($filter_json_mass as $key=>$item){
-                $builder->whereIn('options->'.$key,$item);
+        /*if($optionsTable['options'] != false){
+            foreach ($optionsTable['options'] as $columnName=>$columnValue) {
+                $conditionsForJsonOptions[$columnName] = $columnValue;
+            }
+        }*/
+
+
+        //Добавление json условий
+        if($optionsTable['options'] && !empty($optionsTable['options'])){
+            foreach($optionsTable['options'] as $columnName=>$columnValue){
+                $builder->whereIn('options->'.$columnName,$columnValue);
             }
         }
 
         if($getCount){  return $builder->count(); }
-//
+
+        //Подцепление таблицы продуктов к таблице опции, и подключение таблицы брендов к таблице продуктов
          $builder->with(['product'=>function($q){
              $q->select('product_id','brand_id','category_id','product_model','product_images')->with(['brand'=>function($q){
                 $q->select('brand_id','brand_name','brand_logo');
             }]);;
          }]);
 
+
         Paginator::currentPageResolver(function () use ($currentPage) {
             return $currentPage;
         });
 
         return $builder->paginate(10);
-
     }
 
     public function one($aliasName,$alias, $attr = array()){
