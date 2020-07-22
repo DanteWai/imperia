@@ -2414,6 +2414,7 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
       this.page = 1;
       this.$el.addEventListener('click', pagination.bind(this));
       this.$el.addEventListener('click', addBasket.bind(this));
+      this.$el.addEventListener('click', toggleSort.bind(this));
       this.event = new Event('showBasket', {
         bubbles: false,
         cancelable: false
@@ -2468,7 +2469,7 @@ function productsRender(object) {
 
   if (object.last_page > 1) {
     for (var i = 1; i <= object.last_page && i <= 20; i++) {
-      pagination += "<a ".concat(object.current_page === i ? 'class="active"' : '', " data-page=\"").concat(i, "\"></a>");
+      pagination += "\n                <li class=\"pagination__item\">\n                    <a ".concat(object.current_page === i ? 'class="pagination__link active"' : 'class="pagination__link"', "  data-page=\"").concat(i, "\">").concat(i, "</a>\n                </li>\n            ");
     }
   }
 
@@ -2480,9 +2481,8 @@ function productsRender(object) {
     return "\n            <div class=\"product-item\">\n                <img class=\"p-image\" src=\"/images//test/koleso.png\" alt=\"\">\n                <h3>\n                    <a class=\"product-link\" href=\"catalog/".concat(brandName, "/").concat(id, "\">\n                        ").concat(item.product.brand.brand_name, "\n                        ").concat(item.product.product_model.slice(0, 20), "\n                    </a>\n                </h3>\n                <ul>\n                    ").concat(Object.keys(item.options).map(function (option) {
       return "\n                            <li>\n                                <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                            </li>\n                        ");
     }).join(''), "\n                </ul>\n                <p class=\"product-list-price\" data-price=\"").concat(item.price, "\">").concat(item.price, " P</p>\n                <span class=\"basket-block\">\n                    <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                    <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                        ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                    </button>\n                </span>\n            </div>\n        ");
-  }).join(''); // рендер всего шаблона
-
-  return "\n        <section class=\"content-filter\">\n            <button class=\"filter\">\n                <svg class=\"filter-icon\">\n                    <use xlink:href=\"/public/images/sprite.svg#filter\"></use>\n                </svg>\n            </button>\n            <div class=\"pagination\">\n                ".concat(pagination, "\n            </div>\n        </section>\n        ").concat(products, "\n    ");
+  }).join('');
+  return "\n        <section class=\"content-filter\">\n            <div class=\"sort\">\n\n            <div class=\"sort-item\">\n                <span class=\"sort-item__title\">\u0426\u0435\u043D\u0430:</span>\n                <div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                    <input type=\"text\" name=\"min-price\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\">\n                    <input type=\"text\" name=\"max-price\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\">\n                </div>\n            </div>\n\n            <div class=\"sort-item\">\n                <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                <div class=\"sort-action\">\n                    <div class=\"sort-action__header\">\n                        <span class=\"sort-action__current\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</span>\n                    </div>\n                    <div class=\"sort-action__body hide\">\n                        <div class=\"sort-action__item\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        <div class=\"sort-action__item\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"sort-item\">\n                <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                <div class=\"sort-action\">\n                    <div class=\"sort-action__header\">\n                        <span class=\"sort-action__current\">10</span>\n                    </div>\n                    <div class=\"sort-action__body hide\">\n                        <div class=\"sort-action__item\">10</div>\n                        <div class=\"sort-action__item\">15</div>\n                        <div class=\"sort-action__item\">20</div>\n                        <div class=\"sort-action__item\">30</div>\n                        <div class=\"sort-action__item\">50</div>\n                    </div>\n                </div>\n            </div>\n\n            </div>\n\n            <div class=\"pagination\">\n                <ul class=\"pagination__list\">\n                    ".concat(pagination, "\n                </ul>\n            </div>\n        </section>\n        ").concat(products, "\n    ");
 }
 
 function addBasket(e) {
@@ -2529,6 +2529,25 @@ function pagination(e) {
     this.$el.dispatchEvent(new CustomEvent('change-page', {
       detail: this.page
     }));
+  }
+}
+
+function toggleSort(e) {
+  var target = e.target.closest('.sort-action');
+
+  if (target) {
+    var list = target.parentNode.querySelector('.sort-action__body');
+
+    if (!list.classList.contains('hide')) {
+      list.classList.add('hide');
+      return;
+    }
+
+    var otherList = target.closest('.sort').querySelectorAll('.sort-action__body');
+    otherList.forEach(function (item) {
+      item.classList.add('hide');
+    });
+    list.classList.remove('hide');
   }
 }
 

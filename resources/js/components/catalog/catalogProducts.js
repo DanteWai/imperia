@@ -15,6 +15,7 @@ export class CatalogProductsComponent extends Component {
         this.page = 1;
         this.$el.addEventListener('click',pagination.bind(this))
         this.$el.addEventListener('click',addBasket.bind(this))
+        this.$el.addEventListener('click', toggleSort.bind(this));
         this.event = new Event('showBasket',{bubbles: false, cancelable: false});
     }
 
@@ -36,9 +37,14 @@ function productsRender(object){ // рендер шаблона
 
     let pagination = '';
     // рендер кнопок пагинации
+
     if (object.last_page > 1) {
         for (let i = 1; i <= object.last_page && i <= 20; i++) {
-            pagination += `<a ${(object.current_page === i) ? 'class="active"' : ''} data-page="${i}"></a>`;
+            pagination += `
+                <li class="pagination__item">
+                    <a ${(object.current_page === i) ? 'class="pagination__link active"' : 'class="pagination__link"'}  data-page="${i}">${i}</a>
+                </li>
+            `
         }
     }
 
@@ -81,16 +87,53 @@ function productsRender(object){ // рендер шаблона
         `;
     }).join('');
 
-    // рендер всего шаблона
     return `
         <section class="content-filter">
-            <button class="filter">
-                <svg class="filter-icon">
-                    <use xlink:href="/public/images/sprite.svg#filter"></use>
-                </svg>
-            </button>
+            <div class="sort">
+
+            <div class="sort-item">
+                <span class="sort-item__title">Цена:</span>
+                <div data-type="search" data-option-filter="base_option" data-filter="price" class="filter-price">
+                    <input type="text" name="min-price" id="min-price" placeholder="от" class="price-input">
+                    <input type="text" name="max-price" id="max-price" placeholder="до" class="price-input">
+                </div>
+            </div>
+
+            <div class="sort-item">
+                <span class="sort-item__title">Упорядочить:</span>
+                <div class="sort-action">
+                    <div class="sort-action__header">
+                        <span class="sort-action__current">по возрастанию цены</span>
+                    </div>
+                    <div class="sort-action__body hide">
+                        <div class="sort-action__item">по возрастанию цены</div>
+                        <div class="sort-action__item">по убыванию цены</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sort-item">
+                <span class="sort-item__title">Показывать по:</span>
+                <div class="sort-action">
+                    <div class="sort-action__header">
+                        <span class="sort-action__current">10</span>
+                    </div>
+                    <div class="sort-action__body hide">
+                        <div class="sort-action__item">10</div>
+                        <div class="sort-action__item">15</div>
+                        <div class="sort-action__item">20</div>
+                        <div class="sort-action__item">30</div>
+                        <div class="sort-action__item">50</div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+
             <div class="pagination">
-                ${pagination}
+                <ul class="pagination__list">
+                    ${pagination}
+                </ul>
             </div>
         </section>
         ${products}
@@ -140,6 +183,26 @@ function pagination(e){
 
         this.page = el.dataset.page
         this.$el.dispatchEvent(new CustomEvent('change-page',{detail:this.page}))
+    }
+}
+
+function toggleSort(e) {
+    const target = e.target.closest('.sort-action');
+    if (target) {
+        const list = target.parentNode.querySelector('.sort-action__body');
+
+        if (!list.classList.contains('hide')) {
+            list.classList.add('hide');
+            return;
+        }
+
+        const otherList = target.closest('.sort').querySelectorAll('.sort-action__body');
+
+        otherList.forEach(item => {
+            item.classList.add('hide');
+        });
+
+        list.classList.remove('hide');
     }
 }
 

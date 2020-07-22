@@ -602,7 +602,7 @@
 }
 
 
-
+/*
 .content-filter {
     grid-column-start: 1;
     grid-column-end: -1;
@@ -624,7 +624,7 @@
         &-icon {
             height: 24px;
             width: 24px;
-        }
+        }*/
         /*.filter-trigger {
             color: #bbb;
             font-size: 2em;
@@ -636,10 +636,10 @@
                 color: #8e8686;
             }
         }*/
-    }
+    /*}*/
 
-}
-
+/*}*/
+/*
 .pagination {
     a {
         cursor: pointer;
@@ -666,7 +666,147 @@
 
     }
 
+}*/
+
+
+
+.content-filter {
+	grid-column-start: 1;
+	grid-column-end: -1;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
 }
+
+.filter-price {
+    display: flex;
+    justify-content: space-between;
+    max-width: 200px;
+    width: 165px;
+}
+
+.price-input {
+    max-width: 75px;
+    border: none;
+    border-bottom: 2px solid rgba(254, 190, 10, 0.5);
+    transition: 0.2s;
+    font-family: inherit;
+
+    &:focus {
+        border-bottom-color: rgba(254, 190, 10, 1);
+    }
+}
+
+.sort {
+	display: flex;
+
+	&-item {
+		display: flex;
+		align-items: center;
+		border-right: 1px solid #f2f2f2;
+		padding: 15px 20px;
+		font-size: 14px;
+		line-height: 18px;
+
+		&__title {
+			margin-right: 10px;
+		}
+	}
+
+	&-action {
+		position: relative;
+		cursor: pointer;
+
+		&__current {
+            color: #2f329a;
+            font-weight: 700;
+			display: flex;
+			align-items: center;
+
+			&:after {
+				content: '';
+				display: block;
+				margin-left: 5px;
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-width: 5px 5px 0 5px;
+				border-color: #2f329a transparent transparent transparent;
+			}
+		}
+
+		&__body {
+			position: absolute;
+			top: calc(100% + 10px);
+			left: -10px;
+			max-width: 205px;
+			box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.2);
+			border-radius: 4px;
+			background-color: #fff;
+			z-index: 777;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		&__item {
+			padding: 6px 15px;
+			transition: 0.2s;
+
+			&:hover {
+				background-color: #febe0a;
+			}
+		}
+	}
+}
+
+.pagination {
+	&__list {
+		display: inline-flex;
+		background-color: #fff;
+		border-radius: 4px;
+        overflow: hidden;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+	}
+
+	&__item {
+		border-left: 1px solid #f2f2f2;
+
+		&:first-child {
+			border-left: none;
+        }
+        
+        &:hover {
+            border-left-color: #febe0a;
+        }
+	}
+
+	&__link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 18px;
+		width: 37px;
+		height: 50px;
+		cursor: pointer;
+		transition: 0.2s;
+
+		&:hover {
+            background-color: #febe0a;
+		}
+
+		&.active {
+			background-color: #febe0a;
+			cursor: default;
+		}
+	}
+}
+
+
 
 .product-list,
 .product-list-similar {
@@ -1044,6 +1184,12 @@
     color: #545454;
 }
 
+@media only screen and (max-width: 1485px) {
+    .content-filter {
+        flex-direction: column;
+    }
+}
+
 
 @media only screen and (max-width: 1000px) {
     .options-panel {
@@ -1094,6 +1240,25 @@
                 align-self: stretch;
             }
         }
+    }
+}
+
+@media only screen and (max-width: 830px) {
+    .sort {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .sort-item {
+        border-right: none;
+
+        &:first-child {
+            flex-basis: 100%;
+            justify-content: center;
+        }
+    }
+    .pagination__link {
+        width: 30px;
+        height: 30px;
     }
 }
 
@@ -1154,6 +1319,30 @@
                 margin-left: 0;
             }
         }
+    }
+}
+
+@media only screen and (max-width: 655px) {
+    .sort-item {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .pagination__list {
+        flex-wrap: wrap;
+    }
+
+    .pagination__link {
+        font-size: 13px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .sort-item {
+        padding: 5px;
     }
 }
 
