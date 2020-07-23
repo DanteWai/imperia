@@ -102,10 +102,11 @@ function productsRender(object){ // рендер шаблона
             <div class="sort-item">
                 <span class="sort-item__title">Упорядочить:</span>
                 <div class="sort-action">
+                    <div class="sort-action__wrapper"></div>
                     <div class="sort-action__header">
                         <span class="sort-action__current">по возрастанию цены</span>
                     </div>
-                    <div class="sort-action__body hide">
+                    <div class="sort-action__body">
                         <div class="sort-action__item">по возрастанию цены</div>
                         <div class="sort-action__item">по убыванию цены</div>
                     </div>
@@ -115,10 +116,11 @@ function productsRender(object){ // рендер шаблона
             <div class="sort-item">
                 <span class="sort-item__title">Показывать по:</span>
                 <div class="sort-action">
+                    <div class="sort-action__wrapper"></div>
                     <div class="sort-action__header">
                         <span class="sort-action__current">10</span>
                     </div>
-                    <div class="sort-action__body hide">
+                    <div class="sort-action__body">
                         <div class="sort-action__item">10</div>
                         <div class="sort-action__item">15</div>
                         <div class="sort-action__item">20</div>
@@ -189,20 +191,15 @@ function pagination(e){
 function toggleSort(e) {
     const target = e.target.closest('.sort-action');
     if (target) {
-        const list = target.parentNode.querySelector('.sort-action__body');
-
-        if (!list.classList.contains('hide')) {
-            list.classList.add('hide');
+        if (target.classList.contains('active')) {
+            target.classList.remove('active');
             return;
         }
-
-        const otherList = target.closest('.sort').querySelectorAll('.sort-action__body');
-
+        const otherList = target.closest('.sort').querySelectorAll('.sort-action');
         otherList.forEach(item => {
-            item.classList.add('hide');
+            item.classList.remove('active');
         });
-
-        list.classList.remove('hide');
+        target.classList.add('active');
     }
 }
 
