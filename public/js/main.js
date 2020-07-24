@@ -2147,6 +2147,9 @@ function clickBrand(e) {
   var target = e.target.closest('.category-item');
 
   if (target) {
+    var brand = this.header.optionPanel.querySelector("[data-filter=\"brand_id\"] [data-id=\"".concat(target.dataset.brand, "\"]"));
+    brand.classList.add('active');
+    brand.selected = true;
     var data = creationJSON.call(this, {
       brand_id: target.dataset.brand,
       isJsonOptions: false,

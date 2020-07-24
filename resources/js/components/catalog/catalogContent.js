@@ -68,6 +68,9 @@ async function changeCategory(){
 function clickBrand(e){
     let target = e.target.closest('.category-item')
     if(target){
+        const brand = this.header.optionPanel.querySelector(`[data-filter="brand_id"] [data-id="${target.dataset.brand}"]`);
+        brand.classList.add('active');
+        brand.selected = true;
         let data = creationJSON.call(this,{brand_id:target.dataset.brand, isJsonOptions:false, page:1})
         this.catalog.send(JSON.stringify(data),this.token)
     }
