@@ -160,6 +160,27 @@
         display: flex;
         position: relative;
 
+        &.loading {
+            li[data-id] {
+                color: #ccc;
+
+                &:hover {
+                    cursor: default;
+                    background-color: #fff;
+                }
+            }
+
+            .season-choice label {
+                cursor: default;
+                background-color: #333;
+                color: #f2f2f2;
+                
+                &:hover {
+                    background-color: none;
+                }
+            }
+        }
+
         .choice-list {
             background-color: #fff;
             flex: 1;

@@ -3008,6 +3008,7 @@ var CalculateParamComponent = /*#__PURE__*/function (_Component) {
       this.choiceList = new _mainChoiceList__WEBPACK_IMPORTED_MODULE_2__["MainChoiceListComponent"]('content-choice');
       this.pick = this.$el.querySelector('.pick');
       this.clear = this.$el.querySelector('.clear');
+      this.loading = false;
       /*Подписка на событие смены категории*/
 
       this.choiceMenu.$el.addEventListener('change-category', function () {
@@ -3024,9 +3025,19 @@ var CalculateParamComponent = /*#__PURE__*/function (_Component) {
             switch (_context.prev = _context.next) {
               case 0:
                 activeElements = document.querySelectorAll('[data-id].active').length;
+
+                _this.choiceList.$el.classList.add('loading');
+
                 _this.pick.disabled = true;
                 _this.clear.disabled = true;
-                _context.next = 5;
+
+                if (_this.loading) {
+                  _context.next = 8;
+                  break;
+                }
+
+                _this.loading = true;
+                _context.next = 8;
                 return _this.server.post('praramlist', jsonRequestDate.call(_this), {
                   'Content-Type': 'application/json;charset=utf-8'
                 }, _this.token).then(function (answer) {
@@ -3036,10 +3047,14 @@ var CalculateParamComponent = /*#__PURE__*/function (_Component) {
 
                   _this.pick.disabled = activeElements === 0;
                   _this.clear.disabled = activeElements === 0;
+
+                  _this.choiceList.$el.classList.remove('loading');
+
+                  _this.loading = false;
                   if (activeElements === 0) _this.pick.innerHTML = 'Выберите параметр';
                 });
 
-              case 5:
+              case 8:
               case "end":
                 return _context.stop();
             }
@@ -3262,7 +3277,7 @@ function myLoop(elements, count, toggle) {
 function dataId(e) {
   var el = e.target.closest('[data-id]');
 
-  if (el) {
+  if (el && !this.$el.classList.contains('loading')) {
     el.classList.toggle('active');
     this.$el.dispatchEvent(this.event);
   }

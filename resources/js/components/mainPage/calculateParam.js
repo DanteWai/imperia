@@ -17,6 +17,8 @@ export class CalculateParamComponent extends Component{
         this.pick = this.$el.querySelector('.pick')
         this.clear = this.$el.querySelector('.clear')
 
+        this.loading = false;
+
         /*Подписка на событие смены категории*/
         this.choiceMenu.$el.addEventListener('change-category',()=>{
             this.choiceList.change(this.token,this.choiceMenu.category_id)
@@ -25,16 +27,22 @@ export class CalculateParamComponent extends Component{
         /*Подписка на событие смены параметра поиска*/
         this.choiceList.$el.addEventListener('click-param',async ()=>{
             let activeElements = document.querySelectorAll('[data-id].active').length;
+            this.choiceList.$el.classList.add('loading');
             this.pick.disabled = true;
             this.clear.disabled = true;
-            await this.server.post('praramlist',jsonRequestDate.call(this),{'Content-Type': 'application/json;charset=utf-8',},this.token).then(answer => {
 
-                console.log(answer)
-                this.render(answer)
-                this.pick.disabled = activeElements === 0;
-                this.clear.disabled = activeElements === 0;
-                if(activeElements === 0) this.pick.innerHTML = 'Выберите параметр';
-            })
+            if (!this.loading) {
+                this.loading = true;
+                await this.server.post('praramlist',jsonRequestDate.call(this),{'Content-Type': 'application/json;charset=utf-8',},this.token).then(answer => {
+                    console.log(answer)
+                    this.render(answer)
+                    this.pick.disabled = activeElements === 0;
+                    this.clear.disabled = activeElements === 0;
+                    this.choiceList.$el.classList.remove('loading');
+                    this.loading = false;
+                    if(activeElements === 0) this.pick.innerHTML = 'Выберите параметр';
+                })
+            }
         })
 
         /* кнопка подобрать */

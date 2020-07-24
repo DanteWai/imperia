@@ -58,7 +58,7 @@ function myLoop(elements, count, toggle) {
 
 function dataId(e){
     let el = e.target.closest('[data-id]');
-    if(el) {
+    if(el && !this.$el.classList.contains('loading')) {
         el.classList.toggle('active')
         this.$el.dispatchEvent(this.event)
     }
