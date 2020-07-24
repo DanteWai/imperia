@@ -123,8 +123,46 @@ function checkJSON() {
     if(data){
         data = JSON.parse(data)
         delete data.params
-        data.page = '1'
+        data.page = '1';
+
+        const optionPanel = this.header.optionPanel;
+
+        //this.header.category_id = +data.products.category_id;
+        //this.header.$el.querySelector(`[data-cat="${this.header.category_id}"]`).classList.add('active');
+
+        activeOptions(optionPanel, data);
+
         this.catalog.send(JSON.stringify(data),this.token)
         localStorage.removeItem('product_parameters_complete')
     }
+}
+
+// Активирует опции каталога, из подборщика на главной странице
+function activeOptions(el, data) {
+
+    const category = '';
+    const brand = data.products.brand_id ? el.querySelector(`[data-filter="brand_id"] [data-id="${data.products.brand_id}"]`) : null;
+    if (brand) {
+        brand.classList.add('active');
+        brand.selected = true;
+    }
+
+    const options = Object.keys(data.options.options);  // Ключи опций
+
+    // Если опции есть
+    if (options.length) {
+        options.map(name => {
+            
+            const select = el.querySelectorAll(`[data-filter="${name}"] [data-id]`);    // Набор опций селекта
+            const values = data.options.options[name];                                  // Значения опций из подборщика
+            select.forEach(option => {
+                if (values.includes(option.dataset.id)) {
+                    option.classList.add('active');
+                    option.selected = true;
+                }
+            })
+
+        })
+    }
+
 }
