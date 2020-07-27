@@ -127,13 +127,15 @@ function checkJSON() {
 
         const optionPanel = this.header.optionPanel;
 
-        //this.header.category_id = +data.products.category_id;
-        //this.header.$el.querySelector(`[data-cat="${this.header.category_id}"]`).classList.add('active');
+        this.header.category_id = +data.products.category_id;
+        this.header.$el.querySelector('.category-header.active').classList.remove('active');
+        this.header.$el.querySelector(`[data-cat="${this.header.category_id}"]`).classList.add('active');
 
-        activeOptions(optionPanel, data);
-
-        this.catalog.send(JSON.stringify(data),this.token)
-        localStorage.removeItem('product_parameters_complete')
+        changeCategory.call(this).then(() => {
+            activeOptions(optionPanel, data);
+            this.catalog.send(JSON.stringify(data),this.token)
+            localStorage.removeItem('product_parameters_complete')
+        });
     }
 }
 

@@ -2213,18 +2213,25 @@ function creationJSON(_ref2) {
 
 
 function checkJSON() {
+  var _this2 = this;
+
   var data = localStorage.getItem('product_parameters_complete');
 
   if (data) {
     data = JSON.parse(data);
     delete data.params;
     data.page = '1';
-    var optionPanel = this.header.optionPanel; //this.header.category_id = +data.products.category_id;
-    //this.header.$el.querySelector(`[data-cat="${this.header.category_id}"]`).classList.add('active');
+    var optionPanel = this.header.optionPanel;
+    this.header.category_id = +data.products.category_id;
+    this.header.$el.querySelector('.category-header.active').classList.remove('active');
+    this.header.$el.querySelector("[data-cat=\"".concat(this.header.category_id, "\"]")).classList.add('active');
+    changeCategory.call(this).then(function () {
+      activeOptions(optionPanel, data);
 
-    activeOptions(optionPanel, data);
-    this.catalog.send(JSON.stringify(data), this.token);
-    localStorage.removeItem('product_parameters_complete');
+      _this2.catalog.send(JSON.stringify(data), _this2.token);
+
+      localStorage.removeItem('product_parameters_complete');
+    });
   }
 } // Активирует опции каталога, из подборщика на главной странице
 
