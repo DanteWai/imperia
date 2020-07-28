@@ -14,6 +14,7 @@ import {SendWriteComponent} from "./components/footer/sendWrite";
 import {SendCallComponent} from './components/footer/sendCall';
 //Общее
 import {BasketComponent} from "./components/all/basket";
+import {MainMenuComponent} from './components/all/mainMenu';
 import Modal from "@core/modal";
 
 
@@ -25,5 +26,6 @@ window.addEventListener('load',() => {
     new SendWriteComponent('write');
     new SendCallComponent('call');
     new ProductPageComponent('product-page', basket);
+    new MainMenuComponent('main-menu');
 
 });

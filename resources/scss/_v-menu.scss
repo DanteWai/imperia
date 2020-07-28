@@ -1,86 +1,79 @@
-.wrapper nav{
-    z-index: 500;
+.v-nav {
+    background: linear-gradient(180deg, #ffe032 0, #f29100);
+    margin: 0;
+    height: 60px;
+    display: flex;
+    padding-left: 40px;
+    align-items: center;
+
+    &__menu {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        transition: 0.2s;
+
+        &:hover {
+            background-color: #141a46;
+            cursor: pointer;
+
+            a {
+                color: #ecc45e;
+            }
+        }
+
+        a {
+            font-size: calc(0.8rem + 0.2vmax);
+            padding: 1em 1.6em;
+            text-decoration: none;
+            display: block;
+            color: rgba(0, 24, 56, 0.84);
+        }
+    }
+
+    &__phone-menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: auto;
+        padding-right: 1em;
+
+        a {
+            font-size: calc(0.5rem + 0.4vmax);
+            text-decoration: none;
+            color: rgba(0, 24, 56, 0.84);
+            margin-left: 15px;
+        }
+    }
 }
 
-.v-nav {
-    background: linear-gradient(to bottom, #ffe032 0%,#f29100 100%);
-    list-style-type: none;
-    margin: 0;
-    min-height: 60px;
-    height: 1px;
-
-
+.logo {
+    padding: 0.2em 0px;
+    font-family: "Source Sans Pro";
+    margin-top: -0.5rem;
+    font-size: calc(1.2rem + 0.8vmax);
+    line-height: 1.1;
+    margin-right: 60px;
     display: flex;
 
-    .logo {
-        padding: 0.2em 0;
-        font-family: "Source Sans Pro";
-        margin-top: -0.5rem;
-        font-size: calc(1.2rem + 0.8vmax);
-        line-height: 1.1;
+    a {
+        text-decoration: none;
+        color: rgba(0, 24, 56, 0.84);
+        height: 100%;
+        width: 100%;
+        display: block;
+        font-size: 1em;
 
         span {
             display: block;
             font-size: calc(0.57rem + 0.4vmax);
             margin-left: 2px;
-        }
-    }
-
-    .v-nav-item {
-        position: relative;
-        a {
-            text-decoration: none;
-            color: $mainColorText;
-            height: 100%;
-            width: 100%;
-            display: block;
-            font-size: 1em;
-        }
-
-        >a {
-            font-size: calc(0.8rem + 0.2vmax);
-            padding: 1em 1.6em;
-            display: flex;
-            align-items: center;
-
-            &:hover {
-                background-color: #141a46;
-                color: #ecc45e;
-            }
-            
-        }
-
-        &:first-child {
-            margin-right: 3em;
-            margin-left: 0;
-        }
-
-        &.menu-phone {
-            font-size: calc(0.5rem + 0.4vmax);
-            align-self: center;
-            margin-left: auto;
-            margin-right: 1em;
-
-            span+span {
-                margin-left: 1.5em;
-            }
-        }
-
-        &.basket{
-            display: flex;
-            align-items: center;
-            cursor:pointer;
-            padding: 0 1em;
-            margin-left:1em;
-            &:hover{
-                background-color: rgba(2, 28, 77, 0.808);
-            }
-        }
-
-        .basket-icon{
-            width:40px;
-            height:40px;
-            fill:rgba(255, 255, 255, 0.719);
         }
     }
 }
@@ -248,7 +241,7 @@
 
 
 
-@media only screen and (max-width: 1000px) {
+/*@media only screen and (max-width: 1000px) {
     .v-nav {
 
         .v-nav-item {
@@ -263,43 +256,127 @@
                 }
             }
         }
+    }
+}*/
+
+@media only screen and (max-width: 1000px) {
+    .v-nav__phone-menu {
+        flex-direction: column;
+
+        a {
+            margin-left: 0;
+
+            &:first-child {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    .logo {
+        margin-right: 40px;
     }
 }
 
-@media only screen and (max-width: 700px) {
-    .hide700 {
-        display: none;
-    }
-
+@media only screen and (max-width: 768px) {
     .v-nav {
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 0;
+        justify-content: space-between;
 
-        .v-nav-item {
-            &:first-child {
-                margin-right: 1em;
+        &__burger {
+            display: block;
+            position: relative;
+            width: 38px;
+            height: 24px;
+            order: 3;
+            margin-right: 15px;
+
+            &:before, &:after {
+                content: '';
+                background-color: rgba(0, 24, 56, 0.84);
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                left: 0;
+                transition: 0.3s;
             }
 
-            &.menu-phone {
-                span+span {
-                    margin-left: 0;
-                    display: block;
+            &:before {
+                top: 0;
+            }
+
+            &:after {
+                bottom: 0;
+            }
+
+            span {
+                position: absolute;
+                background-color: rgba(0, 24, 56, 0.84);
+                left: 0;
+                width: 100%;
+                height: 2px;
+                top: 11px;
+                transition: 0.3s;
+            }
+
+            &.active {
+                &:before {
+                    transform: rotate(45deg);
+                    top: 11px;
+                }
+
+                &:after {
+                    transform: rotate(-45deg);
+                    bottom: 11px;
+                }
+
+                span {
+                    transform: scale(0);
                 }
             }
         }
+
+        &__menu {
+            position: absolute;
+            top: -1000%;
+            left: 0;
+            width: 100%;
+            max-height: 40vh;
+            overflow-y: auto;
+            height: auto;
+            flex-direction: column;
+            background: linear-gradient(180deg, #ffe032 0, #f29100);
+            transition: 0.3s;
+            z-index: 10000;
+
+            &.active {
+                top: 60px;
+            }
+        }
+
+        &__item {
+            a {
+                width: 100%;
+                height: 100%;
+                text-align: center;
+            }
+        }
+
+        &__phone-menu {
+            margin-left: 0;
+            padding-right: 0;
+        }
+    }
+
+    .logo {
+        margin-right: 0;
     }
 }
 
 @media only screen and (max-width: 400px) {
-
     .v-nav {
-        .v-nav-item {
-            flex: 50%;
-
-            >a {
-                justify-content: center;
-            }
-        }
+        padding-left: 15px;
+    }
+    
+    .logo {
+        font-size: calc(1rem + 0.8vmax);
     }
 }

@@ -2,12 +2,13 @@
     background-image: none;
     background-color: #f2f2f2;
 
-    nav {
+    .navigation {
         position: absolute;
         left: 0;
         right: 0;
         z-index: 99;
     }
+
 }
 
 .wrapper.catalog-wrapper::before {

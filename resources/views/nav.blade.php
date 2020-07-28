@@ -1,17 +1,20 @@
 @if($menu)
-<nav>
-    <ul class="v-nav">
-        <li class="v-nav-item hide700">
-            <div class="logo"><a href="/">Империя шин<span>Качество без компромиссов</span></a></div>
-        </li>
-        @include(env('THEME').'.customMenuItems',['items'=>$menu->roots()])
-
-
-        <li class="v-nav-item menu-phone hide700">
+<div class="navigation">
+    <nav class="v-nav" id="main-menu">
+        <div class="logo">
+            <a href="/">Империя шин <span>Качество без компромиссов</span> </a>
+        </div>
+        <div class="v-nav__burger">
+            <span></span>
+        </div>
+        <ul class="v-nav__menu">
+            @include(env('THEME').'.customMenuItems',['items'=>$menu->roots()])
+        </ul>
+        <div class="v-nav__phone-menu">
             @foreach (Config::get('settings.phones') as $item)
-                <span>{{$item}}</span>
+                <a href="tel:{{$item}}">{{$item}}</a>
             @endforeach
-        </li>
-    </ul>
-</nav>
+        </div>
+    </nav>
+</div>
 @endif
