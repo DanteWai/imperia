@@ -35,111 +35,124 @@ export class CatalogProductsComponent extends Component {
 
 function productsRender(object){ // рендер шаблона
 
-    let pagination = '';
-    // рендер кнопок пагинации
+    if (object.data.length) {
 
-    if (object.last_page > 1) {
-        for (let i = 1; i <= object.last_page && i <= 20; i++) {
-            pagination += `
-                <li class="pagination__item">
-                    <a ${(object.current_page === i) ? 'class="pagination__link active"' : 'class="pagination__link"'}  data-page="${i}">${i}</a>
-                </li>
-            `
+        let pagination = '';
+        // рендер кнопок пагинации
+
+        if (object.last_page > 1) {
+            for (let i = 1; i <= object.last_page && i <= 20; i++) {
+                pagination += `
+                    <li class="pagination__item">
+                        <a ${(object.current_page === i) ? 'class="pagination__link active"' : 'class="pagination__link"'}  data-page="${i}">${i}</a>
+                    </li>
+                `
+            }
         }
-    }
 
-    let basket = (localStorage.getItem('basket')) ? Object.keys(JSON.parse(localStorage.getItem('basket'))) : [];
+        let basket = (localStorage.getItem('basket')) ? Object.keys(JSON.parse(localStorage.getItem('basket'))) : [];
 
-    // рендер карточек товаров
-    const products = object.data.map(item => {
-        const brandName = item.product.product_model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
-        const id = item.option_id;
+        // рендер карточек товаров
+        const products = object.data.map(item => {
+            const brandName = item.product.product_model.toLowerCase().replace(/ /g, '_').replace(/[.]/g, '');
+            const id = item.option_id;
+            return `
+                <div class="product-item">
+                    <img class="p-image" src="/images//test/koleso.png" alt="">
+                    <h3>
+                        <a class="product-link" href="catalog/${brandName}/${id}">
+                            ${item.product.brand.brand_name}
+                            ${item.product.product_model.slice(0, 20)}
+                        </a>
+                    </h3>
+                    <ul>
+                        ${Object.keys(item.options).map(option => {
+                            return `
+                                <li>
+                                    <span class="product-list-option-title">${Lang.get(`ru.${option}`)}</span>
+                                    <span class="product-list-option-desc">${(item.options[option] === 'true') ? 'Да' : item.options[option]}</span>
+                                </li>
+                            `;
+                        }).join('')}
+                    </ul>
+                    <p class="product-list-price" data-price="${item.price}">${item.price} P</p>
+                    <span class="basket-block">
+                        <input type="text" value="1" ${(basket.includes(id.toString())) ? 'class="hide"' : ''}>
+                        <button data-option-id="${id}" class="add-basket" ${ (basket.includes(id.toString())) ? 'disabled' : '' }>
+                            ${ (basket.includes(id.toString())) ?
+                                '<span>Товар в корзине</span>' :
+                                '<span>Добавить в корзину</span>'
+                            }
+                        </button>
+                    </span>
+                </div>
+            `;
+        }).join('');
+
         return `
-            <div class="product-item">
-                <img class="p-image" src="/images//test/koleso.png" alt="">
-                <h3>
-                    <a class="product-link" href="catalog/${brandName}/${id}">
-                        ${item.product.brand.brand_name}
-                        ${item.product.product_model.slice(0, 20)}
-                    </a>
-                </h3>
-                <ul>
-                    ${Object.keys(item.options).map(option => {
-                        return `
-                            <li>
-                                <span class="product-list-option-title">${Lang.get(`ru.${option}`)}</span>
-                                <span class="product-list-option-desc">${(item.options[option] === 'true') ? 'Да' : item.options[option]}</span>
-                            </li>
-                        `;
-                    }).join('')}
-                </ul>
-                <p class="product-list-price" data-price="${item.price}">${item.price} P</p>
-                <span class="basket-block">
-                    <input type="text" value="1" ${(basket.includes(id.toString())) ? 'class="hide"' : ''}>
-                    <button data-option-id="${id}" class="add-basket" ${ (basket.includes(id.toString())) ? 'disabled' : '' }>
-                        ${ (basket.includes(id.toString())) ?
-                            '<span>Товар в корзине</span>' :
-                            '<span>Добавить в корзину</span>'
-                        }
-                    </button>
-                </span>
+            <section class="content-filter">
+                <div class="sort">
+
+                <div class="sort-item">
+                    <span class="sort-item__title">Цена:</span>
+                    <div data-type="search" data-option-filter="base_option" data-filter="price" class="filter-price">
+                        <input type="text" name="min-price" id="min-price" placeholder="от" class="price-input">
+                        <input type="text" name="max-price" id="max-price" placeholder="до" class="price-input">
+                    </div>
+                </div>
+
+                <div class="sort-item">
+                    <span class="sort-item__title">Упорядочить:</span>
+                    <div class="sort-action">
+                        <div class="sort-action__wrapper"></div>
+                        <div class="sort-action__header">
+                            <span class="sort-action__current">по возрастанию цены</span>
+                        </div>
+                        <div class="sort-action__body">
+                            <div class="sort-action__item">по возрастанию цены</div>
+                            <div class="sort-action__item">по убыванию цены</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sort-item">
+                    <span class="sort-item__title">Показывать по:</span>
+                    <div class="sort-action">
+                        <div class="sort-action__wrapper"></div>
+                        <div class="sort-action__header">
+                            <span class="sort-action__current">10</span>
+                        </div>
+                        <div class="sort-action__body">
+                            <div class="sort-action__item">10</div>
+                            <div class="sort-action__item">15</div>
+                            <div class="sort-action__item">20</div>
+                            <div class="sort-action__item">30</div>
+                            <div class="sort-action__item">50</div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+                <div class="pagination">
+                    <ul class="pagination__list">
+                        ${pagination}
+                    </ul>
+                </div>
+            </section>
+            ${products}
+        `;
+
+    } else {
+
+        return `
+            <div class="goods-empty" style="display: flex">
+                <p>К сожалению по Вашим параметрам подходящих товаров не найдено:(</p>
+                <p>Попробуйте изменить критерии поиска</p>
             </div>
         `;
-    }).join('');
 
-    return `
-        <section class="content-filter">
-            <div class="sort">
-
-            <div class="sort-item">
-                <span class="sort-item__title">Цена:</span>
-                <div data-type="search" data-option-filter="base_option" data-filter="price" class="filter-price">
-                    <input type="text" name="min-price" id="min-price" placeholder="от" class="price-input">
-                    <input type="text" name="max-price" id="max-price" placeholder="до" class="price-input">
-                </div>
-            </div>
-
-            <div class="sort-item">
-                <span class="sort-item__title">Упорядочить:</span>
-                <div class="sort-action">
-                    <div class="sort-action__wrapper"></div>
-                    <div class="sort-action__header">
-                        <span class="sort-action__current">по возрастанию цены</span>
-                    </div>
-                    <div class="sort-action__body">
-                        <div class="sort-action__item">по возрастанию цены</div>
-                        <div class="sort-action__item">по убыванию цены</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sort-item">
-                <span class="sort-item__title">Показывать по:</span>
-                <div class="sort-action">
-                    <div class="sort-action__wrapper"></div>
-                    <div class="sort-action__header">
-                        <span class="sort-action__current">10</span>
-                    </div>
-                    <div class="sort-action__body">
-                        <div class="sort-action__item">10</div>
-                        <div class="sort-action__item">15</div>
-                        <div class="sort-action__item">20</div>
-                        <div class="sort-action__item">30</div>
-                        <div class="sort-action__item">50</div>
-                    </div>
-                </div>
-            </div>
-
-            </div>
-
-            <div class="pagination">
-                <ul class="pagination__list">
-                    ${pagination}
-                </ul>
-            </div>
-        </section>
-        ${products}
-    `;
+    }
 }
 
 export function addBasket(e){
