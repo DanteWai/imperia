@@ -37,7 +37,7 @@ body {
 
 .wrapper {
     min-height: 100vh;
-    background: url(../images/bg-car.webp);
+    background: url(../images/bg-car.webp) no-repeat;
     background-position-y: 40%;
     background-size: cover;
     display: flex;
@@ -235,9 +235,3 @@ html .deploy{
     }
 }
 // end loader
-
-@media only screen and (max-width: 500px) {
-    .wrapper {
-        background-size: auto;
-    }
-}

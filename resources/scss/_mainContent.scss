@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     width: $widthAll;
+    margin-top: 20px;
 
     ul {
         list-style-type: none;
@@ -80,9 +81,11 @@
 
     .season-choice,
     .heavy-choice {
-        margin-top: 0.5em;
+        margin: 0.7em 0;
         position: absolute;
-        bottom: -2em;
+        bottom: 0;
+        //top: 0;
+        width: 100%;
 
         input {
             display: none;
@@ -118,6 +121,7 @@
     .choice-menu {
         display: flex;
         align-self: center;
+        margin-bottom: 1em;
 
         >li {
             font-size: 2.2rem;
@@ -159,6 +163,8 @@
     .content-choice {
         display: flex;
         position: relative;
+        padding-bottom: 3em;
+        justify-content: space-between;
 
         &.loading {
             li[data-id] {
@@ -185,7 +191,7 @@
             background-color: #fff;
             flex: 1;
             border-radius: 1em;
-            margin-top: 1em;
+            //margin-top: 1em;
             transition: 0.4s;
             overflow: hidden;
             position: relative;
@@ -262,25 +268,27 @@
     }
 
     @media only screen and (max-width: 1000px) {
-        .content-choice {
-            flex-wrap: wrap;
-            margin: -0.5em;
+        .main.content {
+            .content-choice {
+                flex-wrap: wrap;
+                margin: -0.5em;
 
 
-            .choice-list {
-                flex: 40%;
-                margin: 0.5em;
-
-                ul {
-                    max-height: 20vh;
-                }
-
-                +.choice-list {
+                .choice-list {
+                    flex: 40%;
                     margin: 0.5em;
 
-                }
-            }
+                    ul {
+                        max-height: 20vh;
+                    }
 
+                    +.choice-list {
+                        margin: 0.5em;
+
+                    }
+                }
+
+            }
         }
 
         .main.content {
@@ -299,27 +307,33 @@
             }
         }
 
+        .season-choice {
+            left: 0.5em
+        }
+
 
 
     }
 
     @media only screen and (max-width: 500px) {
 
-        .choice-menu {
-            >li {
-                font-size: 1.6rem;
-                margin: 0;
+        .main.content {
+            .choice-menu {
+                >li {
+                    font-size: 1.6rem;
+                    margin: 0;
 
-                +li {
-                    margin-left: 0.5em;
+                    +li {
+                        margin-left: 0.5em;
+                    }
+
+                    .choice-icon {
+                        height: 30px;
+                        width: 30px;
+                    }
                 }
 
-                .choice-icon {
-                    height: 30px;
-                    width: 30px;
-                }
             }
-
         }
 
         .content-choice {
@@ -374,5 +388,10 @@
 
         .main.content .season-choice label {
             border-radius: 0;
+        }
+
+        .season-choice {
+            left: 0;
+            text-align: center;
         }
     }
