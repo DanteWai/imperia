@@ -35,15 +35,15 @@ class BrandsRepository extends Repository {
         return $builder->paginate(20);
     }
 
-    public function getBrandsForSearch($search,$currentPage=1){
+    public function getBrandsForSearch($search, $sortName, $sort, $currentPage=1){
 
         Paginator::currentPageResolver(function () use ($currentPage) {
             return $currentPage;
         });
 
-//$where = strtolower($where);
+        //$where = strtolower($where);
 
-        $builder = $this->model->select('*');
+        $builder = $this->model->select('*')->orderBy($sortName, $sort);
         if($search){
             $builder->whereRaw('lower(brand_name) like (?)',["%{$search}%"])
                 ->orderBy('updated_at', 'desc');

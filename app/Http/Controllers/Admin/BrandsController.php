@@ -32,22 +32,13 @@ class BrandsController extends AdminController
 
             if(isset($request->only('page')['page']))
             $page = $request->only('page')['page'];
+            $search = $request->only('search')['search'];
+            $sort = $request->only('sort')['sort'];
+            $sort_type = $request->only('sort_type')['sort_type'];
 
-            if(isset($request->only('sort')['sort'])){
-                $search = $request->only('search')['search'];
-                $sort = $request->only('sort')['sort'];
-
-                $brands = $this->b_rep->getBrandsForSort($search,$sort);
-                return response()->json($brands);
-            }
-
-            if(isset($request->only('search')['search'])){
-                $search = $request->only('search')['search'];
-                $brands = $this->b_rep->getBrandsForSearch($search,$page);
-                return response()->json($brands);
-            }
-            $brands = $this->b_rep->getBrandsForSearch(false,$page);
+            $brands = $this->b_rep->getBrandsForSearch($search,$sort_type,$sort,$page);
             return response()->json($brands);
+
         }
 
         $title = $this->title = 'Производители';
