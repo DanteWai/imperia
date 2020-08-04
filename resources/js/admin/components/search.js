@@ -9,7 +9,7 @@ export class SearchComponent extends Component{
 
     }
     init(){
-        this.url = 'vestnik_admin_panel/'+this.$el.dataset.href
+        this.url = 'imperia_admin_panel/'+this.$el.dataset.href
         this.token = this.$el.dataset.token
         this.server = new Server('/');
         this.event = new Event('search',{bubbles: false, cancelable: false});
@@ -35,15 +35,16 @@ function  inputHandler(e) {
 
 function sendRequest(){
     let data = {
-        'value': this.$el.value,
+        'search': this.$el.value,
         'page': this.page,
         'sort': this.sort,
         'sort_type': this.sortType
     }
-    console.log(data)
+
+    console.log('data', data)
 
     this.server.get(this.url, data,{}, this.token).then(answer => {
-        console.log(answer)
+        console.log('answer', answer)
         this.answer = answer;
         this.$el.dispatchEvent(this.event)
     });

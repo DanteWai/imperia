@@ -20,7 +20,8 @@ export class ListComponent extends Component{
         this.search = new SearchComponent('search')
         this.pagination = new PaginationComponent('paginate')
         this.sort = new SortComponent('sort')
-        this.body = this.$el.querySelector('.elements-body')
+        //this.body = this.$el.querySelector('.elements-body')
+        this.body = this.$el.querySelector('tbody')
 
 
         this.search.$el.addEventListener('search',()=>{

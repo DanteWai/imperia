@@ -4,6 +4,7 @@ import Server from './servers';
 import Tabs from './tabs';
 import {PriceToParse} from "./components/priceToParse"; //временный компонент
 import {OrdersComponents} from "@js/admin/components/mainPage/ordersComponent";
+import {ListComponent} from './components/list';
 
 //import Lang from './../lang';
 //console.log(route('productPage',['3','6'],[4]))
@@ -16,7 +17,7 @@ window.addEventListener('load',() => {
 
     new OrdersComponents('main-orders-component')
 
-
+    new ListComponent('page-list3');
 
     new PriceToParse('parse')
     new Tabs({parent:'.tabs-contaiter'})
