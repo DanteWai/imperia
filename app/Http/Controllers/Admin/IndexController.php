@@ -21,7 +21,6 @@ class IndexController extends AdminController
     public function index() {
         $this->title = 'Панель администратора';
         $orders = $this->order_rep->get();
-        dump($orders);
         $this->content = view('admin.mainPageContent',compact('orders'))->render();
         return $this->renderOutput();
 

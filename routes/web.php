@@ -2,16 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 /*Главная*/
 Route::get('/','IndexController@index')->name('home');
@@ -35,8 +25,6 @@ Route::post('/catalog/basket','CatalogController@basketList')->name('basket');
 Route::post('/send_mail',['uses'=>'EmailController@footerMessages'])->name('footerMessages');
 
 /*Админка*/
-
-
 Route::group(['prefix'=>env('APP_ADMIN_URL', 'imperia_admin_panel')], function(){
     Route::get('/',['uses'=>'Admin\IndexController@index'])->name('admin');
 
@@ -55,7 +43,8 @@ Route::group(['prefix'=>env('APP_ADMIN_URL', 'imperia_admin_panel')], function()
     Route::resources([
         'brands' => 'Admin\BrandsController',
         'pages' => 'Admin\PagesController',
-        'parsers' => 'Admin\ParsersController'
+        'parsers' => 'Admin\ParsersController',
+        'orders' => 'Admin\OrdersController'
     ]);
 
 

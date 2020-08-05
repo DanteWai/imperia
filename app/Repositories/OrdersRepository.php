@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\Product_option;
 use Carbon\Carbon;
 
 class OrdersRepository extends Repository {
@@ -10,6 +11,24 @@ class OrdersRepository extends Repository {
     public function __construct(Order $order)
     {
         $this->model = $order;
+    }
+
+    public function getFullOrder($id){
+        $order = $this->model->select('*')->where('order_id',$id)->first();
+
+        $options_id = array_keys($order['basket']);
+
+        $options_rep = new OptionsRepository(new Product_option());
+        $products = $options_rep->getProducts($options_id);
+
+        $basket = [];
+        foreach ($products as $key => $product){
+            $product['count_basket'] = $order['basket'][$product['option_id']];
+            $basket[$product['option_id']] = $product;
+        }
+
+        $order['basket'] = $basket;
+        return $order;
     }
 
     public function addOrder($data) {
