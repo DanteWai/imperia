@@ -21,8 +21,8 @@
 </div>
 
 <div class="filters" id="sort">
-    <button class="btn-outline" data-search="created_at">По дате</button>
-    <button class="btn-outline" data-search="page_name">По имени</button>
+    <button class="btn-outline" data-href="pages" data-search="created_at">По дате</button>
+    <button class="btn-outline" data-href="pages" data-search="page_name">По имени</button>
 </div>
 
 <ul class="paginate" id="paginate">
@@ -33,7 +33,7 @@
     @endif
 </ul>
 
-<table id="page-list" class="table-elements">
+<table id="page-list" class="table-elements" data-list="pages">
     <thead>
     <tr>
         <td>Название</td>
@@ -58,7 +58,9 @@
     </tr>
 
     @empty
-        <p>Элементов нет</p>
+        <tr>
+            <td colspan="4" style="text-align: center;">Элементов нет</td>
+        </tr>
     @endforelse
     </tbody>
 </table>

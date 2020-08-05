@@ -17,8 +17,9 @@ window.addEventListener('load',() => {
 
     new OrdersComponents('main-orders-component')
 
-    new ListComponent('page-list2');
-    new ListComponent('page-list3');
+    new ListComponent('page-list');     // Страница страниц)
+    new ListComponent('page-list2');    // Страница товаров
+    new ListComponent('page-list3');    // Страница брендов
 
     new PriceToParse('parse')
     new Tabs({parent:'.tabs-contaiter'})

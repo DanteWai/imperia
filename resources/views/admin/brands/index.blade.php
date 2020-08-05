@@ -28,7 +28,7 @@
 <ul class="paginate" id="paginate">
     @if($brands->lastPage() > 1)
         @for($i = 1; $i <= $brands->lastPage();$i++)
-            <div data-page="{$i}}" class="paginate-item @if ($brands->currentPage() == $i)  {{"active"}}  @endif">{{$i}}</div>
+            <div data-page="{{$i}}" class="paginate-item @if ($brands->currentPage() == $i)  {{"active"}}  @endif">{{$i}}</div>
         @endfor
     @endif
 </ul>
