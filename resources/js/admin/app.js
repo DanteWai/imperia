@@ -1,6 +1,6 @@
 import '@scss/admin/adminStyle.scss';
 import "regenerator-runtime/runtime";
-import Server from './servers';
+import Server from '@core/servers';
 import Tabs from './tabs';
 import {PriceToParse} from "./components/priceToParse"; //временный компонент
 import {OrdersComponents} from "@js/admin/components/mainPage/ordersComponent";
@@ -16,13 +16,13 @@ import {ListComponent} from './components/list';
 window.addEventListener('load',() => {
 
     new OrdersComponents('main-orders-component')
-
     new ListComponent('list-component');   //список элементов
-
-
     new PriceToParse('parse')
     new Tabs({parent:'.tabs-contaiter'})
-    let server = new Server();
+
+
+    //TODO убрать всё что ниже в компоненты
+    let server = new Server('admin'); //этот server deprecated
 
 
     // Вешаем на файловые инпуты обработку текста
@@ -35,12 +35,9 @@ window.addEventListener('load',() => {
     }
 
     // смена категории во время добавления товара
-    let category_selector =document.querySelector('.category_selector')
+    let category_selector = document.querySelector('.category_selector')
     category_selector && category_selector.addEventListener('change', async function () {
-        let answer  = await server.get(this.dataset.href + '?id=' + this.value,{
-            'X-CSRF-TOKEN':document.querySelector('input[name="_token"]'.value),
-            "X-Requested-With": "XMLHttpRequest",
-        })
+        let answer  = await server.get(this.dataset.href,{id:this.value},{}, document.querySelector('input[name="_token"]'.value))
         answer.html && (document.querySelector('.product-options').innerHTML = answer.html)
     })
 });

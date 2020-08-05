@@ -1,5 +1,5 @@
-import {Component} from "../../core/component";
-import Server from '../../core/servers';
+import {Component} from "@core/component";
+import Server from '@core/servers';
 
 
 export class SearchComponent extends Component{

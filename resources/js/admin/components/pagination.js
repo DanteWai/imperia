@@ -1,5 +1,4 @@
-import {Component} from "../../core/component";
-import Server from "../../core/servers";
+import {Component} from "@core/component";
 
 export class PaginationComponent extends Component{
     constructor(id){
@@ -36,11 +35,3 @@ export class PaginationComponent extends Component{
 
 }
 
-/*$('.paginate').on('click','.paginate-item',function (e) {
-        let $element = $(this);
-        if(!$element.hasClass('active')){
-            $('.paginate-item.active').removeClass('active');
-            $element.addClass('active');
-            $search.trigger('input');
-        }
-    });*/

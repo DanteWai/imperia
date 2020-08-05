@@ -30,25 +30,3 @@ export default class Tabs {
     }
 
 }
-
-/*let parentsTabs = document.querySelectorAll('.tabs-contaiter')
-
-if(parentsTabs.length !=0 ) {
-    for (let i = 0; i < parentsTabs.length; i++) {
-
-        let tabsArticle = parentsTabs[i].querySelectorAll('[data-t-article]')
-
-        for (let j = 0; j < tabsArticle.length; j++) {
-
-            if(j===0) {
-                tabsArticle[j].classList.add("active")
-                parentsTabs[i].querySelector(`[data-t-source="${tabsArticle[j].dataset.tArticle}"] `).classList.add("active")
-            }
-
-            tabsArticle[j].addEventListener('click', function(e) {
-
-
-            })
-        }
-    }
-}*/
