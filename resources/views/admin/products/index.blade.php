@@ -28,7 +28,11 @@
 </div>
 
 <ul class="paginate" id="paginate">
-
+    @if($products->lastPage() > 1)
+        @for($i = 1; $i <= $products->lastPage();$i++)
+            <div data-page="{$i}}" class="paginate-item @if ($products->currentPage() == $i)  {{"active"}}  @endif">{{$i}}</div>
+        @endfor
+    @endif
 </ul>
 
 <table id="page-list2" class="table-elements" data-list="products">

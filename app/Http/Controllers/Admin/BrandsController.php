@@ -42,7 +42,8 @@ class BrandsController extends AdminController
         }
 
         $title = $this->title = 'Производители';
-        $brands = $this->b_rep->get();
+        //$brands = $this->b_rep->get();
+        $brands = $this->b_rep->getBrandsForSearch(false,'updated_at', 'desc',1);
         $this->content = view('admin.brands.index',compact('brands', 'title'))->render();
         return $this->renderOutput();
     }

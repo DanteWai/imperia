@@ -13,8 +13,6 @@ class OptionsRepository extends Repository {
     public function __construct(Product_option $options)
     {
         $this->model = $options;
-
-
     }
 
     public function getProductsForSearch($category_id, $search, $sortName, $sort, $currentPage = 1) {

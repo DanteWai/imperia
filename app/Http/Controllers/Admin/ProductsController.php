@@ -12,7 +12,7 @@ class ProductsController extends AdminController
     public function __construct()
     {
         parent::__construct();
-        $this->template = env('THEME') . '.admin.index';
+        $this->template = 'admin.index';
     }
 
     public function index($category, Request $request)
@@ -35,10 +35,8 @@ class ProductsController extends AdminController
 
         $title = $this->title = 'Управление товаром';
         //$products = $this->p_rep->getAdminProducts($category_id->category_id);
-        $products = $this->o_rep->getProductsForAdmin($category_id->category_id);
-
-
-        $this->content = view(env('THEME') . '.admin.products.index',compact('products','category','title'))->render();
+        $products = $this->o_rep->getProductsForSearch($category_id->category_id, false,'updated_at','asc',1);
+        $this->content = view('admin.products.index',compact('products','category','title'))->render();
 
         return $this->renderOutput();
     }

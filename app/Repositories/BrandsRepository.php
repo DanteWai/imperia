@@ -49,7 +49,7 @@ class BrandsRepository extends Repository {
                 ->orderBy('updated_at', 'desc');
         }
 
-        return $builder->paginate(20);
+        return $builder->paginate(3);
     }
 
     public function one($aliasName,$alias, $attr = array()){
