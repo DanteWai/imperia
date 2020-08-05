@@ -33,7 +33,7 @@
     @endif
 </ul>
 
-<table id="page-list" class="table-elements" data-list="pages">
+<table id="list-component" class="table-elements" data-list="pages">
     <thead>
     <tr>
         <td>Название</td>

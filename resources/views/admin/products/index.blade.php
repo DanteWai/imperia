@@ -35,7 +35,7 @@
     @endif
 </ul>
 
-<table id="page-list2" class="table-elements" data-list="products">
+<table id="list-component" class="table-elements" data-list="products">
     <thead>
     <tr>
         <td>Название</td>
