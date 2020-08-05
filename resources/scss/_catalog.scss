@@ -444,12 +444,12 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    overflow: hidden;
+    //overflow: hidden;
     height: 50px;
 
     background-color: #111111;
 
-    >ul {
+    >.options-group {
         display: flex;
         margin: 0;
         padding: 0;
@@ -459,7 +459,7 @@
         list-style-type: none;
 
 
-        li:last-child {
+        >li:last-child {
             margin-right: 3em;
             margin-left: 2em;
         }
@@ -519,6 +519,100 @@
             }
 
 
+        }
+    }
+
+    .d-select {
+        width: 10vw;
+        min-width: 100px;
+        margin-right: 3em;
+        position: relative;
+        &.open {
+            .d-select__dropdown {
+                display: block;
+                z-index: 100;
+            }
+
+            .d-select__input {
+                border-color: transparent;
+                //border-bottom: none;
+                .arrow{
+                    transform: rotate(0.75turn);
+                }
+            }
+
+            .d-select__backdrop {
+                display: block;
+            }
+        }
+        &__input {
+            //height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: .6em 0 .2em .8em;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.7em;
+            border-bottom: 2px solid $mainColor;
+            &:hover {
+
+                border-color: $mainHoverColor;
+            }
+
+            .arrow{
+                fill: #febe0a;
+                transform: rotate(0.25turn);
+                margin-left: 5px;
+            }
+        }
+        &__dropdown {
+            display: none;
+            position: absolute;
+            border: 1px solid #ccc;
+            top: 30px;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.7em;
+        }
+        &__list {
+            color: #333;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            background: #fff;
+        }
+
+        &__backdrop {
+            position: fixed;
+            display: none;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: transparent;
+        }
+
+        &__item {
+            padding: .6rem;
+            border-bottom: 1px solid #ccc;
+            margin:0;
+            &:last-child{
+                border-bottom: none;
+            }
+
+            &.active {
+                background-color: bisque;
+            }
+
+            &:hover {
+                background-color: #eee;
+                cursor: pointer;
+                transition: .15s background-color ease-in;
+            }
         }
     }
 
@@ -658,7 +752,7 @@
 	&-action {
 		position: relative;
         cursor: pointer;
-        
+
         &.active {
             .sort-action__body {
                 display: block;
@@ -741,7 +835,7 @@
 		&:first-child {
 			border-left: none;
         }
-        
+
         &:hover {
             border-left-color: #febe0a;
         }
@@ -1177,7 +1271,7 @@
 }
 
 @media only screen and (max-width: 1200px) {
-    
+
     // Название товара в заголовке
     .header {
         & > h3 {
@@ -1244,7 +1338,7 @@
         .basket-count {
             margin-bottom: 10px;
         }
-        
+
         .basket-block {
             flex-direction: column;
 

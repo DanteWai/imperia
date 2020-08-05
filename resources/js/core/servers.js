@@ -1,7 +1,7 @@
 
 export default class Server {
     constructor(baseURL = '/') {
-        this.baseURL = baseURL;
+        this.baseURL = baseURL === 'admin' ? '/imperia_admin_panel/' : baseURL;
     }
 
     get(url, data={}, headers = {}, token){

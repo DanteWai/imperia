@@ -1,11 +1,18 @@
-<ul >
+<ul class="options-group">
     <li>
-        <select  data-option-filter="base_option" data-filter="brand_id" class="select">
-            <option value="" selected disabled hidden>Производитель</option>
-            @foreach($params['brand'] as $item)
-                <option data-type="radio" data-id="{{  $item['brand_id']}}">{{$item['brand_name']}}</option>
-            @endforeach
-        </select>
+        <div class="d-select" data-option-filter="base_option" data-filter="brand_id">
+            <div class="d-select__input" data-type="input">
+                <span data-type="value">Производитель</span>
+                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>
+            </div>
+            <div class="d-select__dropdown">
+                <ul class="d-select__list">
+                    @foreach($params['brand'] as $item)
+                        <li class="d-select__item" data-type="item" data-id="{{$item['brand_id']}}">{{$item['brand_name']}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
     </li>
     <li>
         <select  data-option-filter="json_option" data-filter="width" class="select">

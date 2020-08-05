@@ -15,7 +15,7 @@ import {SendCallComponent} from './components/footer/sendCall';
 //Общее
 import {BasketComponent} from "./components/all/basket";
 import {MainMenuComponent} from './components/all/mainMenu';
-import Modal from "@core/modal";
+import Select from "@core/select";
 
 
 window.addEventListener('load',() => {
@@ -27,5 +27,8 @@ window.addEventListener('load',() => {
     new SendCallComponent('call');
     new ProductPageComponent('product-page', basket);
     new MainMenuComponent('main-menu');
-
+    new Select('.d-select',{
+        multiple:true,
+        //appendClass:'some_class'
+    })
 });

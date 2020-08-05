@@ -8,20 +8,22 @@ export class OrdersComponents extends Component{
     }
 
     init() {
-        this.server = new Server();
+        this.server = new Server('admin');
+
         this.token = document.querySelector('[name="_token"]').value;
         this.fullOrderLink = document.querySelectorAll('.full-order')
         this.fullOrderLink.forEach(el => {
-            el.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = e.target;
-                const id = target.dataset.id;
-                console.log('clck')
-                // TODO тут рамс
-                this.server.get(`orders/${id}`, {}, {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
-                    console.log('answer', answer);
-                });
-            })
+            el.addEventListener('click', linkHandler.bind(this))
         })
     }
+}
+
+
+function linkHandler(e){
+    e.preventDefault();
+    const target = e.target;
+    const id = target.dataset.id;
+    this.server.get(`orders/${id}`, {}, {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
+        console.log('answer', answer);
+    });
 }

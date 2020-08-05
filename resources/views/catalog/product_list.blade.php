@@ -8,7 +8,6 @@
                 <a @if ($products->currentPage() == $i)  {{"class=active"}}  @endif data-page= "{{$i}}"></a>
             @endfor
         @endif
-
     </div>
 </section>
 @foreach($products as $product)
