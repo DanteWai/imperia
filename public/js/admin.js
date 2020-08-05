@@ -1198,6 +1198,8 @@ var ListRenderComponent = /*#__PURE__*/function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrdersComponents", function() { return OrdersComponents; });
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1221,6 +1223,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
+
+
 var OrdersComponents = /*#__PURE__*/function (_Component) {
   _inherits(OrdersComponents, _Component);
 
@@ -1235,11 +1239,21 @@ var OrdersComponents = /*#__PURE__*/function (_Component) {
   _createClass(OrdersComponents, [{
     key: "init",
     value: function init() {
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]();
+      this.token = document.querySelector('[name="_token"]').value;
       this.fullOrderLink = document.querySelectorAll('.full-order');
       this.fullOrderLink.forEach(function (el) {
         el.addEventListener('click', function (e) {
           e.preventDefault();
-          console.log('clck');
+          var target = e.target;
+          var id = target.dataset.id;
+          console.log('clck'); // TODO тут рамс
+
+          this.server.get("orders/".concat(id), {}, {
+            'Content-Type': 'application/json;charset=utf-8'
+          }, this.token).then(function (answer) {
+            console.log('answer', answer);
+          });
         });
       });
     }
@@ -2020,6 +2034,179 @@ var Component = /*#__PURE__*/function () {
 
   return Component;
 }();
+
+/***/ }),
+
+/***/ "./resources/js/core/modal.js":
+/*!************************************!*\
+  !*** ./resources/js/core/modal.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createFooter(buttons) {
+  if (buttons && buttons.length > 0) {
+    var $footer = document.createElement('div');
+    $footer.classList.add('modal-footer');
+    buttons.forEach(function (b) {
+      var $button = document.createElement('button');
+      $button.textContent = b.text;
+      $button.classList.add('btn');
+      $button.classList.add("btn-".concat(b.type || 'secondary'));
+      $button.addEventListener('click', b.handler || function () {});
+      $footer.appendChild($button);
+    });
+    return $footer;
+  }
+
+  return false;
+}
+
+function _createModal(options) {
+  var modal = document.createElement('div');
+  modal.classList.add('dmodal');
+  var header = !options.showHeader ? '' : "<div class=\"modal-header\">\n            <span class=\"modal-title\">".concat(options.title || 'Модальное окно', "</span>\n            ").concat(options.closable ? '<span class="modal-close" data-modal-close>x</span>' : '', "\n        </div>");
+  var html = "\n    <div class=\"modal-overlay\" data-modal-close>\n        <div class=\"modal-window\" style=\"width: ".concat(options.width || '700px', ";\">\n            ").concat(header, "\n            <div class=\"modal-body\" data-content>\n                ").concat(options.content ? options.content : '', "\n            </div>\n        </div>\n    </div>\n    ");
+  modal.insertAdjacentHTML('afterbegin', html);
+
+  var footer = _createFooter(options.footerButtons);
+
+  if (footer) {
+    var content = modal.querySelector('[data-content]'); // вставка элемента после определенного элемента
+
+    content.parentNode.insertBefore(footer, content.nextSibling);
+  }
+
+  document.body.appendChild(modal);
+  return modal;
+}
+
+var ANIMATION_SPEED = 200;
+
+var closeModal = function closeModal(e) {
+  if (typeof e.target.dataset.modalClose !== 'undefined') this.close();
+};
+
+var Modal = /*#__PURE__*/function () {
+  function Modal(options) {
+    _classCallCheck(this, Modal);
+
+    this.$modal = _createModal(options);
+    this.closing = false;
+    this.destroyed = false;
+    this.destroyAfterClose = options.destroyAfterClose;
+    this.onClose = typeof options.onClose === 'function' ? options.onClose : function () {};
+    this.onOpen = typeof options.onOpen === 'function' ? options.onOpen : function () {};
+    this.beforeClose = typeof options.beforeClose === 'function' ? options.beforeClose : function () {
+      return true;
+    };
+    this.init();
+  }
+
+  _createClass(Modal, [{
+    key: "init",
+    value: function init() {
+      this.$modal.addEventListener('click', closeModal.bind(this));
+    }
+  }, {
+    key: "appendClasses",
+    value: function appendClasses(str) {
+      var $window = this.$modal.querySelector('.modal-window');
+      str.split(' ').forEach(function (el) {
+        $window.classList.add(el);
+      });
+    }
+  }, {
+    key: "open",
+    value: function open() {
+      if (!this.destroyed) {
+        this.$modal.classList.add('open');
+        this.onOpen();
+      } else {
+        return console.log('modal destroyed');
+      }
+    }
+  }, {
+    key: "close",
+    value: function () {
+      var _close = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var _this = this;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!(!!this.beforeClose() && !this.destroyed && !this.closing)) {
+                  _context.next = 6;
+                  break;
+                }
+
+                this.closing = true;
+                this.$modal.classList.add('hidden');
+                this.$modal.classList.remove('open');
+                _context.next = 6;
+                return new Promise(function (resolve, reject) {
+                  setTimeout(function () {
+                    _this.$modal.classList.remove('hidden');
+
+                    _this.closing = false;
+
+                    _this.onClose();
+
+                    resolve();
+                  }, ANIMATION_SPEED);
+                });
+
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function close() {
+        return _close.apply(this, arguments);
+      }
+
+      return close;
+    }()
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.$modal.removeEventListener('click', closeModal);
+      this.$modal.parentNode.removeChild(this.$modal);
+      this.destroyed = true;
+    }
+  }, {
+    key: "setContent",
+    value: function setContent(html) {
+      this.$modal.querySelector('.modal-body').innerHTML = html;
+    }
+  }, {
+    key: "setTitle",
+    value: function setTitle(html) {
+      this.$modal.querySelector('.modal-title').innerHTML = html;
+    }
+  }]);
+
+  return Modal;
+}();
+
+
 
 /***/ }),
 

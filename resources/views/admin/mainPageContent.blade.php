@@ -15,7 +15,7 @@
         <h2 class="mainPageMenu-header">Страницы</h2>
     </li>
 </ul>
-
+@csrf
 <h2 class="section-title">Новые заказы</h2>
 <table class="table-elements" id="main-orders-component">
     <thead>
@@ -38,7 +38,7 @@
             <td>{{$item->options['getting']}}</td>
             <td>{{$item->price}}</td>
             <td>{{$item->status['active']['date']}}</td>
-            <td><a class="full-order" href="#">Открыть</a></td>
+            <td><a class="full-order" href="{{route('orders.show',['order' => $item->order_id])}}" data-id="{{$item->order_id}}">Открыть</a></td>
         </tr>
     @endforeach
     </tbody>
