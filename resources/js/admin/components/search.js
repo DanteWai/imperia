@@ -9,7 +9,9 @@ export class SearchComponent extends Component{
 
     }
     init(){
-        this.url = 'imperia_admin_panel/'+this.$el.dataset.href
+        this.categoryName = document.querySelector('[data-category-name].active') ? document.querySelector('[data-category-name].active').dataset.categoryName : '';
+        //this.url = 'imperia_admin_panel/'+this.$el.dataset.href+this.categoryName;
+        this.url = this.categoryName ? `imperia_admin_panel/${this.$el.dataset.href}/${this.categoryName}` : `imperia_admin_panel/${this.$el.dataset.href}`;
         this.token = this.$el.dataset.token
         this.server = new Server('/');
         this.event = new Event('search',{bubbles: false, cancelable: false});

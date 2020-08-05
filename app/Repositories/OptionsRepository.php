@@ -17,7 +17,25 @@ class OptionsRepository extends Repository {
 
     }
 
+    public function getProductsForSearch($category_id, $search, $sortName, $sort, $currentPage = 1) {
 
+        Paginator::currentPageResolver(function () use ($currentPage) {
+            return $currentPage;
+        });
+
+        $builder = $this->model->select('*')
+            ->orderBy($sortName, $sort)
+            ->whereHas('Product', function ($q) use($category_id){
+                $q->where('category_id',$category_id);
+            });
+
+        if ($search) {
+            $builder->whereRaw('lower(full_name) like (?)',["%{$search}%"])
+            ->orderBy('updated_at', 'desc');
+        }
+
+        return $builder->paginate(20);
+    }
 
 
     /*Получаем конкретный продукт по id*/

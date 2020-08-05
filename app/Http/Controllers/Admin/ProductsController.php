@@ -15,10 +15,25 @@ class ProductsController extends AdminController
         $this->template = env('THEME') . '.admin.index';
     }
 
-    public function index($category)
+    public function index($category, Request $request)
     {
-        $title = $this->title = 'Управление товаром';
+
         $category_id = $this->c_rep->getIdFromAlias($category);
+
+        if ($request->ajax()) {
+
+            if(isset($request->only('page')['page']))
+            $page = $request->only('page')['page'];
+            $search = $request->only('search')['search'];
+            $sort = $request->only('sort')['sort'];
+            $sort_type = $request->only('sort_type')['sort_type'];
+
+            $products = $this->o_rep->getProductsForSearch($category_id->category_id, $search,$sort_type,$sort,$page);
+            return response()->json($products);
+
+        }
+
+        $title = $this->title = 'Управление товаром';
         //$products = $this->p_rep->getAdminProducts($category_id->category_id);
         $products = $this->o_rep->getProductsForAdmin($category_id->category_id);
 
