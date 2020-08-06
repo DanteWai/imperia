@@ -1,61 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Didact+Gothic|Ubuntu&display=swap');
-@import "smart-grid";
-
-@include reset();
-
-$bgBody:#f1f4f6; // основной фон админки
-$bgHeader:#F2F2F2; // фон для шапки
-$colorHeader:#1F2833; // цвет текста для шапки
-$bgMenu:#1F2833; //фон для основного меню слева
-$colorMenu:#d0d0d0; //цвет для основного меню слева
-$bgCardElement:#fff; // цвет для карточек с элементами
-$titleColor:#495057; //основной цвет для заголовков
-
-
-$bgHomeButton:#fff; //кнопки на главной странице
-
-$basicButtonColor:#3f6ad8;
-$standartButtonColor:#6c757d;
-$backButtonColor:#343a40;
-$dangerButtonColor:#d92550;
-$successButtonColor:#3ac47d;
-
-
-$mrt:1%;
-
-
-
-* {
-    box-sizing: border-box;
-}
-html{
-    height:100%;
-}
-body{
-    height: 100%;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 400;
-    margin:0;
-    padding: 0;
-}
-
-#wrapper{
-
-    height: 100%;
-    background: $bgBody;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
+@import "core/init";
 
 @import '../core/modal';
-@import "adminTop";
-@import "adminLeftSide";
-@import "adminContent";
-@import "adminForms";
-@import "tabs";
-@import 'modal';
-@import 'btn';
+@import "layout/adminTop";
+@import "layout/adminLeftSide";
+@import "layout/adminContent";
+@import "layout/adminForms";
+@import "components/tabs";
+@import 'components/modal';
+@import 'components/btn';
 
 /*
 @import "adminLists";
