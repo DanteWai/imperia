@@ -24,7 +24,7 @@ class OrdersRepository extends Repository {
         $basket = [];
         foreach ($products as $key => $product){
             $product['count_basket'] = $order['basket'][$product['option_id']];
-            $basket[$product['option_id']] = $product;
+            $basket[] = $product;
         }
 
         $order['basket'] = $basket;
