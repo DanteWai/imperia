@@ -48,80 +48,15 @@ body{
     flex-direction: column;
 }
 
+@import '../core/modal';
 @import "adminTop";
 @import "adminLeftSide";
 @import "adminContent";
 @import "adminForms";
 @import "tabs";
 @import 'modal';
-
-/*Базовый стайл кнопок*/
-.btn{
-    text-decoration: none;
-    border:none;
-    color:#fff;
-    padding: 0.8em 2em;
-    display: inline-block;
-    font-size: 1.1rem;
-    background: $standartButtonColor;
-    border-radius: 3px;
-    cursor: pointer;
-    &:hover{
-        background: darken($standartButtonColor,10%);
-    }
-}
-
-.btn-outline{
-    text-decoration: none;
-    border:1px solid $standartButtonColor;
-    color:$standartButtonColor;
-    padding: 0.8em 2em;
-    display: inline-block;
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0);
-    border-radius: 3px;
-    cursor: pointer;
-    &:hover{
-        border-color: darken($standartButtonColor,10%);
-        color: darken($standartButtonColor,10%);
-    }
-}
-
-.bg-basic{
-    background: $basicButtonColor;
-    &:hover{
-        background: darken($basicButtonColor,10%);
-    }
-}
-
-.bg-basic-outline{
-    border-color: $basicButtonColor;
-    color: $basicButtonColor;
-    &:hover{
-        border-color: darken($basicButtonColor,10%);
-        color: darken($basicButtonColor,10%);
-    }
-}
-
-.bg-back{
-    background: $backButtonColor;
-    &:hover{
-        background: darken($backButtonColor,10%);
-    }
-}
-
-.bg-success{
-    background: $successButtonColor;
-    &:hover{
-        background: darken($successButtonColor,10%);
-    }
-}
-
+@import 'btn';
 
 /*
-
-
-
-
 @import "adminLists";
 */

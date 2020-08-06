@@ -1196,6 +1196,7 @@ var OrdersComponents = /*#__PURE__*/function (_Component) {
       var _this = this;
 
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin');
+      this.modal = false;
       this.token = document.querySelector('[name="_token"]').value;
       this.fullOrderLink = document.querySelectorAll('.full-order');
       this.fullOrderLink.forEach(function (el) {
@@ -1208,6 +1209,8 @@ var OrdersComponents = /*#__PURE__*/function (_Component) {
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 function linkHandler(e) {
+  var _this2 = this;
+
   e.preventDefault();
   var target = e.target;
   var id = target.dataset.id;
@@ -1215,34 +1218,45 @@ function linkHandler(e) {
     'Content-Type': 'application/json;charset=utf-8'
   }, this.token).then(function (answer) {
     console.log('answer', answer);
-    var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
-      showHeader: true,
-      title: "\u0417\u0430\u043A\u0430\u0437 \u2116 ".concat(answer.order_id, " \u043E\u0442 ").concat(new Date(answer.created_at).toLocaleDateString('ru-RU')),
-      width: '60%',
-      closable: true,
-      footerButtons: [{
-        text: 'Подтвердить',
-        type: 'bg-primary',
-        handler: function handler() {
-          modal.close();
-        }
-      }, {
-        text: 'Отменить',
-        type: 'bg-danger',
-        handler: function handler() {
-          modal.close();
-        }
-      }, {
-        text: 'Закрыть',
-        type: 'bg-basic',
-        handler: function handler() {
-          modal.close();
-        }
-      }],
-      content: "\n                <div class=\"modal-order\">\n                    <div class=\"modal-order-title\">\n                        <span>\u0417\u0430\u043A\u0430\u0437\u0447\u0438\u043A:</span>\n                        <span>\u0422\u0435\u043B\u0435\u0444\u043E\u043D:</span>\n                        <span>\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u0430\u044F \u043F\u043E\u0447\u0442\u0430:</span>\n                        <span>\u0421\u043F\u043E\u0441\u043E\u0431 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438:</span>\n                        <span>\u0421\u043F\u043E\u0441\u043E\u0431 \u043E\u043F\u043B\u0430\u0442\u044B:</span>\n                    </div>\n                    <div class=\"modal-order-info\">\n                        <span>".concat(answer.options.name, "</span>\n                        <span>").concat(answer.options.phone, "</span>\n                        <span>").concat(answer.options.email, "</span>\n                        <span>").concat(answer.options.getting, "</span>\n                        <span>").concat(answer.options.payment, "</span>\n                    </div>\n                </div>\n                <table class=\"table-elements\">\n                    <thead>\n                        <tr>\n                            <td>\u2116</td>\n                            <td>\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435</td>\n                            <td>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E</td>\n                            <td>\u0426\u0435\u043D\u0430</td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        ").concat(answer.basket.map(function (item, i) {
-        return "\n                                <tr>\n                                    <td>".concat(i + 1, "</td>\n                                    <td>").concat(item.full_name, "</td>\n                                    <td>").concat(item.count_basket, "</td>\n                                    <td>").concat(item.price, "</td>\n                                </tr>\n                            ");
-      }).join(''), "\n                    </tbody>\n                </table>\n                <div class=\"modal-price-block\">\n                    <span>\u041E\u0431\u0449\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u0437\u0430\u043A\u0430\u0437\u0430: <span class=\"modal-price\">").concat(answer.price, " P</span></span>\n                </div>\n            ")
-    });
+    var title = "\u0417\u0430\u043A\u0430\u0437 \u2116 ".concat(answer.order_id, " \u043E\u0442 ").concat(new Date(answer.created_at).toLocaleDateString('ru-RU'));
+    var content = "\n                <div class=\"modal-order\">\n                    <div class=\"modal-order-title\">\n                        <span>\u0417\u0430\u043A\u0430\u0437\u0447\u0438\u043A:</span>\n                        <span>\u0422\u0435\u043B\u0435\u0444\u043E\u043D:</span>\n                        <span>\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u0430\u044F \u043F\u043E\u0447\u0442\u0430:</span>\n                        <span>\u0421\u043F\u043E\u0441\u043E\u0431 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438:</span>\n                        <span>\u0421\u043F\u043E\u0441\u043E\u0431 \u043E\u043F\u043B\u0430\u0442\u044B:</span>\n                    </div>\n                    <div class=\"modal-order-info\">\n                        <span>".concat(answer.options.name, "</span>\n                        <span>").concat(answer.options.phone, "</span>\n                        <span>").concat(answer.options.email, "</span>\n                        <span>").concat(answer.options.getting, "</span>\n                        <span>").concat(answer.options.payment, "</span>\n                    </div>\n                </div>\n                <table class=\"table-elements\">\n                    <thead>\n                        <tr>\n                            <td>\u2116</td>\n                            <td>\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435</td>\n                            <td>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E</td>\n                            <td>\u0426\u0435\u043D\u0430</td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        ").concat(answer.basket.map(function (item, i) {
+      return "\n                                <tr>\n                                    <td>".concat(i + 1, "</td>\n                                    <td>").concat(item.full_name, "</td>\n                                    <td>").concat(item.count_basket, "</td>\n                                    <td>").concat(item.price, "</td>\n                                </tr>\n                            ");
+    }).join(''), "\n                    </tbody>\n                </table>\n                <div class=\"modal-price-block\">\n                    <span>\u041E\u0431\u0449\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u0437\u0430\u043A\u0430\u0437\u0430: <span class=\"modal-price\">").concat(answer.price, " P</span></span>\n                </div>\n            ");
+
+    if (!_this2.modal) {
+      _this2.modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
+        showHeader: true,
+        title: title,
+        width: '60%',
+        closable: true,
+        footerButtons: [{
+          text: 'Подтвердить',
+          type: 'bg-success',
+          handler: function handler() {
+            _this2.modal.close();
+          }
+        }, {
+          text: 'Отменить',
+          type: 'bg-danger',
+          handler: function handler() {
+            _this2.modal.close();
+          }
+        }, {
+          text: 'Закрыть',
+          type: 'bg-basic',
+          handler: function handler() {
+            _this2.modal.close();
+          }
+        }],
+        content: content
+      });
+    } else {
+      _this2.modal.setTitle(title);
+
+      _this2.modal.setContent(content);
+    }
+
+    _this2.modal.open();
   });
 }
 
@@ -1935,7 +1949,7 @@ function _createFooter(buttons) {
       var $button = document.createElement('button');
       $button.textContent = b.text;
       $button.classList.add('btn');
-      $button.classList.add("btn-".concat(b.type || 'secondary'));
+      $button.classList.add("".concat(b.type || 'secondary'));
       $button.addEventListener('click', b.handler || function () {});
       $footer.appendChild($button);
     });

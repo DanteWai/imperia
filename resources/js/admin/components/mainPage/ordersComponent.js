@@ -25,8 +25,8 @@ function linkHandler(e) {
     this.server.get(`orders/${id}`, {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
         console.log('answer', answer);
 
-        let title = `Заказ № ${answer.order_id} от ${new Date(answer.created_at).toLocaleDateString('ru-RU')}`
-        let content = `
+        const title = `Заказ № ${answer.order_id} от ${new Date(answer.created_at).toLocaleDateString('ru-RU')}`
+        const content = `
                 <div class="modal-order">
                     <div class="modal-order-title">
                         <span>Заказчик:</span>
@@ -80,7 +80,7 @@ function linkHandler(e) {
                 footerButtons: [
                     {
                         text: 'Подтвердить',
-                        type: 'bg-primary',
+                        type: 'bg-success',
                         handler: () => {
                             this.modal.close()
                         }

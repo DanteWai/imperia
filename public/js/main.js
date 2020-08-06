@@ -3821,7 +3821,7 @@ function _createFooter(buttons) {
       var $button = document.createElement('button');
       $button.textContent = b.text;
       $button.classList.add('btn');
-      $button.classList.add("btn-".concat(b.type || 'secondary'));
+      $button.classList.add("".concat(b.type || 'secondary'));
       $button.addEventListener('click', b.handler || function () {});
       $footer.appendChild($button);
     });
