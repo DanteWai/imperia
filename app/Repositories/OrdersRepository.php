@@ -5,12 +5,28 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\Product_option;
 use Carbon\Carbon;
+use Illuminate\Pagination\Paginator;
 
 class OrdersRepository extends Repository {
 
     public function __construct(Order $order)
     {
         $this->model = $order;
+    }
+
+    public function getOrdersForSearch($search, $sortName, $sort, $currentPage=1){
+
+        Paginator::currentPageResolver(function () use ($currentPage) {
+            return $currentPage;
+        });
+
+        $builder = $this->model->select('*')->orderBy($sortName, $sort);
+        if($search){
+            $builder->whereRaw('lower(brand_name) like (?)',["%{$search}%"])
+                ->orderBy('updated_at', 'desc');
+        }
+
+        return $builder->paginate(20);
     }
 
     public function getFullOrder($id){

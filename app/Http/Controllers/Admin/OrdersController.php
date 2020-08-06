@@ -23,7 +23,10 @@ class OrdersController extends AdminController
      */
     public function index()
     {
-        //
+        $title = $this->title = 'Заказы';
+        $orders = $this->order_rep->getOrdersForSearch(false,'created_at', 'desc',1);
+        $this->content = view('admin.orders.index',compact('orders', 'title'))->render();
+        return $this->renderOutput();
     }
 
     /**

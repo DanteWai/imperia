@@ -6,7 +6,7 @@ function _createFooter(buttons){
             let $button = document.createElement('button')
             $button.textContent = b.text
             $button.classList.add('btn')
-            $button.classList.add(`btn-${b.type || 'secondary'}`)
+            $button.classList.add(`${b.type || 'secondary'}`)
             $button.addEventListener('click', b.handler || function () {})
             $footer.appendChild($button)
         })
