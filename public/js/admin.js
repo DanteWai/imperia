@@ -1335,6 +1335,7 @@ var PaginationComponent = /*#__PURE__*/function (_Component) {
     key: "render",
     value: function render(currentPage, lastPage) {
       var html = '';
+      lastPage = lastPage < 20 ? lastPage : 20;
 
       if (lastPage > 1) {
         for (var i = 1; i <= lastPage; i++) {

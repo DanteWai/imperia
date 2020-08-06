@@ -23,8 +23,9 @@ export class PaginationComponent extends Component{
 
     render(currentPage,lastPage){
         let html = ''
+        lastPage = lastPage < 20 ? lastPage : 20;
         if(lastPage > 1) {
-            for(let i = 1; i<=lastPage; i++){
+            for(let i = 1; i <= lastPage; i++){
                 html += `<div data-page="${i}" class="${i === currentPage && 'active'} paginate-item ">${i}</div>`;
             }
         }
