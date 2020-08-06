@@ -9,7 +9,7 @@ export class OrdersComponents extends Component{
 
     init() {
         this.server = new Server('admin');
-
+        this.modal = false
         this.token = document.querySelector('[name="_token"]').value;
         this.fullOrderLink = document.querySelectorAll('.full-order')
         this.fullOrderLink.forEach(el => {
@@ -18,43 +18,15 @@ export class OrdersComponents extends Component{
     }
 }
 
-
-function linkHandler(e){
+function linkHandler(e) {
     e.preventDefault();
     const target = e.target;
     const id = target.dataset.id;
     this.server.get(`orders/${id}`, {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
         console.log('answer', answer);
 
-        const modal = new Modal({
-            showHeader: true,
-            title: `Заказ № ${answer.order_id} от ${new Date(answer.created_at).toLocaleDateString('ru-RU')}`,
-            width: '60%',
-            closable: true,
-            footerButtons: [
-                {
-                    text: 'Подтвердить',
-                    type: 'bg-primary',
-                    handler: () => {
-                        modal.close()
-                    }
-                },
-                {
-                    text: 'Отменить',
-                    type: 'bg-danger',
-                    handler: () => {
-                        modal.close()
-                    }
-                },
-                {
-                    text: 'Закрыть',
-                    type: 'bg-basic',
-                    handler: () => {
-                        modal.close()
-                    }
-                }
-            ],
-            content: `
+        let title = `Заказ № ${answer.order_id} от ${new Date(answer.created_at).toLocaleDateString('ru-RU')}`
+        let content = `
                 <div class="modal-order">
                     <div class="modal-order-title">
                         <span>Заказчик:</span>
@@ -82,7 +54,7 @@ function linkHandler(e){
                     </thead>
                     <tbody>
                         ${answer.basket.map((item, i) => {
-                            return `
+            return `
                                 <tr>
                                     <td>${i + 1}</td>
                                     <td>${item.full_name}</td>
@@ -90,14 +62,52 @@ function linkHandler(e){
                                     <td>${item.price}</td>
                                 </tr>
                             `;
-                        }).join('')}
+        }).join('')}
                     </tbody>
                 </table>
                 <div class="modal-price-block">
                     <span>Общая стоимость заказа: <span class="modal-price">${answer.price} P</span></span>
                 </div>
             `
-        });
 
+
+        if(!this.modal){
+            this.modal = new Modal({
+                showHeader: true,
+                title,
+                width: '60%',
+                closable: true,
+                footerButtons: [
+                    {
+                        text: 'Подтвердить',
+                        type: 'bg-primary',
+                        handler: () => {
+                            this.modal.close()
+                        }
+                    },
+                    {
+                        text: 'Отменить',
+                        type: 'bg-danger',
+                        handler: () => {
+                            this.modal.close()
+                        }
+                    },
+                    {
+                        text: 'Закрыть',
+                        type: 'bg-basic',
+                        handler: () => {
+                            this.modal.close()
+                        }
+                    }
+                ],
+                content
+            });
+        } else{
+            this.modal.setTitle(title)
+            this.modal.setContent(content)
+        }
+
+        this.modal.open()
     });
+
 }
