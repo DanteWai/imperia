@@ -852,7 +852,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss_admin_adminStyle_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_admin_adminStyle_scss__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! regenerator-runtime/runtime */ "./node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./servers */ "./resources/js/admin/servers.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _tabs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tabs */ "./resources/js/admin/tabs.js");
 /* harmony import */ var _components_priceToParse__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/priceToParse */ "./resources/js/admin/components/priceToParse.js");
 /* harmony import */ var _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @js/admin/components/mainPage/ordersComponent */ "./resources/js/admin/components/mainPage/ordersComponent.js");
@@ -883,17 +883,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 window.addEventListener('load', function () {
   new _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__["OrdersComponents"]('main-orders-component');
-  new _components_list__WEBPACK_IMPORTED_MODULE_6__["ListComponent"]('page-list'); // Страница страниц)
-
-  new _components_list__WEBPACK_IMPORTED_MODULE_6__["ListComponent"]('page-list2'); // Страница товаров
-
-  new _components_list__WEBPACK_IMPORTED_MODULE_6__["ListComponent"]('page-list3'); // Страница брендов
+  new _components_list__WEBPACK_IMPORTED_MODULE_6__["ListComponent"]('list-component'); //список элементов
 
   new _components_priceToParse__WEBPACK_IMPORTED_MODULE_4__["PriceToParse"]('parse');
   new _tabs__WEBPACK_IMPORTED_MODULE_3__["default"]({
     parent: '.tabs-contaiter'
-  });
-  var server = new _servers__WEBPACK_IMPORTED_MODULE_2__["default"](); // Вешаем на файловые инпуты обработку текста
+  }); //TODO убрать всё что ниже в компоненты
+
+  var server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin'); //этот server deprecated
+  // Вешаем на файловые инпуты обработку текста
 
   var files = document.querySelectorAll('.inputFile');
 
@@ -923,10 +921,9 @@ window.addEventListener('load', function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return server.get(this.dataset.href + '?id=' + this.value, {
-              'X-CSRF-TOKEN': document.querySelector('input[name="_token"]'.value),
-              "X-Requested-With": "XMLHttpRequest"
-            });
+            return server.get(this.dataset.href, {
+              id: this.value
+            }, {}, document.querySelector('input[name="_token"]'.value));
 
           case 2:
             answer = _context.sent;
@@ -1080,14 +1077,6 @@ var ListRenderComponent = /*#__PURE__*/function () {
     key: "listHtml",
     value: function listHtml(name, data) {
       switch (name) {
-        case 'users':
-          return this.usersRender(data);
-          break;
-
-        case 'authors':
-          return this.authorsRender(data);
-          break;
-
         case 'brands':
           return this.brandsRender(data);
           break;
@@ -1103,41 +1092,6 @@ var ListRenderComponent = /*#__PURE__*/function () {
         default:
           return '';
       }
-    }
-  }, {
-    key: "usersRender",
-    value: function usersRender(data) {
-      var html = 'Нет данных';
-
-      if (data) {
-        html = data.map(function (el) {
-          return "\n                <tr>\n                    <td>".concat(el.id, "</td>\n                    <td><a href=\"/vestnik_admin_panel/users/").concat(el.id, "/edit\">").concat(el.fio, "</a></td>\n                    <td>").concat(el.email, "</td>\n                    <td>").concat(el.updated_at, "</td>\n                    <td style=\"width:15px; text-align: center;\">\n                        <a class=\"delete-element delete-link\" href=\"/vestnik_admin_panel/users/").concat(el.id, "\">\n                            <svg width=\"11\" height=\"14\" viewBox=\"0 0 11 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                                <path d=\"M10.5385 5.13358L9.80513 6.40231L0.909376 1.26873L1.64274 0L3.87218 1.28339L4.86957 1.01205L8.04505 2.84547L8.3164 3.85018L10.5385 5.13358ZM0 12.5333V3.73284H3.71818L8.80042 6.66632V12.5333C8.80042 12.9223 8.64589 13.2953 8.37082 13.5704C8.09576 13.8455 7.72269 14 7.33368 14H1.46674C1.07773 14 0.704664 13.8455 0.429597 13.5704C0.154531 13.2953 0 12.9223 0 12.5333ZM1.46674 12.5333H7.33368V7.54636L3.27082 5.19958H1.46674V12.5333Z\"/>\n                            </svg>\n                        </a>\n                    </td>\n                </tr>\n                ");
-        }).join('');
-      }
-
-      return html;
-    }
-  }, {
-    key: "authorsRender",
-    value: function authorsRender(data) {
-      var html = 'Нет данных';
-      var $authorsComplete = document.getElementById('authors');
-      console.log($authorsComplete.children);
-      var datas = [];
-
-      for (var i = 0; i < $authorsComplete.length; i++) {
-        datas.push(Number($authorsComplete[i].value));
-      }
-
-      if (data) {
-        html = data.map(function (el) {
-          var cl = 'authors-item';
-          if (datas.indexOf(el.id) !== -1) cl += ' active';
-          return "\n                <div class=\"".concat(cl, "\" data-userid=\"").concat(el.id, "\">\n                    <span class=\"user-name\">").concat(el.fio, "</span>\n                    <span>").concat(el.email, "</span>\n                </div>\n                ");
-        }).join('');
-      }
-
-      return html;
     }
   }, {
     key: "brandsRender",
@@ -1239,28 +1193,58 @@ var OrdersComponents = /*#__PURE__*/function (_Component) {
   _createClass(OrdersComponents, [{
     key: "init",
     value: function init() {
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]();
+      var _this = this;
+
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin');
       this.token = document.querySelector('[name="_token"]').value;
       this.fullOrderLink = document.querySelectorAll('.full-order');
       this.fullOrderLink.forEach(function (el) {
-        el.addEventListener('click', function (e) {
-          e.preventDefault();
-          var target = e.target;
-          var id = target.dataset.id;
-          console.log('clck'); // TODO тут рамс
-
-          this.server.get("orders/".concat(id), {}, {
-            'Content-Type': 'application/json;charset=utf-8'
-          }, this.token).then(function (answer) {
-            console.log('answer', answer);
-          });
-        });
+        el.addEventListener('click', linkHandler.bind(_this));
       });
     }
   }]);
 
   return OrdersComponents;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+function linkHandler(e) {
+  e.preventDefault();
+  var target = e.target;
+  var id = target.dataset.id;
+  this.server.get("orders/".concat(id), {
+    'Content-Type': 'application/json;charset=utf-8'
+  }, this.token).then(function (answer) {
+    console.log('answer', answer);
+    var modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      showHeader: true,
+      title: "\u0417\u0430\u043A\u0430\u0437 \u2116 ".concat(answer.order_id, " \u043E\u0442 ").concat(new Date(answer.created_at).toLocaleDateString('ru-RU')),
+      width: '60%',
+      closable: true,
+      footerButtons: [{
+        text: 'Подтвердить',
+        type: 'bg-primary',
+        handler: function handler() {
+          modal.close();
+        }
+      }, {
+        text: 'Отменить',
+        type: 'bg-danger',
+        handler: function handler() {
+          modal.close();
+        }
+      }, {
+        text: 'Закрыть',
+        type: 'bg-basic',
+        handler: function handler() {
+          modal.close();
+        }
+      }],
+      content: "\n                <div class=\"modal-order\">\n                    <div class=\"modal-order-title\">\n                        <span>\u0417\u0430\u043A\u0430\u0437\u0447\u0438\u043A:</span>\n                        <span>\u0422\u0435\u043B\u0435\u0444\u043E\u043D:</span>\n                        <span>\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u0430\u044F \u043F\u043E\u0447\u0442\u0430:</span>\n                        <span>\u0421\u043F\u043E\u0441\u043E\u0431 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438:</span>\n                        <span>\u0421\u043F\u043E\u0441\u043E\u0431 \u043E\u043F\u043B\u0430\u0442\u044B:</span>\n                    </div>\n                    <div class=\"modal-order-info\">\n                        <span>".concat(answer.options.name, "</span>\n                        <span>").concat(answer.options.phone, "</span>\n                        <span>").concat(answer.options.email, "</span>\n                        <span>").concat(answer.options.getting, "</span>\n                        <span>").concat(answer.options.payment, "</span>\n                    </div>\n                </div>\n                <table class=\"table-elements\">\n                    <thead>\n                        <tr>\n                            <td>\u2116</td>\n                            <td>\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435</td>\n                            <td>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E</td>\n                            <td>\u0426\u0435\u043D\u0430</td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        ").concat(answer.basket.map(function (item, i) {
+        return "\n                                <tr>\n                                    <td>".concat(i + 1, "</td>\n                                    <td>").concat(item.full_name, "</td>\n                                    <td>").concat(item.count_basket, "</td>\n                                    <td>").concat(item.price, "</td>\n                                </tr>\n                            ");
+      }).join(''), "\n                    </tbody>\n                </table>\n                <div class=\"modal-price-block\">\n                    <span>\u041E\u0431\u0449\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u0437\u0430\u043A\u0430\u0437\u0430: <span class=\"modal-price\">").concat(answer.price, " P</span></span>\n                </div>\n            ")
+    });
+  });
+}
 
 /***/ }),
 
@@ -1274,8 +1258,7 @@ var OrdersComponents = /*#__PURE__*/function (_Component) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PaginationComponent", function() { return PaginationComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1297,7 +1280,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 
 
 var PaginationComponent = /*#__PURE__*/function (_Component) {
@@ -1352,14 +1334,6 @@ var PaginationComponent = /*#__PURE__*/function (_Component) {
 
   return PaginationComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-/*$('.paginate').on('click','.paginate-item',function (e) {
-        let $element = $(this);
-        if(!$element.hasClass('active')){
-            $('.paginate-item.active').removeClass('active');
-            $element.addClass('active');
-            $search.trigger('input');
-        }
-    });*/
 
 /***/ }),
 
@@ -1581,8 +1555,8 @@ function _elementsCalculate() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SearchComponent", function() { return SearchComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core/servers */ "./resources/js/core/servers.js");
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1682,7 +1656,7 @@ function sendRequest() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SortComponent", function() { return SortComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1789,88 +1763,6 @@ $filterButtons.on('click',function (e) {
 
 /***/ }),
 
-/***/ "./resources/js/admin/servers.js":
-/*!***************************************!*\
-  !*** ./resources/js/admin/servers.js ***!
-  \***************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Server; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Server = /*#__PURE__*/function () {
-  function Server() {
-    _classCallCheck(this, Server);
-
-    this.baseURL = '/imperia_admin_panel/';
-  }
-
-  _createClass(Server, [{
-    key: "get",
-    value: function get(url) {
-      var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      return makeRequest(this.baseURL + url, {
-        headers: headers
-      });
-    }
-  }, {
-    key: "post",
-    value: function post(url, data) {
-      var params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      var headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-      return makeRequest(this.baseURL + url, {
-        method: 'POST',
-        body: data,
-        headers: headers
-      });
-    }
-  }, {
-    key: "delete",
-    value: function _delete(url) {
-      var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      return makeRequest(url, {
-        method: 'DELETE',
-        headers: headers
-      });
-    }
-  }]);
-
-  return Server;
-}();
-
-
-
-function makeRequest(url) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return fetch(url, options).then(function (response) {
-    //return response.text();
-    if (response.status === 200) {
-      return response.json();
-    }
-
-    return response;
-  });
-}
-/*
-function objToFormData(data){
-    let form = new FormData()
-    for(let elem in data){
-        form.append(elem, data[elem]);
-    }
-    return form
-
-}
-*/
-
-/***/ }),
-
 /***/ "./resources/js/admin/tabs.js":
 /*!************************************!*\
   !*** ./resources/js/admin/tabs.js ***!
@@ -1964,28 +1856,6 @@ var Tabs = /*#__PURE__*/function () {
 
   return Tabs;
 }();
-/*let parentsTabs = document.querySelectorAll('.tabs-contaiter')
-
-if(parentsTabs.length !=0 ) {
-    for (let i = 0; i < parentsTabs.length; i++) {
-
-        let tabsArticle = parentsTabs[i].querySelectorAll('[data-t-article]')
-
-        for (let j = 0; j < tabsArticle.length; j++) {
-
-            if(j===0) {
-                tabsArticle[j].classList.add("active")
-                parentsTabs[i].querySelector(`[data-t-source="${tabsArticle[j].dataset.tArticle}"] `).classList.add("active")
-            }
-
-            tabsArticle[j].addEventListener('click', function(e) {
-
-
-            })
-        }
-    }
-}*/
-
 
 
 
@@ -2232,7 +2102,7 @@ var Server = /*#__PURE__*/function () {
 
     _classCallCheck(this, Server);
 
-    this.baseURL = baseURL;
+    this.baseURL = baseURL === 'admin' ? '/imperia_admin_panel/' : baseURL;
   }
 
   _createClass(Server, [{

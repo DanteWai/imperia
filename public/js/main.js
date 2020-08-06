@@ -1510,7 +1510,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/footer/sendCall */ "./resources/js/components/footer/sendCall.js");
 /* harmony import */ var _components_all_basket__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/all/basket */ "./resources/js/components/all/basket.js");
 /* harmony import */ var _components_all_mainMenu__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/all/mainMenu */ "./resources/js/components/all/mainMenu.js");
-/* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
+/* harmony import */ var _core_select__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @core/select */ "./resources/js/core/select.js");
 //Подключение стилей
  //Подключение полифилов
 
@@ -1541,6 +1541,10 @@ window.addEventListener('load', function () {
   new _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
   new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket);
   new _components_all_mainMenu__WEBPACK_IMPORTED_MODULE_9__["MainMenuComponent"]('main-menu');
+  new _core_select__WEBPACK_IMPORTED_MODULE_10__["default"]('.d-select', {
+    multiple: true //appendClass:'some_class'
+
+  });
 });
 
 /***/ }),
@@ -3962,6 +3966,150 @@ var Modal = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./resources/js/core/select.js":
+/*!*************************************!*\
+  !*** ./resources/js/core/select.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Select; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Select = /*#__PURE__*/function () {
+  function Select(select, options) {
+    _classCallCheck(this, Select);
+
+    if (select instanceof HTMLElement) {
+      this.$el = select;
+    } //Если переданный селект это HTML элемент то мы просто его присваиваем
+    else {
+        //Иначе ищем все элементы по переданноому селектору
+        this.$el = document.querySelectorAll(select);
+
+        if (this.$el.length > 1) {
+          //если таких элементов больше одного то для всех них создаем этот же класс
+          var elements = [];
+          this.$el.forEach(function (el) {
+            elements.push(new Select(el, options));
+          });
+          return elements;
+        } else {
+          this.$el = this.$el[0];
+        } // иначе просто присваиваем ео
+
+      }
+
+    this.options = options;
+    this.selectItem = null;
+    this.selectItems = [];
+
+    this._init();
+  }
+
+  _createClass(Select, [{
+    key: "_init",
+    value: function _init() {
+      this.clickHandler = this.clickHandler.bind(this); //привязываем контекст
+
+      this.$el.addEventListener('click', this.clickHandler); //Вешаем обработчик на клик селекта
+
+      this.$input = this.$el.querySelector('[data-type="value"]'); //Элемент тела селектора
+
+      this.placeholder = this.$input.textContent;
+      if (this.options.appendClass) this.$el.classList.add(this.options.appendClass);
+    }
+  }, {
+    key: "open",
+    value: function open() {
+      this.$el.classList.add('open');
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      this.$el.classList.remove('open');
+    }
+  }, {
+    key: "clickHandler",
+    value: function clickHandler(e) {
+      console.log('click');
+      var type = e.target.dataset.type;
+      if (e.target.closest('[data-type="input"]')) type = 'input';
+
+      switch (type) {
+        case 'input':
+          this.isOpen ? this.close() : this.open();
+          break;
+
+        case 'item':
+          this.select(e.target);
+          break;
+      }
+    }
+  }, {
+    key: "select",
+    value: function select(item) {
+      var _this$options;
+
+      if (this.options.multiple) {
+        this.selectItem = item;
+
+        if (item.classList.contains('active')) {
+          item.classList.remove('active');
+          this.selectItems.splice(this.selectItems.indexOf(item), 1);
+        } else {
+          item.classList.add('active');
+          this.selectItems.push(item);
+        }
+
+        this.$input.textContent = this.multiplePlaceHolder;
+      } else {
+        this.selectItem && this.selectItem.classList.remove('active');
+        this.selectItem = item;
+        this.$input.textContent = this.selectItem.textContent;
+        this.selectItem.classList.add('active');
+        this.close();
+      }
+
+      if (typeof ((_this$options = this.options) === null || _this$options === void 0 ? void 0 : _this$options.onSelect) === 'function') this.options.onSelect.call(item);
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.$el.removeEventListener('click', this.clickHandler); //this.$el.innerHTML = ''
+    }
+  }, {
+    key: "isOpen",
+    get: function get() {
+      return this.$el.classList.contains('open');
+    }
+  }, {
+    key: "isEmptyMultiple",
+    get: function get() {
+      return !this.selectItems.length;
+    }
+  }, {
+    key: "multiplePlaceHolder",
+    get: function get() {
+      return this.isEmptyMultiple ? this.placeholder : this.selectItems.map(function (el) {
+        return el.textContent;
+      }).toString();
+    }
+  }]);
+
+  return Select;
+}();
+
+
+
+/***/ }),
+
 /***/ "./resources/js/core/servers.js":
 /*!**************************************!*\
   !*** ./resources/js/core/servers.js ***!
@@ -3984,7 +4132,7 @@ var Server = /*#__PURE__*/function () {
 
     _classCallCheck(this, Server);
 
-    this.baseURL = baseURL;
+    this.baseURL = baseURL === 'admin' ? '/imperia_admin_panel/' : baseURL;
   }
 
   _createClass(Server, [{

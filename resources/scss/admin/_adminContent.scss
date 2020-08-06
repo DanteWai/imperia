@@ -260,7 +260,7 @@
         }
     }
 
-    .table-elements{
+    /*.table-elements{
 
         box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
         background-color: #fff;
@@ -298,7 +298,7 @@
         .delete-link:hover svg{
             fill:$dangerButtonColor;
         }
-    }
+    }*/
 
     .paginate{
         display: flex;
@@ -336,5 +336,45 @@
     border-radius: 3px;
     padding:1%;
     box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
+}
+
+.table-elements{
+
+    box-shadow: 0 .46875rem 2.1875rem rgba(4,9,20,.03),0 .9375rem 1.40625rem rgba(4,9,20,.03),0 .25rem .53125rem rgba(4,9,20,.05),0 .125rem .1875rem rgba(4,9,20,.03);
+    background-color: #fff;
+    margin-top: $mrt;
+    border-radius: 3px;
+    overflow: hidden;
+    font-size: 14px;
+    width: 100%;
+    thead{
+        font-weight: bold;
+        color:#f2f2f2;
+        background: $backButtonColor;
+
+
+
+    }
+    td{
+        padding:8px 15px;
+    }
+    tr:nth-child(even){
+        background-color: #f5f5f5;
+    }
+    tbody tr:hover{
+        background: #ddd;
+
+    }
+    svg{
+        height:24px;
+        width: auto;
+        fill:#777;
+    }
+    .edit-link:hover svg{
+        fill:$basicButtonColor;
+    }
+    .delete-link:hover svg{
+        fill:$dangerButtonColor;
+    }
 }
 
