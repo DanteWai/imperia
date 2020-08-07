@@ -1,13 +1,12 @@
 .body{
     display: flex;
-    height: 100%;
 }
 
 .nav-wrapper{
     min-width: 240px;
-    height: 100%;
     background-color: $bgMenu;
     color:$colorMenu;
+    padding-bottom: 20px;
 
 
     .menu{
