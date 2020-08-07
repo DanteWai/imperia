@@ -1945,7 +1945,9 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 
       this.catalog.$el.addEventListener('click', clickBrand.bind(this)); //смена страницы
 
-      this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
+      this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); // смена сортировки
+
+      this.catalog.$el.addEventListener('change-sort', changeParam.bind(this)); //показ корзины
 
       this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
       checkJSON.call(this);
@@ -2011,8 +2013,9 @@ function clickBrand(e) {
 
   if (target) {
     var brand = this.header.optionPanel.querySelector("[data-filter=\"brand_id\"] [data-id=\"".concat(target.dataset.brand, "\"]"));
+    var brandLabel = this.header.optionPanel.querySelector('[data-filter="brand_id"] [data-type="value"]');
     brand.classList.add('active');
-    brand.selected = true;
+    brandLabel.textContent = brand.textContent;
     var data = creationJSON.call(this, {
       brand_id: target.dataset.brand,
       isJsonOptions: false,
@@ -2024,9 +2027,7 @@ function clickBrand(e) {
 
 
 function changeParam(e) {
-  var data = creationJSON.call(this, {
-    page: e.detail
-  });
+  var data = creationJSON.call(this, e.detail);
   this.catalog.send(JSON.stringify(data), this.token);
 } //Формирует json для отправки на сервер
 
@@ -2034,6 +2035,13 @@ function changeParam(e) {
 function creationJSON(_ref2) {
   var _ref2$page = _ref2.page,
       page = _ref2$page === void 0 ? 1 : _ref2$page,
+      _ref2$sort = _ref2.sort,
+      sort = _ref2$sort === void 0 ? {
+    sortName: 'price',
+    sortType: 'desc'
+  } : _ref2$sort,
+      _ref2$count = _ref2.count,
+      count = _ref2$count === void 0 ? 10 : _ref2$count,
       _ref2$isJsonOptions = _ref2.isJsonOptions,
       isJsonOptions = _ref2$isJsonOptions === void 0 ? true : _ref2$isJsonOptions,
       brand_id = _ref2.brand_id;
@@ -2045,7 +2053,9 @@ function creationJSON(_ref2) {
       //price:{}, // {min:'100', max:''200}
       options: {}
     },
-    page: page //sort:{} //{sortName:'price', sortType:'desc'}
+    page: page,
+    sort: sort,
+    count: count //sort:{} //{sortName:'price', sortType:'desc'}
     //count:10
 
   }; //Смотрим бренд если не передан
@@ -2129,7 +2139,8 @@ function activeOptions(el, data) {
 
       var values = data.options.options[name]; // Значения опций из подборщика
 
-      labelSelected.textContent = values.join(', ');
+      if (name !== 'season' && name !== 'heavy') labelSelected.textContent = values.join(', '); // Вывод значений в селекты
+
       select.forEach(function (option) {
         if (values.includes(option.dataset.id)) {
           option.classList.add('active');
@@ -2306,7 +2317,14 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
       this.json = '';
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
       this.page = 1;
+      this.sort = {
+        sortName: 'price',
+        sortType: 'desc'
+      };
+      this.count = 10;
       this.$el.addEventListener('click', pagination.bind(this));
+      this.$el.addEventListener('click', sort.bind(this));
+      this.$el.addEventListener('click', countGoods.bind(this));
       this.$el.addEventListener('click', addBasket.bind(this));
       this.$el.addEventListener('click', toggleSort.bind(this));
       this.event = new Event('showBasket', {
@@ -2332,7 +2350,7 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
                 }, token).then(function (answer) {
                   //console.log(answer);
                   if (answer.data) {
-                    _this2.$el.innerHTML = productsRender(answer);
+                    _this2.$el.innerHTML = productsRender.call(_this2, answer);
 
                     _this2.loader.unmount(_this2.$el);
                   }
@@ -2377,7 +2395,7 @@ function productsRender(object) {
         return "\n                                <li>\n                                    <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                    <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                                </li>\n                            ");
       }).join(''), "\n                    </ul>\n                    <p class=\"product-list-price\" data-price=\"").concat(item.price, "\">").concat(item.price, " P</p>\n                    <span class=\"basket-block\">\n                        <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                        <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                            ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                        </button>\n                    </span>\n                </div>\n            ");
     }).join('');
-    return "\n            <section class=\"content-filter\">\n                <div class=\"sort\">\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0426\u0435\u043D\u0430:</span>\n                    <div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                        <input type=\"text\" name=\"min-price\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\">\n                        <input type=\"text\" name=\"max-price\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\">\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                            <div class=\"sort-action__item\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">10</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\">10</div>\n                            <div class=\"sort-action__item\">15</div>\n                            <div class=\"sort-action__item\">20</div>\n                            <div class=\"sort-action__item\">30</div>\n                            <div class=\"sort-action__item\">50</div>\n                        </div>\n                    </div>\n                </div>\n\n                </div>\n\n                <div class=\"pagination\">\n                    <ul class=\"pagination__list\">\n                        ".concat(_pagination, "\n                    </ul>\n                </div>\n            </section>\n            ").concat(products, "\n        ");
+    return "\n            <section class=\"content-filter\">\n                <div class=\"sort\">\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0426\u0435\u043D\u0430:</span>\n                    <div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                        <input type=\"text\" name=\"min-price\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\">\n                        <input type=\"text\" name=\"max-price\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\">\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            ".concat(this.sort.sortName === 'price' && this.sort.sortType === 'desc' ? '<span class="sort-action__current">по возрастанию цены</span>' : '<span class="sort-action__current">по убыванию цены</span>', "\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-sort-type=\"desc\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                            <div class=\"sort-action__item\" data-sort-type=\"asc\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">").concat(this.count, "</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-count-goods=\"10\">10</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"15\">15</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"20\">20</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"30\">30</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"50\">50</div>\n                        </div>\n                    </div>\n                </div>\n\n                </div>\n\n                <div class=\"pagination\">\n                    <ul class=\"pagination__list\">\n                        ").concat(_pagination, "\n                    </ul>\n                </div>\n            </section>\n            ").concat(products, "\n        ");
   } else {
     return "\n            <div class=\"goods-empty\" style=\"display: flex\">\n                <p>\u041A \u0441\u043E\u0436\u0430\u043B\u0435\u043D\u0438\u044E \u043F\u043E \u0412\u0430\u0448\u0438\u043C \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E:(</p>\n                <p>\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u043F\u043E\u0438\u0441\u043A\u0430</p>\n            </div>\n        ";
   }
@@ -2425,8 +2443,43 @@ function pagination(e) {
     el.classList.add('active');
     this.page = el.dataset.page;
     this.$el.dispatchEvent(new CustomEvent('change-page', {
-      detail: this.page
+      detail: {
+        page: this.page,
+        sort: this.sort,
+        count: this.count
+      }
     })); //detail - контейнер для аргументов события
+  }
+}
+
+function sort(e) {
+  var el = e.target.closest('[data-sort-type]');
+
+  if (el) {
+    this.sort.sortType = el.dataset.sortType; //this.$el.querySelector('.sort-action__current').textContent = el.textContent;
+
+    this.$el.dispatchEvent(new CustomEvent('change-sort', {
+      detail: {
+        page: this.page,
+        sort: this.sort,
+        count: this.count
+      }
+    }));
+  }
+}
+
+function countGoods(e) {
+  var el = e.target.closest('[data-count-goods]');
+
+  if (el) {
+    this.count = el.dataset.countGoods;
+    this.$el.dispatchEvent(new CustomEvent('change-sort', {
+      detail: {
+        page: this.page,
+        sort: this.sort,
+        count: this.count
+      }
+    }));
   }
 }
 
@@ -3007,6 +3060,10 @@ function jsonRequestDate() {
       category_id: this.choiceMenu.category_id
     },
     options: {
+      /*price: {
+          min: 500,
+          max: 5000
+      },*/
       options: {}
     },
     params: {}

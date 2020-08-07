@@ -13,7 +13,14 @@ export class CatalogProductsComponent extends Component {
         this.json = ''
         this.server = new Server();
         this.page = 1;
-        this.$el.addEventListener('click',pagination.bind(this))
+        this.sort = {
+            sortName: 'price',
+            sortType: 'desc'
+        };
+        this.count = 10;
+        this.$el.addEventListener('click',pagination.bind(this));
+        this.$el.addEventListener('click',sort.bind(this));
+        this.$el.addEventListener('click',countGoods.bind(this));
         this.$el.addEventListener('click',addBasket.bind(this))
         this.$el.addEventListener('click', toggleSort.bind(this));
         this.event = new Event('showBasket',{bubbles: false, cancelable: false});
@@ -25,7 +32,7 @@ export class CatalogProductsComponent extends Component {
         await this.server.post('catalog/list',json,{'Content-Type': 'application/json;charset=utf-8'},token).then(answer =>{
             //console.log(answer);
             if(answer.data){
-                this.$el.innerHTML = productsRender(answer);
+                this.$el.innerHTML = productsRender.call(this, answer);
                 this.loader.unmount(this.$el)
             }
         })
@@ -106,11 +113,11 @@ function productsRender(object){ // рендер шаблона
                     <div class="sort-action">
                         <div class="sort-action__wrapper"></div>
                         <div class="sort-action__header">
-                            <span class="sort-action__current">по возрастанию цены</span>
+                            ${this.sort.sortName === 'price' && this.sort.sortType === 'desc' ? '<span class="sort-action__current">по возрастанию цены</span>' : '<span class="sort-action__current">по убыванию цены</span>'}
                         </div>
                         <div class="sort-action__body">
-                            <div class="sort-action__item">по возрастанию цены</div>
-                            <div class="sort-action__item">по убыванию цены</div>
+                            <div class="sort-action__item" data-sort-type="desc">по возрастанию цены</div>
+                            <div class="sort-action__item" data-sort-type="asc">по убыванию цены</div>
                         </div>
                     </div>
                 </div>
@@ -120,14 +127,14 @@ function productsRender(object){ // рендер шаблона
                     <div class="sort-action">
                         <div class="sort-action__wrapper"></div>
                         <div class="sort-action__header">
-                            <span class="sort-action__current">10</span>
+                            <span class="sort-action__current">${this.count}</span>
                         </div>
                         <div class="sort-action__body">
-                            <div class="sort-action__item">10</div>
-                            <div class="sort-action__item">15</div>
-                            <div class="sort-action__item">20</div>
-                            <div class="sort-action__item">30</div>
-                            <div class="sort-action__item">50</div>
+                            <div class="sort-action__item" data-count-goods="10">10</div>
+                            <div class="sort-action__item" data-count-goods="15">15</div>
+                            <div class="sort-action__item" data-count-goods="20">20</div>
+                            <div class="sort-action__item" data-count-goods="30">30</div>
+                            <div class="sort-action__item" data-count-goods="50">50</div>
                         </div>
                     </div>
                 </div>
@@ -197,7 +204,24 @@ function pagination(e){
         el.classList.add('active')
 
         this.page = el.dataset.page
-        this.$el.dispatchEvent(new CustomEvent('change-page',{detail:this.page})) //detail - контейнер для аргументов события
+        this.$el.dispatchEvent(new CustomEvent('change-page', {detail: {page: this.page, sort: this.sort, count: this.count}})) //detail - контейнер для аргументов события
+    }
+}
+
+function sort(e) {
+    const el = e.target.closest('[data-sort-type]');
+    if (el) {
+        this.sort.sortType = el.dataset.sortType;
+        //this.$el.querySelector('.sort-action__current').textContent = el.textContent;
+        this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count}}));
+    }
+}
+
+function countGoods(e) {
+    const el = e.target.closest('[data-count-goods]');
+    if (el) {
+        this.count = el.dataset.countGoods;
+        this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count}}));
     }
 }
 

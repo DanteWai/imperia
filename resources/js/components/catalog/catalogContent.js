@@ -30,6 +30,8 @@ export class CatalogContentComponent extends Component {
         this.catalog.$el.addEventListener('click', clickBrand.bind(this))
         //смена страницы
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
+        // смена сортировки
+        this.catalog.$el.addEventListener('change-sort', changeParam.bind(this))
         //показ корзины
         this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
 
@@ -65,25 +67,26 @@ function clickBrand(e){
     let target = e.target.closest('.category-item')
     if(target){
         const brand = this.header.optionPanel.querySelector(`[data-filter="brand_id"] [data-id="${target.dataset.brand}"]`);
+        const brandLabel = this.header.optionPanel.querySelector('[data-filter="brand_id"] [data-type="value"]');
         brand.classList.add('active');
-        brand.selected = true;
+        brandLabel.textContent = brand.textContent;
         let data = creationJSON.call(this,{brand_id:target.dataset.brand, isJsonOptions:false, page:1})
         this.catalog.send(JSON.stringify(data),this.token)
     }
 }
 //Событие смена параметра товара
 function changeParam(e){
-    let data = creationJSON.call(this, {page:e.detail})
+    let data = creationJSON.call(this, e.detail)
     this.catalog.send(JSON.stringify(data),this.token)
 }
 //Формирует json для отправки на сервер
-function creationJSON({page =1, isJsonOptions = true, brand_id}){
+function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, count = 10, isJsonOptions = true, brand_id}){
     let data = {
         products: { category_id: this.header.category_id, },
         options: {
             //price:{}, // {min:'100', max:''200}
             options:{}
-        }, page,
+        }, page, sort, count
         //sort:{} //{sortName:'price', sortType:'desc'}
         //count:10
 
@@ -163,7 +166,7 @@ function activeOptions(el, data) {
             const labelSelected = el.querySelector(`[data-filter=${name}] [data-type="value"]`); // label селекта
             const select = el.querySelectorAll(`[data-filter="${name}"] [data-id]`);    // Набор опций селекта
             const values = data.options.options[name];                                  // Значения опций из подборщика
-            labelSelected.textContent = values.join(', ');
+            if (name !== 'season' && name !== 'heavy') labelSelected.textContent = values.join(', ');   // Вывод значений в селекты
             select.forEach(option => {
                 if (values.includes(option.dataset.id)) {
                     option.classList.add('active');

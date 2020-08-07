@@ -81,6 +81,10 @@ function jsonRequestDate(){
     let data = {
         products: { category_id: this.choiceMenu.category_id},
         options: {
+            /*price: {
+                min: 500,
+                max: 5000
+            },*/
             options:{}
         },
         params: {}
