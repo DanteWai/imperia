@@ -24,17 +24,29 @@ export default class Select{
         this.$input = this.$el.querySelector('[data-type="value"]') //Элемент тела селектора
         this.placeholder = this.$input.textContent
         if(this.options.appendClass) this.$el.classList.add(this.options.appendClass)
+
+        document.addEventListener('click', (e) => {
+            this.$el.classList.contains('open') && !this.$el.contains(e.target) && this.close()
+        })
     }
 
     open(){ this.$el.classList.add('open') }
     close(){ this.$el.classList.remove('open') }
     get isOpen(){ return this.$el.classList.contains('open') }
     get isEmptyMultiple(){ return !this.selectItems.length }
-    get multiplePlaceHolder() { return this.isEmptyMultiple ? this.placeholder : this.selectItems.map(el => el.textContent).toString() }
+    get multiplePlaceHolder() {
+        if(this.isEmptyMultiple){
+            return this.placeholder
+        }
+        else{
+            let placeholder = this.selectItems.map(el => el.textContent).toString()
+            if(placeholder.length > 15) placeholder = placeholder.slice(0,16) + '...'
+            return placeholder
+        }
+    }
 
 
     clickHandler(e){
-        console.log('click')
         let {type} = e.target.dataset
 
         if(e.target.closest('[data-type="input"]')) type = 'input'
@@ -49,11 +61,11 @@ export default class Select{
         }
     }
 
-
     select(item){
 
         if(this.options.multiple){
             this.selectItem = item
+
 
             if(item.classList.contains('active')){
                 item.classList.remove('active')
@@ -79,4 +91,10 @@ export default class Select{
         this.$el.removeEventListener('click', this.clickHandler)
         //this.$el.innerHTML = ''
     }
+
+
+}
+
+function outsideClick(){
+
 }

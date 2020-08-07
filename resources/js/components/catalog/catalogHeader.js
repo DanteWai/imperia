@@ -22,10 +22,21 @@ export class CatalogHeaderComponent extends Component {
 }
 
 function dataId(e){
-    let index = e.target.selectedIndex;     // для хрома
-    let el = index ? e.target[index] : e.target.closest('[data-id]');
-    if(el) {
-        let select = el.closest('SELECT')
+
+    let el = e.target.closest('[data-id]');
+    if(el){
+        if(el.tagName === 'INPUT') el.classList.toggle('active')
+        this.$el.dispatchEvent(new CustomEvent('change-param',{page:"1"}))
+    }
+
+}
+
+
+/*
+//let index = e.target.selectedIndex;     // для хрома
+    //let el = index ? e.target[index] : e.target.closest('[data-id]');
+
+let select = el.closest('SELECT')
         if(select){
             let activeInSelect = select.querySelectorAll('.active')
             if(activeInSelect){
@@ -35,8 +46,5 @@ function dataId(e){
             }
 
         }
-        el.classList.toggle('active')
-        this.$el.dispatchEvent(new CustomEvent('change-param',{detail:"1"}))
-    }
-}
+        el.classList.toggle('active')*/
 

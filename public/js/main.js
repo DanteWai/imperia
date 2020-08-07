@@ -2242,9 +2242,9 @@ function clickBrand(e) {
 
 
 function changeParam(e) {
-  console.log(e);
+  //console.log(e);
   var data = creationJSON.call(this, {
-    page: e.detail
+    page: e.page
   });
   this.catalog.send(JSON.stringify(data), this.token);
 } //Формирует json для отправки на сервер
@@ -2268,9 +2268,10 @@ function creationJSON(_ref2) {
   }; //Смотрим бренд если не передан
 
   if (typeof brand_id === "undefined") {
-    var _brand_id = document.querySelector('[data-filter="brand_id"] .active');
-
-    if (_brand_id) data.products["brand_id"] = _brand_id.dataset.id;
+    var brands = document.querySelectorAll('[data-filter="brand_id"] .active');
+    if (brands.length) data.products["brand_id"] = Array.from(brands).map(function (el) {
+      return el.dataset.id;
+    });
   } else {
     data.products.brand_id = brand_id;
   } //Смотрим остальные параметры
@@ -2286,8 +2287,9 @@ function creationJSON(_ref2) {
     });
   } else {
     delete data.options.options;
-  } //TODO смотрим цену
+  }
 
+  console.log('function creationJSON', data); //TODO смотрим цену
 
   return data;
 } // Парсит параметры из подборщика на главной странице
@@ -2433,39 +2435,30 @@ var CatalogHeaderComponent = /*#__PURE__*/function (_Component) {
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 function dataId(e) {
-  var index = e.target.selectedIndex; // для хрома
-
-  var el = index ? e.target[index] : e.target.closest('[data-id]');
+  var el = e.target.closest('[data-id]');
 
   if (el) {
-    var select = el.closest('SELECT');
-
-    if (select) {
-      var activeInSelect = select.querySelectorAll('.active');
-
-      if (activeInSelect) {
-        var _iterator2 = _createForOfIteratorHelper(activeInSelect),
-            _step2;
-
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var act = _step2.value;
-            act.classList.remove('active');
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
-        }
-      }
-    }
-
-    el.classList.toggle('active');
+    if (el.tagName === 'INPUT') el.classList.toggle('active');
     this.$el.dispatchEvent(new CustomEvent('change-param', {
-      detail: "1"
+      page: "1"
     }));
   }
 }
+/*
+//let index = e.target.selectedIndex;     // для хрома
+    //let el = index ? e.target[index] : e.target.closest('[data-id]');
+
+let select = el.closest('SELECT')
+        if(select){
+            let activeInSelect = select.querySelectorAll('.active')
+            if(activeInSelect){
+                for(let act of activeInSelect){
+                    act.classList.remove('active')
+                }
+            }
+
+        }
+        el.classList.toggle('active')*/
 
 /***/ }),
 
@@ -4016,6 +4009,8 @@ var Select = /*#__PURE__*/function () {
   _createClass(Select, [{
     key: "_init",
     value: function _init() {
+      var _this = this;
+
       this.clickHandler = this.clickHandler.bind(this); //привязываем контекст
 
       this.$el.addEventListener('click', this.clickHandler); //Вешаем обработчик на клик селекта
@@ -4024,6 +4019,9 @@ var Select = /*#__PURE__*/function () {
 
       this.placeholder = this.$input.textContent;
       if (this.options.appendClass) this.$el.classList.add(this.options.appendClass);
+      document.addEventListener('click', function (e) {
+        _this.$el.classList.contains('open') && !_this.$el.contains(e.target) && _this.close();
+      });
     }
   }, {
     key: "open",
@@ -4038,7 +4036,6 @@ var Select = /*#__PURE__*/function () {
   }, {
     key: "clickHandler",
     value: function clickHandler(e) {
-      console.log('click');
       var type = e.target.dataset.type;
       if (e.target.closest('[data-type="input"]')) type = 'input';
 
@@ -4097,9 +4094,15 @@ var Select = /*#__PURE__*/function () {
   }, {
     key: "multiplePlaceHolder",
     get: function get() {
-      return this.isEmptyMultiple ? this.placeholder : this.selectItems.map(function (el) {
-        return el.textContent;
-      }).toString();
+      if (this.isEmptyMultiple) {
+        return this.placeholder;
+      } else {
+        var placeholder = this.selectItems.map(function (el) {
+          return el.textContent;
+        }).toString();
+        if (placeholder.length > 15) placeholder = placeholder.slice(0, 16) + '...';
+        return placeholder;
+      }
     }
   }]);
 
@@ -4107,6 +4110,8 @@ var Select = /*#__PURE__*/function () {
 }();
 
 
+
+function outsideClick() {}
 
 /***/ }),
 

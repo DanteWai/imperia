@@ -77,8 +77,8 @@ function clickBrand(e){
 }
 //Событие смена параметра товара
 function changeParam(e){
-    console.log(e);
-    let data = creationJSON.call(this, {page:e.detail})
+    //console.log(e);
+    let data = creationJSON.call(this, {page:e.page})
     this.catalog.send(JSON.stringify(data),this.token)
 }
 //Формирует json для отправки на сервер
@@ -93,8 +93,8 @@ function creationJSON({page =1, isJsonOptions = true, brand_id}){
 
     //Смотрим бренд если не передан
     if(typeof brand_id === "undefined"){
-        let brand_id = document.querySelector('[data-filter="brand_id"] .active');
-        if(brand_id) data.products["brand_id"] = brand_id.dataset.id;
+        let brands = document.querySelectorAll('[data-filter="brand_id"] .active');
+        if(brands.length) data.products["brand_id"] = Array.from(brands).map(el => el.dataset.id);
     } else {
         data.products.brand_id = brand_id
     }
@@ -111,7 +111,7 @@ function creationJSON({page =1, isJsonOptions = true, brand_id}){
         delete data.options.options
     }
 
-
+    console.log('function creationJSON', data)
     //TODO смотрим цену
 
     return data
@@ -154,7 +154,6 @@ function activeOptions(el, data) {
     // Если опции есть
     if (options.length) {
         options.map(name => {
-            
             const select = el.querySelectorAll(`[data-filter="${name}"] [data-id]`);    // Набор опций селекта
             const values = data.options.options[name];                                  // Значения опций из подборщика
             select.forEach(option => {

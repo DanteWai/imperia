@@ -531,6 +531,7 @@
             .d-select__dropdown {
                 display: block;
                 z-index: 100;
+                background: #fff;
             }
 
             .d-select__input {
@@ -615,13 +616,14 @@
             }
         }
     }
-
+    /*
     .select {
         width: 10vw;
         min-width: 100px;
         margin-right: 3em;
     }
 
+    */
     .season-choice {
         margin-top: 0.5em;
 
