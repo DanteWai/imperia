@@ -13,9 +13,9 @@ import {OrderComponent} from "./components/order/order";
 import {SendWriteComponent} from "./components/footer/sendWrite";
 import {SendCallComponent} from './components/footer/sendCall';
 //Общее
-import {BasketComponent} from "./components/all/basket";
-import {MainMenuComponent} from './components/all/mainMenu';
-import Select from "@core/select";
+import {BasketComponent} from "./components/all/basket"; //корзина
+import {MainMenuComponent} from './components/all/mainMenu'; //главное меню
+
 
 
 window.addEventListener('load',() => {
@@ -27,8 +27,4 @@ window.addEventListener('load',() => {
     new SendCallComponent('call');
     new ProductPageComponent('product-page', basket);
     new MainMenuComponent('main-menu');
-    new Select('.d-select',{
-        multiple:true,
-        //appendClass:'some_class'
-    })
 });

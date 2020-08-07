@@ -4,7 +4,7 @@ import {CatalogHeaderComponent} from "./catalogHeader";
 import {CatalogProductsComponent} from "./catalogProducts";
 import Server from "@core/servers";
 import {LoaderComponent} from "@js/components/all/loader";
-import {FilterComponent} from './../all/filter';
+import Select from "@core/select";
 
 
 export class CatalogContentComponent extends Component {
@@ -16,9 +16,9 @@ export class CatalogContentComponent extends Component {
     }
 
     init(){
+        new Select('.d-select',{multiple:true})
         this.header = new CatalogHeaderComponent('header')
         this.catalog = new CatalogProductsComponent('product-list');
-        //this.filter = new FilterComponent('filter-panel');
         this.server = new Server();
         this.token = this.$el.querySelector('[name="_token"]').value
 
@@ -32,19 +32,13 @@ export class CatalogContentComponent extends Component {
         this.catalog.$el.addEventListener('change-page', changeParam.bind(this))
         //показ корзины
         this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
-        // показ фильтра
-        //this.$el.addEventListener('showFilter', showFilter.bind(this));
-
 
         checkJSON.call(this)
     }
 
 }
 
-/*function showFilter(e) { на удаление
-    console.log('filter', this.filter);
-    this.filter.collapse();
-}*/
+
 
 //Событие при изменении содержимого корзины
 export function changeBasket() {
@@ -59,8 +53,10 @@ async function changeCategory(){
     this.loader.mount(this.catalog.$el);
     let answer = await this.server.post('catalog/switch',{category_id:this.header.category_id},{},this.token)
     if(answer.option_panel && answer.list){
+        //console.log(answer.list)
         this.header.optionPanel.innerHTML = answer.option_panel //смена доступных для товара опций
-        this.catalog.$el.innerHTML = answer.list //?
+        this.catalog.$el.innerHTML = answer.list // product-list
+        new Select('.d-select',{multiple:true})
         this.loader.unmount(this.catalog.$el);
     }
 }
@@ -77,8 +73,7 @@ function clickBrand(e){
 }
 //Событие смена параметра товара
 function changeParam(e){
-    //console.log(e);
-    let data = creationJSON.call(this, {page:e.page})
+    let data = creationJSON.call(this, {page:e.detail})
     this.catalog.send(JSON.stringify(data),this.token)
 }
 //Формирует json для отправки на сервер
@@ -86,9 +81,12 @@ function creationJSON({page =1, isJsonOptions = true, brand_id}){
     let data = {
         products: { category_id: this.header.category_id, },
         options: {
-            //price:{},
+            //price:{}, // {min:'100', max:''200}
             options:{}
-        }, page
+        }, page,
+        //sort:{} //{sortName:'price', sortType:'desc'}
+        //count:10
+
     }
 
     //Смотрим бренд если не передан

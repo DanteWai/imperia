@@ -107,7 +107,7 @@ class CatalogController extends SiteController
         $filter = ['brand'=>$params['brand']];
         $list = view('catalog.category_list')->with(['brands'=>$brands,'season'=> $post['name'] == '1'])->render();
         $option_panel = view($option_view)->with('params',$params)->render();
-        $filter_panel = view(env('THEME').'.catalog.filter_panel')->with('filter',$filter)->render();
+        $filter_panel = view('catalog.filter_panel')->with('filter',$filter)->render();
 
         $data = [
             'list' => $list,

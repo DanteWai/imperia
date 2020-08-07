@@ -197,7 +197,7 @@ function pagination(e){
         el.classList.add('active')
 
         this.page = el.dataset.page
-        this.$el.dispatchEvent(new CustomEvent('change-page',{detail:this.page}))
+        this.$el.dispatchEvent(new CustomEvent('change-page',{detail:this.page})) //detail - контейнер для аргументов события
     }
 }
 
