@@ -1,6 +1,7 @@
 .content-wrapper {
     width: 100%;
     @include wrapper-full();
+    padding-bottom: 20px;
 
     /*Заголовок страниц*/
     .section-title{
