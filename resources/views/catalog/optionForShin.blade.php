@@ -46,7 +46,7 @@
         </div>
     </li>
     <li>
-        <div class="d-select" data-option-filter="json_option" data-filter="radius">
+        <div class="d-select" data-option-filter="json_option" data-filter="diameter">
             <div class="d-select__input" data-type="input">
                 <span data-type="value">Диаметр</span>
                 <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>

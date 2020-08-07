@@ -86,8 +86,12 @@ function jsonRequestDate(){
         params: {}
     }
 
-    let brand_id = document.querySelector('[data-filter="brand_id"] .active')
-    if(brand_id) data.products["brand_id"] = brand_id.dataset.id;
+    const $brands = this.choiceList.$el.querySelectorAll('[data-filter="brand_id"] .active');
+    const brands = [];
+    $brands.forEach(item => {
+        brands.push(item.dataset.id);
+    });
+    if (brands.length) data.products.brand_id = brands;
 
     let json_option = document.querySelectorAll('[data-option-filter="json_option"]')
     json_option.forEach(j_el => {

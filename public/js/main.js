@@ -1510,7 +1510,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/footer/sendCall */ "./resources/js/components/footer/sendCall.js");
 /* harmony import */ var _components_all_basket__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/all/basket */ "./resources/js/components/all/basket.js");
 /* harmony import */ var _components_all_mainMenu__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/all/mainMenu */ "./resources/js/components/all/mainMenu.js");
-/* harmony import */ var _core_select__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @core/select */ "./resources/js/core/select.js");
 //Подключение стилей
  //Подключение полифилов
 
@@ -1526,8 +1525,9 @@ __webpack_require__.r(__webpack_exports__);
 
  //Общее
 
+ //корзина
 
-
+ //главное меню
 
 window.addEventListener('load', function () {
   var basket = new _components_all_basket__WEBPACK_IMPORTED_MODULE_8__["BasketComponent"]('basket');
@@ -1541,10 +1541,6 @@ window.addEventListener('load', function () {
   new _components_footer_sendCall__WEBPACK_IMPORTED_MODULE_7__["SendCallComponent"]('call');
   new _components_catalog_productPage__WEBPACK_IMPORTED_MODULE_4__["ProductPageComponent"]('product-page', basket);
   new _components_all_mainMenu__WEBPACK_IMPORTED_MODULE_9__["MainMenuComponent"]('main-menu');
-  new _core_select__WEBPACK_IMPORTED_MODULE_10__["default"]('.d-select', {
-    multiple: true //appendClass:'some_class'
-
-  });
 });
 
 /***/ }),
@@ -1743,219 +1739,6 @@ function changeCount(e) {
 
 /***/ }),
 
-/***/ "./resources/js/components/all/filter.js":
-/*!***********************************************!*\
-  !*** ./resources/js/components/all/filter.js ***!
-  \***********************************************/
-/*! exports provided: FilterComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FilterComponent", function() { return FilterComponent; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var FilterComponent = /*#__PURE__*/function (_Component) {
-  _inherits(FilterComponent, _Component);
-
-  var _super = _createSuper(FilterComponent);
-
-  function FilterComponent(id) {
-    _classCallCheck(this, FilterComponent);
-
-    return _super.call(this, id);
-  }
-
-  _createClass(FilterComponent, [{
-    key: "init",
-    value: function init() {
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
-      this.token = document.querySelector('[name="_token"]').value;
-      this.event = new Event('showFilter', {
-        bubbles: false,
-        cancelable: false
-      });
-      this.$catalog = document.getElementById('catalog-content');
-      this.$minPrice = document.getElementById('min-price');
-      this.$maxPrice = document.getElementById('max-price');
-      this.$catalog.addEventListener('click', collapse.bind(this));
-      this.$commit = this.$el.querySelector('.commit');
-      this.$reset = this.$el.querySelector('.reset');
-      this.$el.addEventListener('click', changeParam.bind(this));
-      this.$minPrice.addEventListener('blur', changePriceFilter.bind(this));
-      this.$maxPrice.addEventListener('blur', changePriceFilter.bind(this)); // Кнопка "Показать модели"
-
-      this.$commit.addEventListener('click', function () {
-        localStorage.setItem('product_parameters_complete', localStorage.getItem('filter_parameters'));
-        localStorage.removeItem('filter_parameters');
-        document.location.href = "/catalog";
-      });
-      this.$reset.addEventListener('click', reset.bind(this));
-    }
-  }]);
-
-  return FilterComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]); // Сброс фильтра
-
-function reset() {
-  this.$minPrice.value = '';
-  this.$maxPrice.value = '';
-  var params = this.$el.querySelectorAll('[data-id].active');
-  params.forEach(function (elem) {
-    return elem.classList.remove('active');
-  });
-  this.$commit.innerHTML = 'Выберите параметры';
-  this.$commit.disabled = true;
-  this.$reset.disabled = true;
-} // Показ/скрытие фильтра
-
-
-function collapse(e) {
-  var target = e.target.closest('.filter');
-  var priceList = document.querySelectorAll('.product-list-price');
-  var minPrice = this.$minPrice;
-  var maxPrice = this.$maxPrice;
-  var price = [];
-  var max = 0;
-  var min = 0;
-
-  if (target) {
-    this.$el.classList.toggle('active');
-    var icon = this.$el.classList.contains('active') ? 'arrow-left' : 'filter';
-    target.innerHTML = "\n      <svg class=\"filter-icon\">\n         <use xlink:href=\"/public/images/sprite.svg#".concat(icon, "\"></use>\n      </svg>\n      ");
-
-    if (this.$el.classList.contains('active')) {
-      priceList.forEach(function (item) {
-        return price.push(Number(item.dataset.price));
-      });
-      max = Math.max.apply(null, price);
-      min = Math.min.apply(null, price);
-      minPrice.placeholder += " ".concat(min);
-      minPrice.dataset.price = min;
-      maxPrice.placeholder += " ".concat(max);
-      maxPrice.dataset.price = max;
-    } else {
-      minPrice.placeholder = 'от';
-      minPrice.dataset.price = 0;
-      maxPrice.placeholder = 'до';
-      maxPrice.dataset.price = 0;
-    }
-
-    this.$el.dispatchEvent(this.event);
-  }
-} // Изменение цен
-
-
-function changePriceFilter(e) {
-  var target = e.target;
-  var price = Number(target.dataset.price);
-  var min = 0;
-  var max = 0;
-  var elem;
-  var value = Number(target.value);
-
-  if (target.name === 'min-price') {
-    elem = target.nextElementSibling;
-    min = price;
-    max = elem.value ? Number(elem.value) : Number(elem.dataset.price);
-  } else {
-    elem = target.previousElementSibling;
-    max = price;
-    min = elem.value ? Number(elem.value) : Number(elem.dataset.price);
-  }
-
-  value = Number.isNaN(value) ? price : Math.min(Math.max(value, min), max); //Проверка на nan и на диапазон
-
-  target.value = value;
-  filter.call(this);
-} // Клик по параметру
-
-
-function changeParam(e) {
-  var el = e.target.closest('[data-id]');
-
-  if (el) {
-    el.classList.toggle('active');
-    filter.call(this);
-  }
-} // Количество товара
-
-
-function filter() {
-  var _this = this;
-
-  var activeElements = this.$el.querySelectorAll('[data-id].active').length;
-
-  if (activeElements || this.$minPrice.value || this.$maxPrice.value) {
-    this.$commit.disabled = false;
-    this.$reset.disabled = false;
-  } else {
-    this.$commit.disabled = true;
-    this.$reset.disabled = true;
-  }
-
-  var id = document.querySelector('.category-header.active').dataset.cat;
-  this.server.post('praramlist', jsonRequestData.call(this, id), {
-    'Content-Type': 'application/json;charset=utf-8'
-  }, this.token).then(function (answer) {
-    console.log('answer', answer);
-
-    if (answer.count) {
-      _this.$commit.innerHTML = "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C ".concat(answer.count, " \u043C\u043E\u0434\u0435\u043B\u0435\u0439");
-    } //this.$commit.disabled = activeElements === 0;
-    //this.$reset.disabled = activeElements === 0;
-
-
-    if (activeElements === 0 && !_this.$minPrice.value && !_this.$maxPrice.value) _this.$commit.innerHTML = 'Выберите параметр';
-  });
-} // Формирование данных для запроса на сервер
-
-
-function jsonRequestData(id) {
-  var data = {
-    base_option: {
-      category_id: id
-    },
-    json_option: {},
-    params: {}
-  };
-  var brand_id = document.querySelector('[data-filter="brand_id"] .active');
-  if (brand_id) data.base_option.brand_id = brand_id.dataset.id;
-  var minPrice = this.$minPrice.value ? this.$minPrice.value : this.$minPrice.dataset.price;
-  var maxPrice = this.$maxPrice.value ? this.$maxPrice.value : this.$maxPrice.dataset.price;
-  data.base_option.price = [minPrice, maxPrice];
-  data = JSON.stringify(data);
-  console.log(data);
-  localStorage.setItem('filter_parameters', data);
-  return data;
-}
-
-/***/ }),
-
 /***/ "./resources/js/components/all/loader.js":
 /*!***********************************************!*\
   !*** ./resources/js/components/all/loader.js ***!
@@ -2092,7 +1875,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _catalogProducts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./catalogProducts */ "./resources/js/components/catalog/catalogProducts.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _js_components_all_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @js/components/all/loader */ "./resources/js/components/all/loader.js");
-/* harmony import */ var _all_filter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../all/filter */ "./resources/js/components/all/filter.js");
+/* harmony import */ var _core_select__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @core/select */ "./resources/js/core/select.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2148,9 +1931,11 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
   _createClass(CatalogContentComponent, [{
     key: "init",
     value: function init() {
+      new _core_select__WEBPACK_IMPORTED_MODULE_5__["default"]('.d-select', {
+        multiple: true
+      });
       this.header = new _catalogHeader__WEBPACK_IMPORTED_MODULE_1__["CatalogHeaderComponent"]('header');
-      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list'); //this.filter = new FilterComponent('filter-panel');
-
+      this.catalog = new _catalogProducts__WEBPACK_IMPORTED_MODULE_2__["CatalogProductsComponent"]('product-list');
       this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_3__["default"]();
       this.token = this.$el.querySelector('[name="_token"]').value; //Смена категории в шапке
 
@@ -2162,20 +1947,13 @@ var CatalogContentComponent = /*#__PURE__*/function (_Component) {
 
       this.catalog.$el.addEventListener('change-page', changeParam.bind(this)); //показ корзины
 
-      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this)); // показ фильтра
-      //this.$el.addEventListener('showFilter', showFilter.bind(this));
-
+      this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
       checkJSON.call(this);
     }
   }]);
 
   return CatalogContentComponent;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-/*function showFilter(e) { на удаление
-    console.log('filter', this.filter);
-    this.filter.collapse();
-}*/
-//Событие при изменении содержимого корзины
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]); //Событие при изменении содержимого корзины
 
 function changeBasket() {
   //рендерит корзину
@@ -2207,10 +1985,14 @@ function _changeCategory() {
             answer = _context.sent;
 
             if (answer.option_panel && answer.list) {
+              //console.log(answer.list)
               this.header.optionPanel.innerHTML = answer.option_panel; //смена доступных для товара опций
 
-              this.catalog.$el.innerHTML = answer.list; //?
+              this.catalog.$el.innerHTML = answer.list; // product-list
 
+              new _core_select__WEBPACK_IMPORTED_MODULE_5__["default"]('.d-select', {
+                multiple: true
+              });
               this.loader.unmount(this.catalog.$el);
             }
 
@@ -2242,9 +2024,8 @@ function clickBrand(e) {
 
 
 function changeParam(e) {
-  //console.log(e);
   var data = creationJSON.call(this, {
-    page: e.page
+    page: e.detail
   });
   this.catalog.send(JSON.stringify(data), this.token);
 } //Формирует json для отправки на сервер
@@ -2261,10 +2042,12 @@ function creationJSON(_ref2) {
       category_id: this.header.category_id
     },
     options: {
-      //price:{},
+      //price:{}, // {min:'100', max:''200}
       options: {}
     },
-    page: page
+    page: page //sort:{} //{sortName:'price', sortType:'desc'}
+    //count:10
+
   }; //Смотрим бренд если не передан
 
   if (typeof brand_id === "undefined") {
@@ -2320,12 +2103,19 @@ function checkJSON() {
 
 
 function activeOptions(el, data) {
-  var category = '';
-  var brand = data.products.brand_id ? el.querySelector("[data-filter=\"brand_id\"] [data-id=\"".concat(data.products.brand_id, "\"]")) : null;
-
-  if (brand) {
-    brand.classList.add('active');
-    brand.selected = true;
+  // Если есть бренды
+  if (data.products.brand_id) {
+    var labelBrand = el.querySelector('[data-filter="brand_id"] [data-type="value"]');
+    var brandsSet = el.querySelectorAll('[data-filter="brand_id"] [data-id]');
+    var brands = data.products.brand_id;
+    var values = [];
+    brandsSet.forEach(function (brand) {
+      if (brands.includes(brand.dataset.id)) {
+        brand.classList.add('active');
+        values.push(brand.textContent);
+      }
+    });
+    labelBrand.textContent = values.join(', ');
   }
 
   var options = Object.keys(data.options.options); // Ключи опций
@@ -2333,14 +2123,16 @@ function activeOptions(el, data) {
 
   if (options.length) {
     options.map(function (name) {
+      var labelSelected = el.querySelector("[data-filter=".concat(name, "] [data-type=\"value\"]")); // label селекта
+
       var select = el.querySelectorAll("[data-filter=\"".concat(name, "\"] [data-id]")); // Набор опций селекта
 
       var values = data.options.options[name]; // Значения опций из подборщика
 
+      labelSelected.textContent = values.join(', ');
       select.forEach(function (option) {
         if (values.includes(option.dataset.id)) {
           option.classList.add('active');
-          option.selected = true;
         }
       });
     });
@@ -2440,25 +2232,10 @@ function dataId(e) {
   if (el) {
     if (el.tagName === 'INPUT') el.classList.toggle('active');
     this.$el.dispatchEvent(new CustomEvent('change-param', {
-      page: "1"
-    }));
+      detail: 1
+    })); //detail - контейнер для аргументов события
   }
 }
-/*
-//let index = e.target.selectedIndex;     // для хрома
-    //let el = index ? e.target[index] : e.target.closest('[data-id]');
-
-let select = el.closest('SELECT')
-        if(select){
-            let activeInSelect = select.querySelectorAll('.active')
-            if(activeInSelect){
-                for(let act of activeInSelect){
-                    act.classList.remove('active')
-                }
-            }
-
-        }
-        el.classList.toggle('active')*/
 
 /***/ }),
 
@@ -2649,7 +2426,7 @@ function pagination(e) {
     this.page = el.dataset.page;
     this.$el.dispatchEvent(new CustomEvent('change-page', {
       detail: this.page
-    }));
+    })); //detail - контейнер для аргументов события
   }
 }
 
@@ -3234,8 +3011,12 @@ function jsonRequestDate() {
     },
     params: {}
   };
-  var brand_id = document.querySelector('[data-filter="brand_id"] .active');
-  if (brand_id) data.products["brand_id"] = brand_id.dataset.id;
+  var $brands = this.choiceList.$el.querySelectorAll('[data-filter="brand_id"] .active');
+  var brands = [];
+  $brands.forEach(function (item) {
+    brands.push(item.dataset.id);
+  });
+  if (brands.length) data.products.brand_id = brands;
   var json_option = document.querySelectorAll('[data-option-filter="json_option"]');
   json_option.forEach(function (j_el) {
     var activeOptions = j_el.querySelectorAll('.active');
