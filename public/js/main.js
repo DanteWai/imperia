@@ -2322,9 +2322,8 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
         sortType: 'desc'
       };
       this.count = 10;
-      this.$el.addEventListener('click', pagination.bind(this));
-      this.$el.addEventListener('click', sort.bind(this));
-      this.$el.addEventListener('click', countGoods.bind(this));
+      this.$el.addEventListener('click', changeParameters.bind(this)); // Изменение параметров сортировки/пагниации/кол-ва
+
       this.$el.addEventListener('click', addBasket.bind(this));
       this.$el.addEventListener('click', toggleSort.bind(this));
       this.event = new Event('showBasket', {
@@ -2432,9 +2431,28 @@ function addBasketJson(id, count) {
   localStorage.setItem('basket', JSON.stringify(data));
 }
 
-function pagination(e) {
-  var el = e.target.closest('[data-page]');
+function changeParameters(e) {
+  var target = e.target;
 
+  switch (target) {
+    case target.closest('[data-page]'):
+      pagination.call(this, target);
+      break;
+
+    case target.closest('[data-sort-type]'):
+      sort.call(this, target);
+      break;
+
+    case target.closest('[data-count-goods]'):
+      countGoods.call(this, target);
+      break;
+
+    default:
+      return;
+  }
+}
+
+function pagination(el) {
   if (el && !el.classList.contains('active')) {
     var paginations = this.$el.querySelectorAll('.pagination a.active');
     paginations.forEach(function (el) {
@@ -2452,12 +2470,9 @@ function pagination(e) {
   }
 }
 
-function sort(e) {
-  var el = e.target.closest('[data-sort-type]');
-
+function sort(el) {
   if (el) {
-    this.sort.sortType = el.dataset.sortType; //this.$el.querySelector('.sort-action__current').textContent = el.textContent;
-
+    this.sort.sortType = el.dataset.sortType;
     this.$el.dispatchEvent(new CustomEvent('change-sort', {
       detail: {
         page: this.page,
@@ -2468,9 +2483,7 @@ function sort(e) {
   }
 }
 
-function countGoods(e) {
-  var el = e.target.closest('[data-count-goods]');
-
+function countGoods(el) {
   if (el) {
     this.count = el.dataset.countGoods;
     this.$el.dispatchEvent(new CustomEvent('change-sort', {

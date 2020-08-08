@@ -18,9 +18,7 @@ export class CatalogProductsComponent extends Component {
             sortType: 'desc'
         };
         this.count = 10;
-        this.$el.addEventListener('click',pagination.bind(this));
-        this.$el.addEventListener('click',sort.bind(this));
-        this.$el.addEventListener('click',countGoods.bind(this));
+        this.$el.addEventListener('click', changeParameters.bind(this));    // Изменение параметров сортировки/пагниации/кол-ва
         this.$el.addEventListener('click',addBasket.bind(this))
         this.$el.addEventListener('click', toggleSort.bind(this));
         this.event = new Event('showBasket',{bubbles: false, cancelable: false});
@@ -194,8 +192,25 @@ export function addBasketJson(id,count) {
     localStorage.setItem('basket',JSON.stringify(data))
 }
 
-function pagination(e){
-    let el = e.target.closest('[data-page]');
+function changeParameters(e) {
+    const target = e.target;
+
+    switch (target) {
+        case target.closest('[data-page]'):
+            pagination.call(this, target);
+            break;
+        case target.closest('[data-sort-type]'):
+            sort.call(this, target);
+            break;
+        case target.closest('[data-count-goods]'):
+            countGoods.call(this, target);
+            break;
+        default:
+            return;
+    }
+}
+
+function pagination(el){
     if(el && !el.classList.contains('active')) {
         let paginations = this.$el.querySelectorAll('.pagination a.active')
         paginations.forEach(el => {
@@ -208,17 +223,14 @@ function pagination(e){
     }
 }
 
-function sort(e) {
-    const el = e.target.closest('[data-sort-type]');
+function sort(el) {
     if (el) {
         this.sort.sortType = el.dataset.sortType;
-        //this.$el.querySelector('.sort-action__current').textContent = el.textContent;
         this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count}}));
     }
 }
 
-function countGoods(e) {
-    const el = e.target.closest('[data-count-goods]');
+function countGoods(el) {
     if (el) {
         this.count = el.dataset.countGoods;
         this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count}}));
