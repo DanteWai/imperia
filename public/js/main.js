@@ -2042,6 +2042,7 @@ function creationJSON(_ref2) {
   } : _ref2$sort,
       _ref2$count = _ref2.count,
       count = _ref2$count === void 0 ? 10 : _ref2$count,
+      price = _ref2.price,
       _ref2$isJsonOptions = _ref2.isJsonOptions,
       isJsonOptions = _ref2$isJsonOptions === void 0 ? true : _ref2$isJsonOptions,
       brand_id = _ref2.brand_id;
@@ -2050,14 +2051,12 @@ function creationJSON(_ref2) {
       category_id: this.header.category_id
     },
     options: {
-      //price:{}, // {min:'100', max:''200}
       options: {}
     },
     page: page,
     sort: sort,
-    count: count //sort:{} //{sortName:'price', sortType:'desc'}
-    //count:10
-
+    count: count,
+    price: price
   }; //Смотрим бренд если не передан
 
   if (typeof brand_id === "undefined") {
@@ -2066,7 +2065,7 @@ function creationJSON(_ref2) {
       return el.dataset.id;
     });
   } else {
-    data.products.brand_id = brand_id;
+    data.products.brand_id = [brand_id];
   } //Смотрим остальные параметры
 
 
@@ -2083,8 +2082,133 @@ function creationJSON(_ref2) {
   }
 
   console.log('function creationJSON', data); //TODO смотрим цену
+  // трансформируем объект в GET-строку
 
+  var get = transformJSONToGet(data); // транфсорфируем GET-строку в объект
+
+  var json = transformGetToJSON(get);
   return data;
+} // трансформируем объект в GET-строку
+
+
+function transformJSONToGet(data) {
+  var _data$products$brand_;
+
+  ///------////
+  // перевод data в GET
+  var getQuery = "?category_id=".concat(data.products.category_id, "&page=").concat(data.page, "&count=").concat(data.count, "&sortName=").concat(data.sort.sortName, "&sortType=").concat(data.sort.sortType); // Переданы ли бренды
+
+  if ((_data$products$brand_ = data.products.brand_id) === null || _data$products$brand_ === void 0 ? void 0 : _data$products$brand_.length) {
+    getQuery += "&brand_id=".concat(data.products.brand_id.join('-'));
+  } // Передана ли цена
+
+
+  if (data.price) {
+    var keysPrice = Object.keys(data.price);
+    keysPrice.map(function (key) {
+      getQuery += "&".concat(key, "=").concat(data.price[key]);
+    });
+  } // Переданы ли опции с главной
+
+
+  if (data.options.options) {
+    var keysOptions = Object.keys(data.options.options);
+    keysOptions.map(function (key) {
+      getQuery += "&".concat(key, "=").concat(data.options.options[key].join('-'));
+    });
+  }
+
+  console.log('function JSONToGet', getQuery);
+  return getQuery;
+} // транфсорфируем GET-строку в объект
+
+
+function transformGetToJSON(str) {
+  var obj = {
+    products: {},
+    options: {
+      options: {}
+    },
+    sort: {},
+    price: {}
+  };
+  var getK = [];
+  var get = str.slice(1).split('&');
+  get.map(function (item) {
+    return getK.push(item.split('='));
+  });
+  getK.map(function (item) {
+    switch (item[0]) {
+      case 'category_id':
+        obj.products[item[0]] = item[1];
+        break;
+
+      case 'brand_id':
+        obj.products[item[0]] = item[1].split('-');
+        break;
+
+      case 'page':
+        obj[item[0]] = item[1];
+        break;
+
+      case 'count':
+        obj[item[0]] = item[1];
+        break;
+
+      case 'sortName':
+        obj.sort[item[0]] = item[1];
+        break;
+
+      case 'sortType':
+        obj.sort[item[0]] = item[1];
+        break;
+
+      case 'min':
+        obj.price[item[0]] = item[1];
+        break;
+
+      case 'max':
+        obj.price[item[0]] = item[1];
+        break;
+
+      case 'heavy':
+        obj.options.options[item[0]] = item[1];
+        break;
+
+      case 'height':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      case 'width':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      case 'season':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      case 'diameter':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      case 'mount':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      case 'departure':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      case 'dia':
+        obj.options.options[item[0]] = item[1].split('-');
+        break;
+
+      default:
+        return;
+    }
+  });
+  console.log('function GetToJson', obj);
+  return obj;
 } // Парсит параметры из подборщика на главной странице
 
 
@@ -2322,6 +2446,8 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
         sortType: 'desc'
       };
       this.count = 10;
+      this.$minPrice = null;
+      this.$maxPrice = null;
       this.$el.addEventListener('click', changeParameters.bind(this)); // Изменение параметров сортировки/пагниации/кол-ва
 
       this.$el.addEventListener('click', addBasket.bind(this));
@@ -2352,6 +2478,13 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
                     _this2.$el.innerHTML = productsRender.call(_this2, answer);
 
                     _this2.loader.unmount(_this2.$el);
+
+                    _this2.$minPrice = document.getElementById('min-price');
+                    _this2.$maxPrice = document.getElementById('max-price');
+
+                    _this2.$minPrice.addEventListener('blur', changePrice.bind(_this2));
+
+                    _this2.$maxPrice.addEventListener('blur', changePrice.bind(_this2));
                   }
                 });
 
@@ -2394,7 +2527,7 @@ function productsRender(object) {
         return "\n                                <li>\n                                    <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                    <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                                </li>\n                            ");
       }).join(''), "\n                    </ul>\n                    <p class=\"product-list-price\" data-price=\"").concat(item.price, "\">").concat(item.price, " P</p>\n                    <span class=\"basket-block\">\n                        <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                        <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                            ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                        </button>\n                    </span>\n                </div>\n            ");
     }).join('');
-    return "\n            <section class=\"content-filter\">\n                <div class=\"sort\">\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0426\u0435\u043D\u0430:</span>\n                    <div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                        <input type=\"text\" name=\"min-price\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\">\n                        <input type=\"text\" name=\"max-price\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\">\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            ".concat(this.sort.sortName === 'price' && this.sort.sortType === 'desc' ? '<span class="sort-action__current">по возрастанию цены</span>' : '<span class="sort-action__current">по убыванию цены</span>', "\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-sort-type=\"desc\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                            <div class=\"sort-action__item\" data-sort-type=\"asc\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">").concat(this.count, "</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-count-goods=\"10\">10</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"15\">15</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"20\">20</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"30\">30</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"50\">50</div>\n                        </div>\n                    </div>\n                </div>\n\n                </div>\n\n                <div class=\"pagination\">\n                    <ul class=\"pagination__list\">\n                        ").concat(_pagination, "\n                    </ul>\n                </div>\n            </section>\n            ").concat(products, "\n        ");
+    return "\n            <section class=\"content-filter\">\n                <div class=\"sort\">\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0426\u0435\u043D\u0430:</span>\n                    <div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                        <input type=\"text\" name=\"min-price\" data-price=\"500\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\">\n                        <input type=\"text\" name=\"max-price\" data-price=\"10000\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\">\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            ".concat(this.sort.sortName === 'price' && this.sort.sortType === 'desc' ? '<span class="sort-action__current">по возрастанию цены</span>' : '<span class="sort-action__current">по убыванию цены</span>', "\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-sort-type=\"desc\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                            <div class=\"sort-action__item\" data-sort-type=\"asc\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">").concat(this.count, "</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-count-goods=\"10\">10</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"15\">15</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"20\">20</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"30\">30</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"50\">50</div>\n                        </div>\n                    </div>\n                </div>\n\n                </div>\n\n                <div class=\"pagination\">\n                    <ul class=\"pagination__list\">\n                        ").concat(_pagination, "\n                    </ul>\n                </div>\n            </section>\n            ").concat(products, "\n        ");
   } else {
     return "\n            <div class=\"goods-empty\" style=\"display: flex\">\n                <p>\u041A \u0441\u043E\u0436\u0430\u043B\u0435\u043D\u0438\u044E \u043F\u043E \u0412\u0430\u0448\u0438\u043C \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E:(</p>\n                <p>\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u043F\u043E\u0438\u0441\u043A\u0430</p>\n            </div>\n        ";
   }
@@ -2494,6 +2627,52 @@ function countGoods(el) {
       }
     }));
   }
+}
+
+function changePrice(e) {
+  var target = e.target;
+  var price = Number(target.dataset.price);
+  var min = 0;
+  var max = 0;
+  var elem;
+  var value = Number(target.value);
+
+  if (target.name === 'min-price') {
+    // Если изменен input min
+    elem = target.nextElementSibling; // input max
+
+    min = price; // min равен значению data атрибута 
+
+    max = elem.value ? Number(elem.value) : Number(elem.dataset.price); // если max не пустой, то он равен своему значению, иначе data атрибуту
+  } else {
+    // обратное с max
+    elem = target.previousElementSibling;
+    max = price;
+    min = elem.value ? Number(elem.value) : Number(elem.dataset.price);
+  }
+
+  value = Number.isNaN(value) || value === 0 ? price : Math.min(Math.max(value, min), max); // проверка на число и диапазон
+
+  target.value = value;
+  target.name === 'min-price' ? this.$el.dispatchEvent(new CustomEvent('change-sort', {
+    detail: {
+      page: this.page,
+      sort: this.sort,
+      count: this.count,
+      price: {
+        min: value
+      }
+    }
+  })) : this.$el.dispatchEvent(new CustomEvent('change-sort', {
+    detail: {
+      page: this.page,
+      sort: this.sort,
+      count: this.count,
+      price: {
+        max: value
+      }
+    }
+  }));
 }
 
 function toggleSort(e) {

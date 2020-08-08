@@ -12,12 +12,16 @@ export class CatalogProductsComponent extends Component {
     init(){
         this.json = ''
         this.server = new Server();
+
         this.page = 1;
         this.sort = {
             sortName: 'price',
             sortType: 'desc'
         };
         this.count = 10;
+        this.$minPrice = null;
+        this.$maxPrice = null;
+
         this.$el.addEventListener('click', changeParameters.bind(this));    // Изменение параметров сортировки/пагниации/кол-ва
         this.$el.addEventListener('click',addBasket.bind(this))
         this.$el.addEventListener('click', toggleSort.bind(this));
@@ -32,6 +36,10 @@ export class CatalogProductsComponent extends Component {
             if(answer.data){
                 this.$el.innerHTML = productsRender.call(this, answer);
                 this.loader.unmount(this.$el)
+                this.$minPrice = document.getElementById('min-price');
+                this.$maxPrice = document.getElementById('max-price');
+                this.$minPrice.addEventListener('blur', changePrice.bind(this));
+                this.$maxPrice.addEventListener('blur', changePrice.bind(this));
             }
         })
 
@@ -101,8 +109,8 @@ function productsRender(object){ // рендер шаблона
                 <div class="sort-item">
                     <span class="sort-item__title">Цена:</span>
                     <div data-type="search" data-option-filter="base_option" data-filter="price" class="filter-price">
-                        <input type="text" name="min-price" id="min-price" placeholder="от" class="price-input">
-                        <input type="text" name="max-price" id="max-price" placeholder="до" class="price-input">
+                        <input type="text" name="min-price" data-price="500" id="min-price" placeholder="от" class="price-input">
+                        <input type="text" name="max-price" data-price="10000" id="max-price" placeholder="до" class="price-input">
                     </div>
                 </div>
 
@@ -235,6 +243,32 @@ function countGoods(el) {
         this.count = el.dataset.countGoods;
         this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count}}));
     }
+}
+
+function changePrice(e) {
+    const target = e.target;
+    const price = Number(target.dataset.price);
+    let min = 0;
+    let max = 0;
+    let elem;
+    let value = Number(target.value);
+
+    if (target.name === 'min-price') {          // Если изменен input min
+        elem = target.nextElementSibling;       // input max
+        min = price;                            // min равен значению data атрибута 
+        max = elem.value ? Number(elem.value) : Number(elem.dataset.price);     // если max не пустой, то он равен своему значению, иначе data атрибуту
+    } else {                                    // обратное с max
+        elem = target.previousElementSibling;
+        max = price;
+        min = elem.value ? Number(elem.value) : Number(elem.dataset.price);
+    }
+
+    value = Number.isNaN(value) || value === 0 ? price : Math.min(Math.max(value, min), max);  // проверка на число и диапазон
+    target.value = value;
+
+    target.name === 'min-price' ?
+        this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count, price: {min: value}}})) :
+        this.$el.dispatchEvent(new CustomEvent('change-sort', {detail: {page: this.page, sort: this.sort, count: this.count, price: {max: value}}}))
 }
 
 function toggleSort(e) {

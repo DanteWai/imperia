@@ -80,16 +80,16 @@ function changeParam(e){
     this.catalog.send(JSON.stringify(data),this.token)
 }
 //Формирует json для отправки на сервер
-function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, count = 10, isJsonOptions = true, brand_id}){
+function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, count = 10, price, isJsonOptions = true, brand_id}){
     let data = {
         products: { category_id: this.header.category_id, },
         options: {
-            //price:{}, // {min:'100', max:''200}
             options:{}
-        }, page, sort, count
-        //sort:{} //{sortName:'price', sortType:'desc'}
-        //count:10
-
+        }, 
+        page, 
+        sort, 
+        count, 
+        price
     }
 
     //Смотрим бренд если не передан
@@ -97,7 +97,7 @@ function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, co
         let brands = document.querySelectorAll('[data-filter="brand_id"] .active');
         if(brands.length) data.products["brand_id"] = Array.from(brands).map(el => el.dataset.id);
     } else {
-        data.products.brand_id = brand_id
+        data.products.brand_id = [brand_id]
     }
 
 
@@ -115,7 +115,116 @@ function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, co
     console.log('function creationJSON', data)
     //TODO смотрим цену
 
+    // трансформируем объект в GET-строку
+    const get = transformJSONToGet(data);
+
+    // транфсорфируем GET-строку в объект
+    const json = transformGetToJSON(get);
+
     return data
+}
+
+// трансформируем объект в GET-строку
+function transformJSONToGet(data) {
+    ///------////
+    // перевод data в GET
+    let getQuery = `?category_id=${data.products.category_id}&page=${data.page}&count=${data.count}&sortName=${data.sort.sortName}&sortType=${data.sort.sortType}`;
+    // Переданы ли бренды
+    if (data.products.brand_id?.length) {
+        getQuery += `&brand_id=${data.products.brand_id.join('-')}`;
+    }
+    // Передана ли цена
+    if (data.price) {
+        const keysPrice = Object.keys(data.price);
+        keysPrice.map(key => {
+            getQuery += `&${key}=${data.price[key]}`;
+        });
+    }
+    // Переданы ли опции с главной
+    if (data.options.options) {
+        const keysOptions = Object.keys(data.options.options);
+        keysOptions.map(key => {
+            getQuery += `&${key}=${data.options.options[key].join('-')}`;
+        });
+    }
+
+    console.log('function JSONToGet', getQuery);
+
+    return getQuery;
+}
+
+// транфсорфируем GET-строку в объект
+function transformGetToJSON(str) {
+    const obj = {
+        products: {},
+        options: {
+            options: {}
+        },
+        sort: {},
+        price: {}
+    };
+    let getK = [];
+
+    let get = str.slice(1).split('&');
+    get.map(item => getK.push(item.split('=')));
+    getK.map(item => {
+        switch (item[0]) {
+            case 'category_id':
+                obj.products[item[0]] = item[1];
+                break;
+            case 'brand_id':
+                obj.products[item[0]] = item[1].split('-');
+                break;
+            case 'page':
+                obj[item[0]] = item[1];
+                break;
+            case 'count':
+                obj[item[0]] = item[1];
+                break;
+            case 'sortName':
+                obj.sort[item[0]] = item[1];
+                break;
+            case 'sortType':
+                obj.sort[item[0]] = item[1];
+                break;
+            case 'min':
+                obj.price[item[0]] = item[1];
+                break;
+            case 'max':
+                obj.price[item[0]] = item[1];
+                break;
+            case 'heavy':
+                obj.options.options[item[0]] = item[1];
+                break;
+            case 'height':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            case 'width':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            case 'season':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            case 'diameter':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            case 'mount':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            case 'departure':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            case 'dia':
+                obj.options.options[item[0]] = item[1].split('-');
+                break;
+            default:
+                return;
+        }
+    });
+    
+    console.log('function GetToJson', obj);
+
+    return obj;
 }
 
 // Парсит параметры из подборщика на главной странице
