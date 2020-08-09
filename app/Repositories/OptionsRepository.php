@@ -15,6 +15,11 @@ class OptionsRepository extends Repository {
         $this->model = $options;
     }
 
+    /*Получаем максимальную цену*/
+    public function maxPrice(){
+        return $this->model->max('price');
+    }
+
     public function getProductsForSearch($category_id, $search, $sortName, $sort, $currentPage = 1) {
 
         Paginator::currentPageResolver(function () use ($currentPage) {
@@ -34,7 +39,6 @@ class OptionsRepository extends Repository {
 
         return $builder->paginate(20);
     }
-
 
     /*Получаем конкретный продукт по id*/
     public function getProduct($id){
@@ -254,8 +258,6 @@ class OptionsRepository extends Repository {
 
         return $product;
     }
-
-
 
 
     public function addOption($data) {

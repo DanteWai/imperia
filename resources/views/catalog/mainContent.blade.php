@@ -16,6 +16,10 @@
     </section>
     <section class="product-list" id="product-list">
         {!! $list !!}
+
+        <div id="back-options" class="hide">
+            <span data-max-price>{{ $max_price }}</span>
+        </div>
     </section>
 
 </section>

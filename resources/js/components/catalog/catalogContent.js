@@ -35,6 +35,7 @@ export class CatalogContentComponent extends Component {
         //показ корзины
         this.catalog.$el.addEventListener('showBasket', changeBasket.bind(this));
 
+
         checkJSON.call(this)
     }
 
@@ -80,16 +81,16 @@ function changeParam(e){
     this.catalog.send(JSON.stringify(data),this.token)
 }
 //Формирует json для отправки на сервер
-function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, count = 10, price, isJsonOptions = true, brand_id}){
+function creationJSON({page = 1, isJsonOptions = true, brand_id}){
     let data = {
         products: { category_id: this.header.category_id, },
         options: {
             options:{}
-        }, 
-        page, 
-        sort, 
-        count, 
-        price
+        },
+        page,
+        sort:this.catalog.sort,
+        count:this.catalog.count,
+        price:{}
     }
 
     //Смотрим бренд если не передан
@@ -112,15 +113,26 @@ function creationJSON({page =1, sort = {sortName: 'price', sortType: 'desc'}, co
         delete data.options.options
     }
 
-    console.log('function creationJSON', data)
-    //TODO смотрим цену
+
+    //првоеряем диапазон цен
+    let priceMin = this.catalog.$minPrice?.value
+    let priceMax = this.catalog.$maxPrice?.value
+
+    if(priceMin) data.price.min = priceMin
+    if(priceMax) data.price.max = priceMax
+
+    if(!(priceMin || priceMax)) delete data.price
+
+
 
     // трансформируем объект в GET-строку
-    const get = transformJSONToGet(data);
+    //const get = transformJSONToGet(data);
 
     // транфсорфируем GET-строку в объект
-    const json = transformGetToJSON(get);
+    //const json = transformGetToJSON(get);
 
+
+    console.log('function creationJSON', data)
     return data
 }
 
@@ -221,7 +233,7 @@ function transformGetToJSON(str) {
                 return;
         }
     });
-    
+
     console.log('function GetToJson', obj);
 
     return obj;
@@ -286,3 +298,5 @@ function activeOptions(el, data) {
     }
 
 }
+
+

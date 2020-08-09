@@ -20,7 +20,7 @@ class CatalogController extends SiteController
     {
         parent::__construct(new MenusRepository(new Main_menu), new CategoriesRepository(new Product_category()));
 
-        $this->template=env('THEME').'.catalog.catalog';
+        $this->template='catalog.catalog';
 
     }
 
@@ -37,13 +37,14 @@ class CatalogController extends SiteController
 
 
         $params = $this->getUniqueParamsForCategory('1',$brands);
+        $max_price = $this->o_rep->maxPrice();
 
         $list = view('catalog.category_list')->with('brands',$brands)->render();
         $option_panel = view('catalog.optionForShin')->with('params',$params)->render();
         $categories = $this->getCategories();
 
 
-        $content = view('catalog.mainContent')->with(compact(['params', 'list', 'categories', 'option_panel']))->render();
+        $content = view('catalog.mainContent')->with(compact(['params', 'list', 'categories', 'option_panel','max_price']))->render();
 
         $this->vars = Arr::add($this->vars,'content',$content);
 
@@ -123,6 +124,16 @@ class CatalogController extends SiteController
 
         if(isset($post['products']) && isset($post['options'])){
             $products = $this->o_rep->getParamOption($post['products'],$post['options'], false, $post['page']);
+            $products= $products->toArray();
+
+
+            if(isset($post['price']['min']))
+                $products['price']['min'] = $post['price']['min'];
+            if(isset($post['price']['max']))
+                $products['price']['max'] = $post['price']['max'];
+            if(isset($post['sort']))
+                $products['sort'] = $post['sort'];
+
             return response()->json($products);
         }
         return response()->json(['error'=>"не удалось получить товары"]);
