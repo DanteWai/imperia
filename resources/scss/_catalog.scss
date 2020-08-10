@@ -460,8 +460,8 @@
 
 
         >li:last-child {
-            margin-right: 3em;
-            margin-left: 2em;
+            margin-right: 2rem;
+            margin-left: 0;
         }
 
 
@@ -523,9 +523,9 @@
     }
 
     .d-select {
-        width: 10vw;
+        width: 11vw;
         min-width: 100px;
-        margin-right: 3em;
+        margin-right: 2rem;
         position: relative;
         &.open {
             .d-select__dropdown {
@@ -1280,11 +1280,48 @@
             font-size: 1.45rem;
         }
     }
+
+    .options-panel {
+        .d-select {
+            width: 13vw;
+        }
+
+        & > .options-group {
+            justify-content: center;
+
+            & > li {
+                &:last-child {
+                    margin: 0;
+                }
+            }
+        }
+    }
 }
 
 
 @media only screen and (max-width: 1000px) {
+
+    .header {
+        height: 45vh;
+    }
+
     .options-panel {
+        height: 100px;
+
+        & > .options-group {
+            flex-wrap: wrap;
+        }
+
+        li {
+
+            .d-select {
+                margin-right: 1rem;
+                width: 20vw;
+            }
+        }
+
+    }
+    /*.options-panel {
 
         .season-choice {
             display: flex;
@@ -1332,7 +1369,7 @@
                 align-self: stretch;
             }
         }
-    }
+    }*/
 
     // Страница товара
     .product-preview {
@@ -1411,7 +1448,7 @@
         grid-gap: 1em;
     }
 
-    .options-panel {
+    /*.options-panel {
 
         .select {
             width: 90%;
@@ -1461,10 +1498,31 @@
                 margin-left: 0;
             }
         }
-    }
+    }*/
 }
 
 @media only screen and (max-width: 655px) {
+    
+    .header {
+        height: 55vh;
+    }
+    
+    .options-panel {
+        height: 150px;
+
+        li {
+            .d-select {
+                width: 40vw;
+            }
+        }
+
+        .season-choice {
+            label {
+                padding: 0.3em 1.5em;
+            }
+        }
+    }
+
     .sort-item {
         width: 100%;
         justify-content: center;
@@ -1530,9 +1588,9 @@
 
 @media only screen and (max-width: 400px) {
 
-    .header {
+    /*.header {
         height: 760vh;
-    }
+    }*/
 
 
 
@@ -1541,7 +1599,7 @@
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
-    .options-panel {
+    /*.options-panel {
 
         .select {
             width: 95%;
@@ -1570,5 +1628,5 @@
                 margin-left: 0;
             }
         }
-    }
+    }*/
 }
