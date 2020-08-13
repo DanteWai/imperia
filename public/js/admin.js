@@ -885,10 +885,10 @@ window.addEventListener('load', function () {
   new _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__["OrdersComponents"]('main-orders-component');
   new _components_list__WEBPACK_IMPORTED_MODULE_6__["ListComponent"]('list-component'); //список элементов
 
-  new _components_priceToParse__WEBPACK_IMPORTED_MODULE_4__["PriceToParse"]('parse');
   new _tabs__WEBPACK_IMPORTED_MODULE_3__["default"]({
     parent: '.tabs-contaiter'
-  }); //TODO убрать всё что ниже в компоненты
+  }); //new PriceToParse('parse')
+  //TODO убрать всё что ниже в компоненты
 
   var server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin'); //этот server deprecated
   // Вешаем на файловые инпуты обработку текста

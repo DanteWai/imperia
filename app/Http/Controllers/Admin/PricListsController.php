@@ -24,18 +24,14 @@ class PricListsController extends AdminController
         $this->template = 'admin.index';
     }
 
+
+    //Главная страница
     public function index(Request $request)
     {
         $this->title = 'Прайс листы';
 
-
-
-        /*;*/
-
         $lists = new Price();
         $lists = $lists->select('*')->get();
-        //dump($lists);
-
 
         $uri = $request->getPathInfo();
         $headContent = $this->headContent(['title' => $this->title, 'backUri' => dirname($uri), 'addUri' => $uri.'/add']);
@@ -48,6 +44,7 @@ class PricListsController extends AdminController
         return $this->renderOutput();
     }
 
+    //Страница с добавлением прайс листа
     public function add(Request $request)
     {
         $this->title = 'Добавление прайс листа';
@@ -62,117 +59,32 @@ class PricListsController extends AdminController
         return $this->renderOutput();
     }
 
-    public function testParse(Request $request)
-    {
-        $data = $request->except('_token');
-
-        $parser = new Parser('123');
-        $data = $parser->parseProduct($data);
-
-        return response()->json($data);
-    }
-
-    public function addFromParse(Request $request)
-    {
-        $price_id = $this->addPrice($request);
 
 
-        $data = $request->except('_token','product_images','brand','price');
-
-        $brand_id = $this->b_rep->one('brand_alias',strtolower($request->brand));
-
-        if(empty($brand_id)){
-            $brand_id = $this->b_rep->addBrand([
-                'brand_name' => $request->brand,
-                'brand_alias' => strtolower($request->brand)
-            ]);
-            $data['brand_id'] = $brand_id['brand_id'];
-        } else {
-            $data['brand_id'] = $brand_id->brand_id;
-        }
-
-        $result = $this->p_rep->addProduct($data);
 
 
-        if(is_array($result) && !empty($result['error'])) {
-            return response()->json($result['error']);
-        }
-
-        $result['price'] = $request->price;
-        $result['price_id'] = $price_id;
-        $result = $this->o_rep->addOption($result);
-
-        return response()->json($result);
-    }
-    public function addPrice(Request $request)
-    {
-        $data = $request->except('_token');
-
-        $old = new Price();
-        $old = $old->select('*')->where('price_alias',Str::slug($request->parser_name))->first();
-        if(empty($old)){
-            $price = new Price();
-            $price->price_name = $request->parser_name;
-            $price->price_alias = Str::slug($request->parser_name);
-            $price->save();
-            $id = $price->id;
-        } else{
-            $id = $old->id;
-        }
-
-
-        return $id;
-    }
-
-
+    //ИМПОРТ ИЗ ЭКСЕЛЯ
     public function import(Request $request)
     {
 
         $this->title = 'Добавление прайс листа';
 
-
-        /*;*/
-
-
-        //$parsers = $this->pars_rep->get();
-
-
         $array = Excel::toArray(new ProductImport, $request->file('list'));
 
-        $counter = 0;
+
 
         foreach($array as $key=>$item){
             $header = $this->parseHead($item);
-
                 foreach ($item as $keyRow=>$row){
                     $result = $this->parseRow($row,$header);
                     if($result){
-                        /* todo отправка в парсер
-                         if($key === 0 && $keyRow <11){
-                            $parse = $parser->getContentProduct($result['value'],$parsers);
-                            $result['value'] = array_merge($parse,$result['value']);
-                        }*/
-
-
-                        if($result['type'] === 's' && (int) $result['value']['radius'] > 13
-                            && $result['value']['brand'] === 'Ханкук'
-                            && trim($result['value']['all']) != 'Kinergy eco K425'
-                            && trim($result['value']['all']) != 'Kinergy Eco 2 K435'
-                        ){
-                            $result['value']['brand'] = 'Hankook';
-                            $newMass[$result['type']][] = $result['value'];
-                            //dump($result['value']);
-                            $counter++;
-                        }
-
+                        $newMass[$result['type']][] = $result['value'];
                     }
-
-
-                    if($counter > 10) break;
-
                 }
         }
 
+        //заглушка если ничё не напарсили
+        if(!isset($newMass)) $newMass = [];
 
 
         $this->title = 'Добавление прайс листа';
@@ -188,7 +100,8 @@ class PricListsController extends AdminController
 
         $headContent = $this->headContent(['title' => $this->title, 'backUri' => dirname($uri)]);
 
-        $this->content = view(env('THEME') . '.admin.p_lists.add')->with([
+
+        $this->content = view('admin.p_lists.add')->with([
             'top'=>$headContent,
             'products' => $newMass,
             'types' => $types
@@ -200,7 +113,10 @@ class PricListsController extends AdminController
 
     }
 
+    //Нахождения заголовка таблицы и колонки с номенкулатурой, плюс помогает отсечь левые строки перед таблицей
     public function parseHead($mass){
+
+        //Устроена она максимально тупо, она ищет заголовок начинающийся "номенклатур"
         $header = false;
 
         foreach ($mass as $keyRow=>$row){
@@ -221,7 +137,9 @@ class PricListsController extends AdminController
         return $header;
     }
 
+    //Парсинг каждой отдельной строчки
     public function parseRow($row,$header){
+        //Тут сейчас всё толкается от номенкулатуры "$header['nomen']" но в хеадере задумываются и прочие разделы врое count, price
         if(isset($header['nomen'])){
             $reg = '/(r ?[0-9]+|[0-9]([*]|x|х)[0-9]|[0-9]{2,3}\/[0-9]{2,3}\/[0-9]{2,3}|д\/ст|[0-9]+(,|.)[0-9]+)/iu';
             /* Проверяем что в строке шина или диск */
@@ -237,14 +155,18 @@ class PricListsController extends AdminController
                 $nomen = explode(' ',$row[$header['nomen']]);
 
                 if($type === 's'){
+                    //Если в строке шины то запускаем функцию парсинга шины
                     $result = $this->sParse($nomen,$type);
                 } else if($type === 'd'){
+                    //Если диск то парсим как диск
                     $result = $this->dParse($nomen,$type);
                 }
                 else{
+                    //заглушка
                     $result = $this->sParse($nomen,$type);
                 }
 
+                //Возвращаем тип и распаршенную строчку
                 return [
                     'type'=>$type,
                     'value'=>$result,
@@ -261,6 +183,7 @@ class PricListsController extends AdminController
 
     }
 
+    //Парсинг инфы о шине
     public function sParse($nomen,$type){
         $param['type'] = $type;
         foreach($nomen as $key=>$string){
@@ -388,15 +311,7 @@ class PricListsController extends AdminController
         ksort($param);
         return $param;
     }
-
-    /*
-    сверловка+
-    диаметр+
-    ширина
-    вылет
-    DIA
-    производитель
-     */
+    //Парсинг инфы о диске
     public function dParse($nomen,$type){
         $param['type'] = $type;
 
@@ -464,5 +379,71 @@ class PricListsController extends AdminController
         ksort($param);
 
         return $param;
+    }
+
+
+
+    //Для парсинга с сайтов (Пока не использовать)
+    public function testParse(Request $request)
+    {
+        $data = $request->except('_token');
+
+        $parser = new Parser('123');
+        $data = $parser->parseProduct($data);
+
+        return response()->json($data);
+    }
+    //Добавление после прайсинга (Пока не использовать)
+    public function addFromParse(Request $request)
+    {
+        $price_id = $this->addPrice($request);
+
+
+        $data = $request->except('_token','product_images','brand','price');
+
+        $brand_id = $this->b_rep->one('brand_alias',strtolower($request->brand));
+
+        if(empty($brand_id)){
+            $brand_id = $this->b_rep->addBrand([
+                'brand_name' => $request->brand,
+                'brand_alias' => strtolower($request->brand)
+            ]);
+            $data['brand_id'] = $brand_id['brand_id'];
+        } else {
+            $data['brand_id'] = $brand_id->brand_id;
+        }
+
+        $result = $this->p_rep->addProduct($data);
+
+
+        if(is_array($result) && !empty($result['error'])) {
+            return response()->json($result['error']);
+        }
+
+        $result['price'] = $request->price;
+        $result['price_id'] = $price_id;
+        $result = $this->o_rep->addOption($result);
+
+        return response()->json($result);
+    }
+    //Тестовая функция добавления цены после парсинга с сайта (Пока не использовать)
+    public function addPrice(Request $request)
+    {
+        $data = $request->except('_token');
+
+        $old = new Price();
+        $old = $old->select('*')->where('price_alias',Str::slug($request->parser_name))->first();
+        if(empty($old)){
+            $price = new Price();
+            $price->price_name = $request->parser_name;
+            $price->price_alias = Str::slug($request->parser_name);
+            $price->save();
+            $id = $price->id;
+        } else{
+            $id = $old->id;
+        }
+
+
+        return $id;
     }
 }

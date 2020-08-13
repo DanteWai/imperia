@@ -40,7 +40,7 @@
     @if(isset($products))
         <div class="tabs-contaiter">
             @foreach (array_keys($products) as $type)
-                <p data-t-article="{{ 'tab'.$type }}" class="tab-atricle">{{ $types[$type] }}</p>
+                <p data-t-article="{{ 'tab'.$type }}" class="tab-title">{{ $types[$type] }}</p>
             @endforeach
 
             @foreach ($products as $key=>$type)

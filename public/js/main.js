@@ -2033,16 +2033,10 @@ function changeParam(e) {
 
 
 function creationJSON(_ref2) {
+  var _this$catalog$$minPri, _this$catalog$$maxPri;
+
   var _ref2$page = _ref2.page,
       page = _ref2$page === void 0 ? 1 : _ref2$page,
-      _ref2$sort = _ref2.sort,
-      sort = _ref2$sort === void 0 ? {
-    sortName: 'price',
-    sortType: 'desc'
-  } : _ref2$sort,
-      _ref2$count = _ref2.count,
-      count = _ref2$count === void 0 ? 10 : _ref2$count,
-      price = _ref2.price,
       _ref2$isJsonOptions = _ref2.isJsonOptions,
       isJsonOptions = _ref2$isJsonOptions === void 0 ? true : _ref2$isJsonOptions,
       brand_id = _ref2.brand_id;
@@ -2054,9 +2048,9 @@ function creationJSON(_ref2) {
       options: {}
     },
     page: page,
-    sort: sort,
-    count: count,
-    price: price
+    sort: this.catalog.sort,
+    count: this.catalog.count,
+    price: {}
   }; //Смотрим бренд если не передан
 
   if (typeof brand_id === "undefined") {
@@ -2079,14 +2073,19 @@ function creationJSON(_ref2) {
     });
   } else {
     delete data.options.options;
-  }
+  } //првоеряем диапазон цен
 
-  console.log('function creationJSON', data); //TODO смотрим цену
-  // трансформируем объект в GET-строку
 
-  var get = transformJSONToGet(data); // транфсорфируем GET-строку в объект
+  var priceMin = (_this$catalog$$minPri = this.catalog.$minPrice) === null || _this$catalog$$minPri === void 0 ? void 0 : _this$catalog$$minPri.value;
+  var priceMax = (_this$catalog$$maxPri = this.catalog.$maxPrice) === null || _this$catalog$$maxPri === void 0 ? void 0 : _this$catalog$$maxPri.value;
+  if (priceMin) data.price.min = priceMin;
+  if (priceMax) data.price.max = priceMax;
+  if (!(priceMin || priceMax)) delete data.price; // трансформируем объект в GET-строку
+  //const get = transformJSONToGet(data);
+  // транфсорфируем GET-строку в объект
+  //const json = transformGetToJSON(get);
 
-  var json = transformGetToJSON(get);
+  console.log('function creationJSON', data);
   return data;
 } // трансформируем объект в GET-строку
 
@@ -2390,6 +2389,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _js_lang_lang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @js/lang/lang */ "./resources/js/lang/lang.js");
 /* harmony import */ var _js_components_all_loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @js/components/all/loader */ "./resources/js/components/all/loader.js");
+/* harmony import */ var _js_components_catalog_priceFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @js/components/catalog/priceFilter */ "./resources/js/components/catalog/priceFilter.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2415,6 +2415,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -2446,8 +2447,7 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
         sortType: 'desc'
       };
       this.count = 10;
-      this.$minPrice = null;
-      this.$maxPrice = null;
+      this.priceMaxLimit = this.$el.querySelector('[data-max-price]').textContent;
       this.$el.addEventListener('click', changeParameters.bind(this)); // Изменение параметров сортировки/пагниации/кол-ва
 
       this.$el.addEventListener('click', addBasket.bind(this));
@@ -2473,18 +2473,13 @@ var CatalogProductsComponent = /*#__PURE__*/function (_Component) {
                 return this.server.post('catalog/list', json, {
                   'Content-Type': 'application/json;charset=utf-8'
                 }, token).then(function (answer) {
-                  //console.log(answer);
+                  //console.log('catalogProduct send', answer);
                   if (answer.data) {
                     _this2.$el.innerHTML = productsRender.call(_this2, answer);
+                    endLoadCatalog.call(_this2); //функция завершения каталога
 
-                    _this2.loader.unmount(_this2.$el);
+                    _this2.loader.unmount(_this2.$el); //снятие лоадера
 
-                    _this2.$minPrice = document.getElementById('min-price');
-                    _this2.$maxPrice = document.getElementById('max-price');
-
-                    _this2.$minPrice.addEventListener('blur', changePrice.bind(_this2));
-
-                    _this2.$maxPrice.addEventListener('blur', changePrice.bind(_this2));
                   }
                 });
 
@@ -2527,7 +2522,10 @@ function productsRender(object) {
         return "\n                                <li>\n                                    <span class=\"product-list-option-title\">".concat(_js_lang_lang__WEBPACK_IMPORTED_MODULE_2__["default"].get("ru.".concat(option)), "</span>\n                                    <span class=\"product-list-option-desc\">").concat(item.options[option] === 'true' ? 'Да' : item.options[option], "</span>\n                                </li>\n                            ");
       }).join(''), "\n                    </ul>\n                    <p class=\"product-list-price\" data-price=\"").concat(item.price, "\">").concat(item.price, " P</p>\n                    <span class=\"basket-block\">\n                        <input type=\"text\" value=\"1\" ").concat(basket.includes(id.toString()) ? 'class="hide"' : '', ">\n                        <button data-option-id=\"").concat(id, "\" class=\"add-basket\" ").concat(basket.includes(id.toString()) ? 'disabled' : '', ">\n                            ").concat(basket.includes(id.toString()) ? '<span>Товар в корзине</span>' : '<span>Добавить в корзину</span>', "\n                        </button>\n                    </span>\n                </div>\n            ");
     }).join('');
-    return "\n            <section class=\"content-filter\">\n                <div class=\"sort\">\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0426\u0435\u043D\u0430:</span>\n                    <div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                        <input type=\"text\" name=\"min-price\" data-price=\"500\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\">\n                        <input type=\"text\" name=\"max-price\" data-price=\"10000\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\">\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            ".concat(this.sort.sortName === 'price' && this.sort.sortType === 'desc' ? '<span class="sort-action__current">по возрастанию цены</span>' : '<span class="sort-action__current">по убыванию цены</span>', "\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-sort-type=\"desc\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                            <div class=\"sort-action__item\" data-sort-type=\"asc\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">").concat(this.count, "</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-count-goods=\"10\">10</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"15\">15</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"20\">20</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"30\">30</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"50\">50</div>\n                        </div>\n                    </div>\n                </div>\n\n                </div>\n\n                <div class=\"pagination\">\n                    <ul class=\"pagination__list\">\n                        ").concat(_pagination, "\n                    </ul>\n                </div>\n            </section>\n            ").concat(products, "\n        ");
+    var priceFilter = new _js_components_catalog_priceFilter__WEBPACK_IMPORTED_MODULE_4__["PriceFilter"]({
+      priceMaxLimit: this.priceMaxLimit
+    }).getTemplate();
+    return "\n            <section class=\"content-filter\">\n                <div class=\"sort\">\n                ".concat(priceFilter, "\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0442\u044C:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            ").concat(this.sort.sortName === 'price' && this.sort.sortType === 'desc' ? '<span class="sort-action__current">по возрастанию цены</span>' : '<span class="sort-action__current">по убыванию цены</span>', "\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-sort-type=\"desc\">\u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                            <div class=\"sort-action__item\" data-sort-type=\"asc\">\u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u0446\u0435\u043D\u044B</div>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"sort-item\">\n                    <span class=\"sort-item__title\">\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E:</span>\n                    <div class=\"sort-action\">\n                        <div class=\"sort-action__wrapper\"></div>\n                        <div class=\"sort-action__header\">\n                            <span class=\"sort-action__current\">").concat(this.count, "</span>\n                        </div>\n                        <div class=\"sort-action__body\">\n                            <div class=\"sort-action__item\" data-count-goods=\"10\">10</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"15\">15</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"20\">20</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"30\">30</div>\n                            <div class=\"sort-action__item\" data-count-goods=\"50\">50</div>\n                        </div>\n                    </div>\n                </div>\n\n                </div>\n\n                <div class=\"pagination\">\n                    <ul class=\"pagination__list\">\n                        ").concat(_pagination, "\n                    </ul>\n                </div>\n            </section>\n            ").concat(products, "\n        ");
   } else {
     return "\n            <div class=\"goods-empty\" style=\"display: flex\">\n                <p>\u041A \u0441\u043E\u0436\u0430\u043B\u0435\u043D\u0438\u044E \u043F\u043E \u0412\u0430\u0448\u0438\u043C \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E:(</p>\n                <p>\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u043F\u043E\u0438\u0441\u043A\u0430</p>\n            </div>\n        ";
   }
@@ -2629,52 +2627,6 @@ function countGoods(el) {
   }
 }
 
-function changePrice(e) {
-  var target = e.target;
-  var price = Number(target.dataset.price);
-  var min = 0;
-  var max = 0;
-  var elem;
-  var value = Number(target.value);
-
-  if (target.name === 'min-price') {
-    // Если изменен input min
-    elem = target.nextElementSibling; // input max
-
-    min = price; // min равен значению data атрибута 
-
-    max = elem.value ? Number(elem.value) : Number(elem.dataset.price); // если max не пустой, то он равен своему значению, иначе data атрибуту
-  } else {
-    // обратное с max
-    elem = target.previousElementSibling;
-    max = price;
-    min = elem.value ? Number(elem.value) : Number(elem.dataset.price);
-  }
-
-  value = Number.isNaN(value) || value === 0 ? price : Math.min(Math.max(value, min), max); // проверка на число и диапазон
-
-  target.value = value;
-  target.name === 'min-price' ? this.$el.dispatchEvent(new CustomEvent('change-sort', {
-    detail: {
-      page: this.page,
-      sort: this.sort,
-      count: this.count,
-      price: {
-        min: value
-      }
-    }
-  })) : this.$el.dispatchEvent(new CustomEvent('change-sort', {
-    detail: {
-      page: this.page,
-      sort: this.sort,
-      count: this.count,
-      price: {
-        max: value
-      }
-    }
-  }));
-}
-
 function toggleSort(e) {
   var target = e.target.closest('.sort-action');
 
@@ -2690,6 +2642,143 @@ function toggleSort(e) {
     });
     target.classList.add('active');
   }
+}
+
+function endLoadCatalog() {
+  /* this.$minPrice = document.getElementById('min-price');
+   this.$maxPrice = document.getElementById('max-price');
+   this.$minPrice.addEventListener('change', changePrice.bind(this));
+   this.$maxPrice.addEventListener('change', changePrice.bind(this));*/
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/catalog/priceFilter.js":
+/*!********************************************************!*\
+  !*** ./resources/js/components/catalog/priceFilter.js ***!
+  \********************************************************/
+/*! exports provided: PriceFilter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PriceFilter", function() { return PriceFilter; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var PriceFilter = /*#__PURE__*/function () {
+  function PriceFilter(_ref) {
+    var priceMaxLimit = _ref.priceMaxLimit,
+        _ref$priceMinLimit = _ref.priceMinLimit,
+        priceMinLimit = _ref$priceMinLimit === void 0 ? 0 : _ref$priceMinLimit,
+        _ref$currentMax = _ref.currentMax,
+        currentMax = _ref$currentMax === void 0 ? '' : _ref$currentMax,
+        _ref$currentMin = _ref.currentMin,
+        currentMin = _ref$currentMin === void 0 ? '' : _ref$currentMin;
+
+    _classCallCheck(this, PriceFilter);
+
+    this.priceMaxLimit = priceMaxLimit;
+    this.priceMinLimit = priceMinLimit;
+    this.currentMax = currentMax;
+    this.currentMin = currentMin;
+
+    this._init();
+  }
+
+  _createClass(PriceFilter, [{
+    key: "_init",
+    value: function _init() {
+      console.log('price filter init');
+      this.currentMaxOld = this.currentMax;
+      this.currentMinOld = this.currentMin;
+      /* this.$minPrice = this.$el.getElementById('min-price');
+       this.$maxPrice = this.$el.getElementById('max-price');
+       this.$minPrice.addEventListener('change', changePrice.bind(this));
+       this.$maxPrice.addEventListener('change', changePrice.bind(this));*/
+
+      this.$el = _create();
+    }
+  }, {
+    key: "getTemplate",
+    value: function getTemplate() {
+      var _object$price$min, _object, _object$price, _object$price$max, _object2, _object2$price;
+
+      return this.$el.outerHTML;
+      return "<div data-type=\"search\" data-option-filter=\"base_option\" data-filter=\"price\" class=\"filter-price\">\n                    <input type=\"text\" name=\"min-price\" data-price=\"0\" id=\"min-price\" placeholder=\"\u043E\u0442\" class=\"price-input\" value=\"".concat((_object$price$min = (_object = object) === null || _object === void 0 ? void 0 : (_object$price = _object.price) === null || _object$price === void 0 ? void 0 : _object$price.min) !== null && _object$price$min !== void 0 ? _object$price$min : '', "\">\n                    <input type=\"text\" name=\"max-price\" data-price=\"").concat(this.priceMaxLimit, "\" id=\"max-price\" placeholder=\"\u0434\u043E\" class=\"price-input\" value=\"").concat((_object$price$max = (_object2 = object) === null || _object2 === void 0 ? void 0 : (_object2$price = _object2.price) === null || _object2$price === void 0 ? void 0 : _object2$price.max) !== null && _object$price$max !== void 0 ? _object$price$max : '', "\">\n                </div>");
+    }
+    /*
+    * <div class="sort-item">
+                    <span class="sort-item__title">Цена:</span>
+                 </div>
+    *
+    *
+    * */
+
+  }]);
+
+  return PriceFilter;
+}();
+
+function _create() {
+  var $sortItem = document.createElement('div');
+  $sortItem.classList.add('sort-item');
+  var $sortItemTitle = document.createElement('span');
+  $sortItemTitle.classList.add('sort-item__title');
+  $sortItemTitle.textContent = 'Цена:';
+  var $filterPrice = document.createElement('div');
+  $filterPrice.dataset.type = 'search';
+  $filterPrice.dataset.optionFilter = 'base_option';
+  $filterPrice.dataset.filter = 'price';
+  $filterPrice.classList.add('filter-price');
+  var $minPrice = document.createElement('input');
+  var $maxPrice = document.createElement('input');
+  $filterPrice.insertAdjacentElement('beforeend', $minPrice);
+  $filterPrice.insertAdjacentElement('beforeend', $maxPrice);
+  $sortItem.insertAdjacentElement('beforeend', $sortItemTitle);
+  $sortItem.insertAdjacentElement('beforeend', $filterPrice);
+  return $sortItem;
+}
+
+function changePrice(e) {
+  var target = e.target;
+  console.log(e.target);
+  var price = Number(target.dataset.price);
+  var min = 0;
+  var max = 0;
+  var elem;
+  var value = Number(target.value);
+
+  if (target.name === 'min-price') {
+    // Если изменен input min
+    elem = target.nextElementSibling; // input max
+
+    min = price; // min равен значению data атрибута
+
+    max = elem.value ? Number(elem.value) : Number(elem.dataset.price); // если max не пустой, то он равен своему значению, иначе data атрибуту
+  } else {
+    // обратное с max
+    elem = target.previousElementSibling;
+    max = price;
+    min = elem.value ? Number(elem.value) : Number(elem.dataset.price);
+  }
+
+  value = Number.isNaN(value) || value === 0 ? price : Math.min(Math.max(value, min), max); // проверка на число и диапазон
+
+  if (target.value == value) {
+    console.log('ravn');
+    return;
+  }
+
+  target.value = value;
+  this.$el.dispatchEvent(new CustomEvent('change-price', {
+    detail: {
+      page: 1
+    }
+  }));
 }
 
 /***/ }),

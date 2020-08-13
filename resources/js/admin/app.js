@@ -17,10 +17,10 @@ window.addEventListener('load',() => {
 
     new OrdersComponents('main-orders-component')
     new ListComponent('list-component');   //список элементов
-    new PriceToParse('parse')
+
     new Tabs({parent:'.tabs-contaiter'})
 
-
+    //new PriceToParse('parse')
     //TODO убрать всё что ниже в компоненты
     let server = new Server('admin'); //этот server deprecated
 
