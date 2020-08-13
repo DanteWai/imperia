@@ -60,7 +60,27 @@ class PricListsController extends AdminController
     }
 
 
+    //Сохранение прайслиста
+    public function addPrice(Request $request)
+    {
+        $data = $request->except('_token');
 
+        $old = new Price();
+        $old = $old->select('*')->where('price_alias',Str::slug($request->parser_name))->first();
+        if(empty($old)){
+            $price = new Price();
+            $price->price_name = $request->parser_name;
+            $price->price_alias = Str::slug($request->parser_name);
+            //$price->options =
+            $price->save();
+            $id = $price->id;
+        } else{
+            $id = $old->id;
+        }
+
+
+        return $id;
+    }
 
 
     //ИМПОРТ ИЗ ЭКСЕЛЯ
@@ -68,10 +88,20 @@ class PricListsController extends AdminController
     {
 
         $this->title = 'Добавление прайс листа';
+        $uri = $request->getPathInfo();
+        $headContent = $this->headContent(['title' => $this->title, 'backUri' => dirname($uri)]);
+
+
+        $title = $request->only('parser_name');
+        $options = $request->except('list','_token','parser_name');
+
+
+
 
         $array = Excel::toArray(new ProductImport, $request->file('list'));
 
-
+        //dd($data);
+        //dump($data);
 
         foreach($array as $key=>$item){
             $header = $this->parseHead($item);
@@ -86,21 +116,14 @@ class PricListsController extends AdminController
         //заглушка если ничё не напарсили
         if(!isset($newMass)) $newMass = [];
 
-
-        $this->title = 'Добавление прайс листа';
-
-
         $types = [
             's' => 'Шины',
             'd' => 'Диски',
             'un' => 'Неизвестно'
         ];
 
-        $uri = $request->getPathInfo();
 
-        $headContent = $this->headContent(['title' => $this->title, 'backUri' => dirname($uri)]);
-
-
+        //формируем вид
         $this->content = view('admin.p_lists.add')->with([
             'top'=>$headContent,
             'products' => $newMass,
@@ -108,13 +131,11 @@ class PricListsController extends AdminController
         ])->render();
 
         return $this->renderOutput();
-
-
-
     }
 
     //Нахождения заголовка таблицы и колонки с номенкулатурой, плюс помогает отсечь левые строки перед таблицей
     public function parseHead($mass){
+
 
         //Устроена она максимально тупо, она ищет заголовок начинающийся "номенклатур"
         $header = false;
@@ -426,24 +447,5 @@ class PricListsController extends AdminController
 
         return response()->json($result);
     }
-    //Тестовая функция добавления цены после парсинга с сайта (Пока не использовать)
-    public function addPrice(Request $request)
-    {
-        $data = $request->except('_token');
 
-        $old = new Price();
-        $old = $old->select('*')->where('price_alias',Str::slug($request->parser_name))->first();
-        if(empty($old)){
-            $price = new Price();
-            $price->price_name = $request->parser_name;
-            $price->price_alias = Str::slug($request->parser_name);
-            $price->save();
-            $id = $price->id;
-        } else{
-            $id = $old->id;
-        }
-
-
-        return $id;
-    }
 }

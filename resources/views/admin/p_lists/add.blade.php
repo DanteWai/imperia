@@ -13,6 +13,10 @@
             <label for="parser_name">Название</label>
             <input class="form-model text-input" type="text" placeholder="Название" name="parser_name" id="parser_name" value="Тестовый прайс">
         </div>
+        <div class="form-section">
+            <label for="parser_name">Столбец для номенаклотуры</label>
+            <input class="form-model text-input" type="text" placeholder="Столбец для номенаклотуры" name="colNom" id="colNom" value="2">
+        </div>
     </div>
     <div>
         {{Form::file('list',['id'=>'list','class'=>'inputFile','data-multiple-caption'=>'{count} files selected'])}}
