@@ -14,8 +14,22 @@
             <input class="form-model text-input" type="text" placeholder="Название" name="parser_name" id="parser_name" value="Тестовый прайс">
         </div>
         <div class="form-section">
-            <label for="parser_name">Столбец для номенаклотуры</label>
-            <input class="form-model text-input" type="text" placeholder="Столбец для номенаклотуры" name="colNom" id="colNom" value="2">
+            <label for="colNum">Столбец для номенклатуры</label>
+            <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colNum" id="colNum">
+        </div>
+        <div class="form-section">
+            <label for="rowNum">Строка заголовков</label>
+            <input class="form-model text-input" type="number" min="0" placeholder="0" name="rowNum" id="rowNum">
+        </div>
+        <div class="form-section">
+            <label for="colBrand">Столбец для бренда</label>
+            <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colBrand" id="colBrand">
+        </div>
+        <div class="form-section">
+            <label for="priceType">Выберите тип прайс-листа</label>
+            <input class="form-model" type="radio" name="priceType" value="shiny"> Шины
+            <input class="form-model" type="radio" name="priceType" value="diski"> Диски
+            <input class="form-model" type="radio" name="priceType" value="all" checked> Универсальный
         </div>
     </div>
     <div>
@@ -58,6 +72,8 @@
                             @isset($type[0]['width'])<td>Ширина</td>@endisset
                             @isset($type[0]['height'])<td>Высота</td>@endisset
                             @isset($type[0]['radius'])<td>Диаметр</td>@endisset
+                            @isset($type[0]['index_speed'])<td>Индекс скорости</td>@endisset
+                            @isset($type[0]['index_load'])<td>Индекс нагрузки</td>@endisset
                             @isset($type[0]['index'])<td>Индекс</td>@endisset
                             @isset($type[0]['spikes'])<td>Шипы</td>@endisset
 
@@ -83,6 +99,8 @@
                                 @isset($row['width'])<td>{{ $row['width']}}</td>@endisset
                                 @isset($row['height'])<td>{{ $row['height']}}</td>@endisset
                                 @isset($row['radius'])<td>{{ $row['radius']}}</td>@endisset
+                                @isset($row['index_speed'])<td>{{ $row['index_speed']}}</td>@endisset
+                                @isset($row['index_load'])<td>{{ $row['index_load']}}</td>@endisset
                                 @isset($row['index'])<td>{{ $row['index']}}</td>@endisset
                                 @isset($row['spikes'])<td>{{ $row['spikes']}}</td>@endisset
 
