@@ -13,17 +13,22 @@
             <label for="parser_name">Название</label>
             <input class="form-model text-input" type="text" placeholder="Название" name="parser_name" id="parser_name" value="Тестовый прайс">
         </div>
-        <div class="form-section">
+        <!--<div class="form-section">
             <label for="colNum">Столбец для номенклатуры</label>
             <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colNum" id="colNum">
         </div>
+        <div class="form-section">
+            <label for="colBrand">Столбец для бренда</label>
+            <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colBrand" id="colBrand">
+            <input class="form-model text-checkbox" type="checkbox" name="match" id="match"> Совпадает со столбцом номенклатуры
+        </div>-->
         <div class="form-section">
             <label for="rowNum">Строка заголовков</label>
             <input class="form-model text-input" type="number" min="0" placeholder="0" name="rowNum" id="rowNum">
         </div>
         <div class="form-section">
-            <label for="colBrand">Столбец для бренда</label>
-            <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colBrand" id="colBrand">
+            <label for="brand_position">Позиция бренда в номенклатуре</label>
+            <input class="form-model text-input" type="number" name="brand_position" min="0" placeholder="0" id="brand_position">
         </div>
         <div class="form-section">
             <label for="priceType">Выберите тип прайс-листа</label>
