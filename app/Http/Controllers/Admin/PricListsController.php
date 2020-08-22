@@ -150,7 +150,7 @@ class PricListsController extends AdminController
 
 
             // Если колонка "Номенклатура" не задана пользователем или не нашлась
-            if (!$header['nomen']) {
+            if (!isset($header['nomen'])) {
                 
                 if (isset($options['rowNum'])) {
                     $row = intval($options['rowNum']) - 1;      // Номер строки заголовков таблицы
@@ -343,7 +343,7 @@ class PricListsController extends AdminController
                     $result = $this->sParse($nomen,$type,$brand_name,$brand_position);
                 } else if($type === 'd'){
                     //Если диск то парсим как диск
-                    $result = $this->dParse($nomen,$type);
+                    $result = $this->dParse($nomen,$type,$brand_name,$brand_position);
                 }
                 else{
                     //заглушка
@@ -472,6 +472,7 @@ class PricListsController extends AdminController
             if (!isset($param['spikes']) && preg_match('/(?<![a-zа-я])([\*]?ш|шип)[\.]?(?=\s)|(Ш|шип)[\.]?$/ium', $nomen, $spikes)) {
                 $nomen = str_replace($spikes[0], '', $nomen);
                 $param['spikes'] = 'Да';
+                $param['season'] = 'Зима';
             }
 
             // Очищаем лишние пробелы
@@ -633,8 +634,134 @@ class PricListsController extends AdminController
         ksort($param);
         return $param;
     }
+
     //Парсинг инфы о диске
-    public function dParse($nomen,$type){
+    public function dParse($nomen,$type,$brand,$position){
+
+        if (isset($position)) {
+            $brand_search = explode(' ', $nomen);
+            $pattern_brand = '/^[a-zа-яё\-\_\']{2,}$/ium';
+            if (isset($brand_search[$position]) && preg_match($pattern_brand, $brand_search[$position])) {
+                $param['brand'] = $brand_search[$position];
+            } else if (isset($brand_search[$position - 1]) && preg_match($pattern_brand, $brand_search[$position - 1])) {
+                $param['brand'] = $brand_search[$position - 1];
+            } else if (isset($brand_search[$position + 1]) && preg_match($pattern_brand, $brand_search[$position + 1])) {
+                $param['brand'] = $brand_search[$position + 1];
+            }
+        }
+
+        // Если бренд берется из отдельного столбца
+        if (!empty($brand) && preg_match('/^[a-zа-яё\-\_\']{2,}\.?(\s[a-zа-яё\-\_\'\(\)]{2,}\.?)?$/ium', $brand)) {
+            $param['brand'] = $brand;
+        } else {
+            $brand_search = explode(' ', $nomen);
+            $pattern_brand = '/^[a-zа-яё\-\_\']{2,}\.?(\s[a-zа-яё\-\_\'\(\)]{2,}\.?)?$/ium';
+            foreach ($brand_search as $position => $name) {
+                if (preg_match($pattern_brand, $name) && !isset($param['brand'])) {
+                    $param['brand'] = $name;
+                    break;
+                }
+            }
+        }
+
+        $param['type'] = $type;
+
+        // тело
+        // Очищаем номенклатуру от лишних слов и пробелов
+        $nomen = preg_replace(['/\s+/', '/^диск(\sстальной(\s\(штампованный\))?|\sлитой)?|^д\/(л|ст)|^(л|ст)\sдиск|а\/диск|ар?т?\.\d+|уцен\.?|(?<=\s)диск(?=\s)/imu', '/\s+/'], [' ', '', ' '], $nomen);
+        
+        while (!empty($nomen) && (
+            !isset($param['brand']) ||
+            !isset($param['all']) ||
+            !isset($param['width']) ||
+            !isset($param['drilling']) ||
+            !isset($param['diametr']) ||
+            !isset($param['departure']) ||
+            !isset($param['dia']))) {
+
+                // Вылет
+                if (!isset($param['departure']) && preg_match('/(?<!\w)[EeЕе][TtТт]\s?\d{1,3}[,\.]?\d?|(?<=[\s\-])([2-5]\d[,\.]?5?|1\d{2})(?=\s)|(?<=[\/,])[01]\d{0,2}(?=\s)/u', $nomen, $departure)) {
+                    $nomen = str_replace($departure[0], '', $nomen);
+                    preg_match('/\d+[,\.]?\d*/u', $departure[0], $value);
+                    $param['departure'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                } else if (isset($param['departure'])) {
+
+                } else {
+                    $param['departure'] = '-';
+                }
+
+                // DIA
+                if (!isset($param['dia']) && preg_match('/(?<!\w)([dD]|dia|DIA)\s?\d{2,3}[,\.]?\d?|(?<=\s)[4-9]\d[,\.]\d{1,2}(?=\s)|(?<=\s)1\d{2}[,\.]\d(?=\s)|(?<=\/)[12]\d{2}[,\.]?\d?/u', $nomen, $dia)) {
+                    $nomen = str_replace($dia[0], '', $nomen);
+                    preg_match('/\d{2,3}[,\.]?\d?/u', $dia[0], $value);
+                    $param['dia'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                } else if (isset($param['dia'])) {
+
+                } else {
+                    $param['dia'] = '-';
+                }
+
+                // Сверловка
+                if (!isset($param['drilling']) && preg_match('/(?<=[\s\/])\d[xXхХ\-\*]([3-9]\d|1\d{2})[,\.]?\d?|(?<=\s)(\d|1\d)\/\d{3}|(?<=\s)(\d|[12]\d)\D+\d{3}/u', $nomen, $drilling)) {
+                    $nomen = str_replace($drilling[0], '', $nomen);
+                    $param['drilling'] = preg_replace('/\D{2,}|(?<=\d)[^,\.\d](?=\d)/u', '*', $drilling[0]);
+                } else if (isset($param['drilling'])) {
+
+                } else {
+                    $param['drilling'] = '-';
+                }
+
+                // Ширина и диаметр общие
+                if (preg_match('/(?<=\s)[12]?\d[,\.]?\d?[50]?[xXхХ\-][12]\d[,\.]?[50]?(?=[\s\"\'\/])/u', $nomen, $size)) {
+                    $nomen = str_replace($size[0], '', $nomen);
+                    $size_value = preg_split('/[xXхХ\*\-\/]/u', $size[0]);
+                    $param['width'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[0]);
+                    $param['diametr'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[1]);
+                } else {
+                    // Если ширина и диаметр записаны раздельно
+
+                    // Ищем диаметр
+                    if (!isset($param['diametr']) && preg_match('/(?<=\s)[rR\-][12]\d[,\.]?[50]?(?=\s)/u', $nomen, $diametr)) {
+                        $nomen = str_replace($diametr[0], '', $nomen);
+                        preg_match('/[12]\d[,\.]?\d{0,2}C?/u', $diametr[0], $value);
+                        $param['diametr'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                    } else {
+                        $param['diametr'] = '-';
+                    }
+
+                    // Ищем ширину
+                    if (!isset($param['width']) && preg_match('/(?<=\s)([jJ]?\d|[jJ]?1[0-24-9]|[jJ]?1[0-24-9][,\.][50]|[jJ]?\d[,\.][50]|[jJ]?\d[,\.]\d[50])(?=\s)/u', $nomen, $width)) {
+                        $nomen = str_replace($width[0], '', $nomen);
+                        preg_match('/1?\d[,\.]?\d{0,2}/u', $width[0], $value);
+                        $param['width'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                    } else {
+                        $param['width'] = '-';
+                    }
+                }
+
+                // Очищаем лишние пробелы и одиночные символы
+                $nomen = trim(preg_replace(['/(?<=\s)[^a-z0-9а-яё\+]+(?=\s)/iu', '/\s{2,}/'], ['', ' '], $nomen));
+
+                if (!isset($param['brand'])) {
+                    $param['brand'] = '-';
+                } else {
+                    $nomen = preg_replace(['/' . $param['brand'] . '/iu', '/\s+|\(\)|\_+/', '/^\s?[^\wа-яё\(]/ium'], ['', ' ', ''], $nomen);
+                    $param['brand'] = str_replace('_', ' ', $param['brand']);
+                    $param['all'] = $nomen;
+                }
+                if (!isset($param['all'])) {
+                    $param['all'] = trim($nomen);
+                } else {
+    
+                }
+
+            }
+
+        return $param;
+        // ===========//
+
+
+
         $param['type'] = $type;
 
         foreach($nomen as $key=>$string){
