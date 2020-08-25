@@ -639,8 +639,9 @@ class PricListsController extends AdminController
     public function dParse($nomen,$type,$brand,$position){
 
         if (isset($position)) {
+            $nomen = preg_replace('/\s{2,}/', ' ', $nomen);
             $brand_search = explode(' ', $nomen);
-            $pattern_brand = '/^[a-zа-яё\-\_\']{2,}$/ium';
+            $pattern_brand = '/^[a-zа-яё\-\_\'\&]+\.?(\s?[a-zа-яё\-\_\'\(\)\&]+\.?)?$/ium';
             if (isset($brand_search[$position]) && preg_match($pattern_brand, $brand_search[$position])) {
                 $param['brand'] = $brand_search[$position];
             } else if (isset($brand_search[$position - 1]) && preg_match($pattern_brand, $brand_search[$position - 1])) {
@@ -650,12 +651,15 @@ class PricListsController extends AdminController
             }
         }
 
+        //dump($brand);
+
         // Если бренд берется из отдельного столбца
-        if (!empty($brand) && preg_match('/^[a-zа-яё\-\_\']{2,}\.?(\s[a-zа-яё\-\_\'\(\)]{2,}\.?)?$/ium', $brand)) {
+        if (isset($brand) && !empty($brand) && preg_match('/^[a-zа-яё\-\_\'\&]+\.?(\s?[a-zа-яё\-\_\'\(\)\&]+\.?)?$/ium', $brand)) {
             $param['brand'] = $brand;
-        } else {
+        } else if (!isset($brand)) {
+            $nomen = preg_replace(['/\s+/', '/^\s|\s$/m', '/^диск(\sстальной(\s\(штампованный\))?|\sлитой)?|^д\/(л|ст)|^(л|ст)\sдиск|а\/диск|ар?т?\.\d+|уцен\.?|(?<=\s)диск(?=\s)/imu', '/\s+/'], [' ', '', '', ' '], $nomen);
             $brand_search = explode(' ', $nomen);
-            $pattern_brand = '/^[a-zа-яё\-\_\']{2,}\.?(\s[a-zа-яё\-\_\'\(\)]{2,}\.?)?$/ium';
+            $pattern_brand = '/^[a-zа-яё\-\_\'\&]+\.?(\s?[a-zа-яё\-\_\'\(\)\&]+\.?)?$/ium';
             foreach ($brand_search as $position => $name) {
                 if (preg_match($pattern_brand, $name) && !isset($param['brand'])) {
                     $param['brand'] = $name;
@@ -668,8 +672,14 @@ class PricListsController extends AdminController
 
         // тело
         // Очищаем номенклатуру от лишних слов и пробелов
-        $nomen = preg_replace(['/\s+/', '/^диск(\sстальной(\s\(штампованный\))?|\sлитой)?|^д\/(л|ст)|^(л|ст)\sдиск|а\/диск|ар?т?\.\d+|уцен\.?|(?<=\s)диск(?=\s)/imu', '/\s+/'], [' ', '', ' '], $nomen);
+        $nomen = preg_replace(['/\s+/', '/^\s|\s$/m', '/^диск(\sстальной(\s\(штампованный\))?|\sлитой)?|^д\/(л|ст)|^(л|ст)\sдиск|а\/диск|ар?т?\.\d+|уцен\.?|(?<=\s)диск(?=\s)/imu', '/\s+/'], [' ', '', '', ' '], $nomen);
+
+        // Если есть какие-то скобки, то временно их вырезать, потом вставить обратно
+        if (preg_match('/\([^()]*\)/', $nomen, $result)) {
+            $nomen = str_replace($result[0], '', $nomen);
+        }
         
+        //dump($nomen);
         while (!empty($nomen) && (
             !isset($param['brand']) ||
             !isset($param['all']) ||
@@ -679,19 +689,9 @@ class PricListsController extends AdminController
             !isset($param['departure']) ||
             !isset($param['dia']))) {
 
-                // Вылет
-                if (!isset($param['departure']) && preg_match('/(?<!\w)[EeЕе][TtТт]\s?\d{1,3}[,\.]?\d?|(?<=[\s\-])([2-5]\d[,\.]?5?|1\d{2})(?=\s)|(?<=[\/,])[01]\d{0,2}(?=\s)/u', $nomen, $departure)) {
-                    $nomen = str_replace($departure[0], '', $nomen);
-                    preg_match('/\d+[,\.]?\d*/u', $departure[0], $value);
-                    $param['departure'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
-                } else if (isset($param['departure'])) {
-
-                } else {
-                    $param['departure'] = '-';
-                }
-
+                //dump($nomen);
                 // DIA
-                if (!isset($param['dia']) && preg_match('/(?<!\w)([dD]|dia|DIA)\s?\d{2,3}[,\.]?\d?|(?<=\s)[4-9]\d[,\.]\d{1,2}(?=\s)|(?<=\s)1\d{2}[,\.]\d(?=\s)|(?<=\/)[12]\d{2}[,\.]?\d?/u', $nomen, $dia)) {
+                if (!isset($param['dia']) && preg_match('/(?<!\w)([dD]|dia|DIA)\s?\d{2,3}[,\.]?\d?|(?<=[^eEеЕ][^tTтТ]\s)[4-9]\d[,\.]\d{1,2}(?=\s)|(?<=\s)1\d{2}[,\.]\d(?=\s)|(?<=\s)[4-9]\d[,\.]\d{1,2}$|(?<=\s)1\d{2}[,\.]\d$|(?<=\s)[4-9]\d$|(?<=\s)1\d{2}$|(?<=\/)[12]\d{2}[,\.]?\d?(?=[\s\/])|(?<=[^eEеЕ][^tTтТ]\s)[4-9]\d(?=\s)|(?<=[^lL][^sS]\s)1\d{2}(?=\s)|(?<=[^lL][^sS]\s)2\d{2}[,\.][50](?=\s)/mu', $nomen, $dia)) {
                     $nomen = str_replace($dia[0], '', $nomen);
                     preg_match('/\d{2,3}[,\.]?\d?/u', $dia[0], $value);
                     $param['dia'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
@@ -702,7 +702,7 @@ class PricListsController extends AdminController
                 }
 
                 // Сверловка
-                if (!isset($param['drilling']) && preg_match('/(?<=[\s\/])\d[xXхХ\-\*]([3-9]\d|1\d{2})[,\.]?\d?|(?<=\s)(\d|1\d)\/\d{3}|(?<=\s)(\d|[12]\d)\D+\d{3}/u', $nomen, $drilling)) {
+                if (!isset($param['drilling']) && preg_match('/(?<=[\s\/])\d[xXхХ\-\*]([3-9]\d|1\d{2})[,\.]?\d?|^\d[xXхХ\-\*]([3-9]\d|1\d{2})[,\.]?\d?|(?<=\s)(\d|1\d)\/\d{3}|^(\d|1\d)\/\d{3}|(?<=\s)(\d|[12]\d)[^\deEtT]+\d{3}[,\.]?[50]?(?=[\/])|^(\d|[12]\d)\D+\d{3}|(?<=\s)(\d|[12]\d)_отв[,\.](?=\s)|^(\d|1\d)\*\d{2,3}[,\.]?\d?(?=\s)|(?<=)(\d|1\d)\*\d{2,3}[,\.]?\d?$/mu', $nomen, $drilling)) {
                     $nomen = str_replace($drilling[0], '', $nomen);
                     $param['drilling'] = preg_replace('/\D{2,}|(?<=\d)[^,\.\d](?=\d)/u', '*', $drilling[0]);
                 } else if (isset($param['drilling'])) {
@@ -710,9 +710,19 @@ class PricListsController extends AdminController
                 } else {
                     $param['drilling'] = '-';
                 }
+                // Вылет
+                if (!isset($param['departure']) && preg_match('/(?<!\w)[EeЕе][TtТт][\s-]?\d{1,3}[,\.]?5?|(?<=\s\-)([2-5]\d|1\d{2})(?=\s)|(?<=[\/,])1\d{0,2}(?=\s)|(?<=\s)([2-5]\d|6[02])(?=\s)|(?<=\s)([2-5]\d|6[02])[,\.]5(?=\s)|(?<=[^lL][^sS]\s)([2-5]\d|6[02]|1\d{2})$|^([2-5]\d|6[02])(?=\s)|^([2-5]\d|6[02])[,\.]5(?=\s)|(?<=\s)d{2}(?=\s)/mu', $nomen, $departure)) {
+                    $nomen = str_replace($departure[0], '', $nomen);
+                    preg_match('/\d+[,\.]?\d*/u', $departure[0], $value);
+                    $param['departure'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                } else if (isset($param['departure'])) {
+
+                } else {
+                    $param['departure'] = '-';
+                }
 
                 // Ширина и диаметр общие
-                if (preg_match('/(?<=\s)[12]?\d[,\.]?\d?[50]?[xXхХ\-][12]\d[,\.]?[50]?(?=[\s\"\'\/])/u', $nomen, $size)) {
+                if (preg_match('/(?<=\s)[12]?\d[,\.]?\d?[50]?[xXхХ\-][12]\d[,\.]?[50]?(?=[\s\"\'\/])|^[12]?\d[,\.]?\d?[50]?[xXхХ\-][12]\d[,\.]?[50]?/mu', $nomen, $size)) {
                     $nomen = str_replace($size[0], '', $nomen);
                     $size_value = preg_split('/[xXхХ\*\-\/]/u', $size[0]);
                     $param['width'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[0]);
@@ -721,7 +731,7 @@ class PricListsController extends AdminController
                     // Если ширина и диаметр записаны раздельно
 
                     // Ищем диаметр
-                    if (!isset($param['diametr']) && preg_match('/(?<=\s)[rR\-][12]\d[,\.]?[50]?(?=\s)/u', $nomen, $diametr)) {
+                    if (!isset($param['diametr']) && preg_match('/(?<=\s)[rR\-][12]\d[,\.]?[50]?(?=\s)|^[rR\-]?[12]\d[,\.]?[50]?|[rR\-][12]\d[,\.]?[50]?$/mu', $nomen, $diametr)) {
                         $nomen = str_replace($diametr[0], '', $nomen);
                         preg_match('/[12]\d[,\.]?\d{0,2}C?/u', $diametr[0], $value);
                         $param['diametr'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
@@ -730,7 +740,7 @@ class PricListsController extends AdminController
                     }
 
                     // Ищем ширину
-                    if (!isset($param['width']) && preg_match('/(?<=\s)([jJ]?\d|[jJ]?1[0-24-9]|[jJ]?1[0-24-9][,\.][50]|[jJ]?\d[,\.][50]|[jJ]?\d[,\.]\d[50])(?=\s)/u', $nomen, $width)) {
+                    if (!isset($param['width']) && preg_match('/(?<=\s)([jJ]?[5-9]|[jJ]?1[0-2468-9]|[jJ]?1[0-2468-9][,\.][50]|[jJ]?[4-9][,\.][50]|[jJ]?[5-9][,\.]\d[50])(?=\s)|^([jJ]?[5-9]|[jJ]?1[0-2468-9]|[jJ]?1[0-2468-9][,\.][50]|[jJ]?[5-9][,\.][50]|[jJ]?[5-9][,\.]\d[50])(?=\s)|(?<=\s)([jJ]?[5-9]|[jJ]?1[0-2468-9]|[jJ]?1[0-2468-9][,\.][50]|[jJ]?[5-9][,\.][50]|[jJ]?[5-9][,\.]\d[50])$/mu', $nomen, $width)) {
                         $nomen = str_replace($width[0], '', $nomen);
                         preg_match('/1?\d[,\.]?\d{0,2}/u', $width[0], $value);
                         $param['width'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
@@ -747,10 +757,23 @@ class PricListsController extends AdminController
                 } else {
                     $nomen = preg_replace(['/' . $param['brand'] . '/iu', '/\s+|\(\)|\_+/', '/^\s?[^\wа-яё\(]/ium'], ['', ' ', ''], $nomen);
                     $param['brand'] = str_replace('_', ' ', $param['brand']);
-                    $param['all'] = $nomen;
+                    if (!empty($nomen)) {
+                        if (!empty($result)) {
+                            $param['all'] = $nomen . ' ' .$result[0];
+                        } else {
+                            $param['all'] = $nomen;
+                        }
+                    } else {
+                        $param['all'] = '-';
+                    }
                 }
                 if (!isset($param['all'])) {
-                    $param['all'] = trim($nomen);
+                    if (!empty($result)) {
+                        $param['all'] = trim($nomen) . ' ' .$result[0];
+                    } else {
+                        $param['all'] = trim($nomen);
+                    }
+                    
                 } else {
     
                 }

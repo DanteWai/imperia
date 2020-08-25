@@ -99,22 +99,22 @@
                         <tbody>
                         @foreach ($type as $row)
                             <tr>
-                                @isset($row['brand'])<td>{{ $row['brand']}}</td>@endisset
-                                @isset($row['all'])<td>{{ $row['all'] }}</td>@endisset
-                                @isset($row['width'])<td>{{ $row['width']}}</td>@endisset
-                                @isset($row['height'])<td>{{ $row['height']}}</td>@endisset
-                                @isset($row['radius'])<td>{{ $row['radius']}}</td>@endisset
-                                @isset($row['index_speed'])<td>{{ $row['index_speed']}}</td>@endisset
-                                @isset($row['index_load'])<td>{{ $row['index_load']}}</td>@endisset
-                                @isset($row['index'])<td>{{ $row['index']}}</td>@endisset
-                                @isset($row['spikes'])<td>{{ $row['spikes']}}</td>@endisset
+                                @isset($row['brand'])<td title="Производитель">{{ $row['brand']}}</td>@endisset
+                                @isset($row['all'])<td title="Модель">{{ $row['all'] }}</td>@endisset
+                                @isset($row['width'])<td title="Ширина">{{ $row['width']}}</td>@endisset
+                                @isset($row['height'])<td title="Высота">{{ $row['height']}}</td>@endisset
+                                @isset($row['radius'])<td title="Диаметр">{{ $row['radius']}}</td>@endisset
+                                @isset($row['index_speed'])<td title="Индекс скорости">{{ $row['index_speed']}}</td>@endisset
+                                @isset($row['index_load'])<td title="Индекс нагрузки">{{ $row['index_load']}}</td>@endisset
+                                @isset($row['index'])<td title="">{{ $row['index']}}</td>@endisset
+                                @isset($row['spikes'])<td title="Шипы">{{ $row['spikes']}}</td>@endisset
 
-                                @isset($row['drilling'])<td>{{ $row['drilling']}}</td>@endisset
-                                @isset($row['diametr'])<td>{{ $row['diametr']}}</td>@endisset
-                                @isset($row['departure'])<td>{{ $row['departure']}}</td>@endisset
-                                @isset($row['dia'])<td>{{ $row['dia']}}</td>@endisset
+                                @isset($row['drilling'])<td title="Сверловка">{{ $row['drilling']}}</td>@endisset
+                                @isset($row['diametr'])<td title="Диаметр">{{ $row['diametr']}}</td>@endisset
+                                @isset($row['departure'])<td title="Вылет">{{ $row['departure']}}</td>@endisset
+                                @isset($row['dia'])<td title="DIA">{{ $row['dia']}}</td>@endisset
 
-                                @isset($row['season'])<td>{{ $row['season']}}</td>@endisset
+                                @isset($row['season'])<td title="Сезон">{{ $row['season']}}</td>@endisset
                                 @isset($row['price'])<td>{{ $row['price']}}</td>@endisset
 
 
