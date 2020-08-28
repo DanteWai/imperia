@@ -68,7 +68,15 @@
 
             @foreach ($products as $key=>$type)
                 <div  data-t-source="{{ 'tab'.$key}}" class="tab-source">
-                    <p>Колечество: {{ count($type) }}</p>
+                    @if (isset($brands))
+                        <h2>Найденные производители:</h2>
+                        <ul>
+                            @foreach ($brands[$key] as $name)
+                                <li>{{ $name }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <p>Колечество: {{ count($type)}}</p>
                     <table id="parse" class="table-elements">
                         <thead>
                         <tr>

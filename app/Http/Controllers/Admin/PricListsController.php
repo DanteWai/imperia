@@ -105,6 +105,7 @@ class PricListsController extends AdminController
         //dd($options['colNum']); // вывод одной опции
 
 
+        $brands = [];
 
         foreach($array as $key=>$item){
             //dd($item);
@@ -240,18 +241,28 @@ class PricListsController extends AdminController
                 }
             }
 
-            //dd($header);
-
+            // Парсим каждую строчку
             foreach ($item as $keyRow=>$row){
                 $result = $this->parseRow($row,$header);
+
                 if($result){
-                    $newMass[$result['type']][] = $result['value'];
+
+                    // Если массив брендом пустой и текущий бренд не пустая строка и не равна "-", то заносим в массив текущий бренд
+                    if (!isset($brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
+                        $brands[$result['type']][] = $result['value']['brand'];
+                        $newMass[$result['type']][] = $result['value'];
+                        // Если массив брендов уже есть и текущий бренд еще не существует в массиве то заносим его
+                    } else if (isset($brands[$result['type']]) && !in_array($result['value']['brand'], $brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
+                        $brands[$result['type']][] = $result['value']['brand'];
+                        $newMass[$result['type']][] = $result['value'];
+                    } else {
+                        $newMass[$result['type']][] = $result['value'];
+                        continue;
+                    }
                 }
             }
             
         }
-
-        //dump($header);
 
         //заглушка если ничё не напарсили
         if(!isset($newMass)) $newMass = [];
@@ -266,7 +277,8 @@ class PricListsController extends AdminController
         $this->content = view('admin.p_lists.add')->with([
             'top'=>$headContent,
             'products' => $newMass,
-            'types' => $types
+            'types' => $types,
+            'brands' => $brands
         ])->render();
 
         return $this->renderOutput();
