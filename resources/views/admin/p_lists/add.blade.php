@@ -13,9 +13,28 @@
             <label for="parser_name">Название</label>
             <input class="form-model text-input" type="text" placeholder="Название" name="parser_name" id="parser_name" value="Тестовый прайс">
         </div>
+        <!--<div class="form-section">
+            <label for="colNum">Столбец для номенклатуры</label>
+            <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colNum" id="colNum">
+        </div>
         <div class="form-section">
-            <label for="parser_name">Столбец для номенаклотуры</label>
-            <input class="form-model text-input" type="text" placeholder="Столбец для номенаклотуры" name="colNom" id="colNom" value="2">
+            <label for="colBrand">Столбец для бренда</label>
+            <input class="form-model text-input" type="number" min="0" value="0" placeholder="0" name="colBrand" id="colBrand">
+            <input class="form-model text-checkbox" type="checkbox" name="match" id="match"> Совпадает со столбцом номенклатуры
+        </div>-->
+        <div class="form-section">
+            <label for="rowNum">Строка заголовков</label>
+            <input class="form-model text-input" type="number" min="0" placeholder="0" name="rowNum" id="rowNum">
+        </div>
+        <div class="form-section">
+            <label for="brand_position">Позиция бренда в номенклатуре</label>
+            <input class="form-model text-input" type="number" name="brand_position" min="0" placeholder="0" id="brand_position">
+        </div>
+        <div class="form-section">
+            <label for="priceType">Выберите тип прайс-листа</label>
+            <input class="form-model" type="radio" name="priceType" value="shiny"> Шины
+            <input class="form-model" type="radio" name="priceType" value="diski"> Диски
+            <input class="form-model" type="radio" name="priceType" value="all" checked> Универсальный
         </div>
     </div>
     <div>
@@ -49,7 +68,15 @@
 
             @foreach ($products as $key=>$type)
                 <div  data-t-source="{{ 'tab'.$key}}" class="tab-source">
-                    <p>Колечество: {{ count($type) }}</p>
+                    @if (isset($brands))
+                        <h2>Найденные производители:</h2>
+                        <ul>
+                            @foreach ($brands[$key] as $name)
+                                <li>{{ $name }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <p>Колечество: {{ count($type)}}</p>
                     <table id="parse" class="table-elements">
                         <thead>
                         <tr>
@@ -58,6 +85,8 @@
                             @isset($type[0]['width'])<td>Ширина</td>@endisset
                             @isset($type[0]['height'])<td>Высота</td>@endisset
                             @isset($type[0]['radius'])<td>Диаметр</td>@endisset
+                            @isset($type[0]['index_speed'])<td>Индекс скорости</td>@endisset
+                            @isset($type[0]['index_load'])<td>Индекс нагрузки</td>@endisset
                             @isset($type[0]['index'])<td>Индекс</td>@endisset
                             @isset($type[0]['spikes'])<td>Шипы</td>@endisset
 
@@ -78,20 +107,22 @@
                         <tbody>
                         @foreach ($type as $row)
                             <tr>
-                                @isset($row['brand'])<td>{{ $row['brand']}}</td>@endisset
-                                @isset($row['all'])<td>{{ $row['all'] }}</td>@endisset
-                                @isset($row['width'])<td>{{ $row['width']}}</td>@endisset
-                                @isset($row['height'])<td>{{ $row['height']}}</td>@endisset
-                                @isset($row['radius'])<td>{{ $row['radius']}}</td>@endisset
-                                @isset($row['index'])<td>{{ $row['index']}}</td>@endisset
-                                @isset($row['spikes'])<td>{{ $row['spikes']}}</td>@endisset
+                                @isset($row['brand'])<td title="Производитель">{{ $row['brand']}}</td>@endisset
+                                @isset($row['all'])<td title="Модель">{{ $row['all'] }}</td>@endisset
+                                @isset($row['width'])<td title="Ширина">{{ $row['width']}}</td>@endisset
+                                @isset($row['height'])<td title="Высота">{{ $row['height']}}</td>@endisset
+                                @isset($row['radius'])<td title="Диаметр">{{ $row['radius']}}</td>@endisset
+                                @isset($row['index_speed'])<td title="Индекс скорости">{{ $row['index_speed']}}</td>@endisset
+                                @isset($row['index_load'])<td title="Индекс нагрузки">{{ $row['index_load']}}</td>@endisset
+                                @isset($row['index'])<td title="">{{ $row['index']}}</td>@endisset
+                                @isset($row['spikes'])<td title="Шипы">{{ $row['spikes']}}</td>@endisset
 
-                                @isset($row['drilling'])<td>{{ $row['drilling']}}</td>@endisset
-                                @isset($row['diametr'])<td>{{ $row['diametr']}}</td>@endisset
-                                @isset($row['departure'])<td>{{ $row['departure']}}</td>@endisset
-                                @isset($row['dia'])<td>{{ $row['dia']}}</td>@endisset
+                                @isset($row['drilling'])<td title="Сверловка">{{ $row['drilling']}}</td>@endisset
+                                @isset($row['diametr'])<td title="Диаметр">{{ $row['diametr']}}</td>@endisset
+                                @isset($row['departure'])<td title="Вылет">{{ $row['departure']}}</td>@endisset
+                                @isset($row['dia'])<td title="DIA">{{ $row['dia']}}</td>@endisset
 
-                                @isset($row['season'])<td>{{ $row['season']}}</td>@endisset
+                                @isset($row['season'])<td title="Сезон">{{ $row['season']}}</td>@endisset
                                 @isset($row['price'])<td>{{ $row['price']}}</td>@endisset
 
 

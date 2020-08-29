@@ -91,26 +91,177 @@ class PricListsController extends AdminController
         $uri = $request->getPathInfo();
         $headContent = $this->headContent(['title' => $this->title, 'backUri' => dirname($uri)]);
 
-
         $title = $request->only('parser_name');
         $options = $request->except('list','_token','parser_name');
-
-
-
 
         $array = Excel::toArray(new ProductImport, $request->file('list'));
 
         //dd($data);
         //dump($data);
+        //dump($array);
+        //dd($options);
+
+        // dd($array[0][1]); // строка в excel
+        //dd($options['colNum']); // вывод одной опции
+
+
+        $brands = [];
 
         foreach($array as $key=>$item){
+            //dd($item);
+
+            // Исходный
+            /*if (isset($options['colNum']) && $options['colNum'] === '0') {
+                $header = $this->parseHead($item);
+            } else if (isset($options['colNum']) && $options['colNum'] !== '0') {
+                $header['nomen'] = intval($options['colNum']) - 1;
+            } else {
+                $header = $this->parseHead($item);
+            }*/
+            // -- Исходный
+
+            // Пока оставлю это
+            /*if ((isset($options['colNum']) && $options['colNum'] !== '0') && (isset($options['colBrand']) && $options['colBrand'] !== '0')) {
+                $header['nomen'] = intval($options['colNum']) - 1;
+                $header['brand'] = intval($options['colBrand']) - 1;
+            } else if (((isset($options['colNum']) && $options['colNum'] === '0') || !isset($options['colNum'])) && 
+                        ((isset($options['colBrand']) && $options['colBrand'] === '0') || !isset($options['colBrand']))) {
+                $header = $this->parseHead($item);
+            } else {
+                $header = $this->parseHead($item);
+            }*/
+            // -- Пока оставлю это
             $header = $this->parseHead($item);
-                foreach ($item as $keyRow=>$row){
-                    $result = $this->parseRow($row,$header);
-                    if($result){
+            //dd($header);
+            //if ((isset($options['colNum']) && $options['colNum'] !== '0') && ((isset($options['brand_col']) && $options['brand_col'] === '0') || !isset($options['brand_col'])))
+
+            // Проверяет наличие позиции бренда в номенклатуре
+            if(isset($options['brand_position'])) {
+                $header['brand_position'] = intval($options['brand_position']) - 1;
+            }
+
+            // Столбец Бренд
+            /*if (isset($options['brand_col']) && isset($options['brand_col']) === '0') {
+                $header = $this->parseHead($item);
+            } else if (isset($options['brand_col']) && $options['brand_col'] !== '0') {
+                $header['brand'] = intval($options['brand_col']) - 1;
+            } else {
+                $header = $this->parseHead($item);
+            }*/
+
+
+            // Если колонка "Номенклатура" не задана пользователем или не нашлась
+            if (!isset($header['nomen'])) {
+                
+                if (isset($options['rowNum'])) {
+                    $row = intval($options['rowNum']) - 1;      // Номер строки заголовков таблицы
+                    $column = [];                               // Массив для номеров столбцов
+
+                    foreach($array[$key][$row] as $col => $title) {
+
+                        switch (true) {
+                            case preg_match_all('/производитель|бренд/iu', $title):
+                                $column['brand_col'] = $col;                      // Столбец производителя
+                                break;
+                            case preg_match_all('/модель/iu', $title):
+                                $column['model_col'] = $col;                      // Столбец модели
+                                break;
+                            case preg_match_all('/ширина/iu', $title):
+                                $column['width_col'] = $col;                      // Столбец ширины
+                                break;
+                            case preg_match_all('/высота/iu', $title):
+                                $column['height_col'] = $col;                      // Столбец высоты
+                                break;
+                            case preg_match_all('/^индекс$/ium', $title):
+                                $column['index_col'] = $col;                      // Столбец высоты
+                                break;
+                            case preg_match_all('/индекс\sскорости|скорост/iu', $title):
+                                $column['index_speed_col'] = $col;                      // Столбец высоты
+                                break;
+                            case preg_match_all('/индекс\нагрузки|нагруз/iu', $title):
+                                $column['index_load_col'] = $col;                      // Столбец высоты
+                                break;
+                            case preg_match_all('/^R$|^диаметр$|диаметр\sдиска|диаметр\sшины/ium', $title):
+                                $column['diameter_col'] = $col;                      // Столбец диаметра диска
+                                break;
+                            case preg_match_all('/сверловка/iu', $title):
+                                $column['drilling_col'] = $col;                      // Столбец сверловки
+                                break;
+                            case preg_match_all('/вылет/iu', $title):
+                                $column['departure_col'] = $col;                      // Столбец вылета
+                                break;
+                            case preg_match_all('/отверстие|^центральное\sотверстие$|^dia$|dia|^диаметр\sступицы$|ступиц|диаметр\sступиц/ium', $title):
+                                $column['dia_col'] = $col;                      // Столбец dia
+                                break;
+                            case preg_match_all('/отверстий|количество\sотверстий/iu', $title):
+                                $column['hole_col'] = $col;                      // Столбец отверстий
+                                break;
+                            case preg_match_all('/^pcd$|pcd|^Расстояние\sмежду\sотверстиями$|отверстиями|между\sотверстиями/ium', $title):
+                                $column['s_hole_col'] = $col;                      // Столбец Расстояние между отверстиями
+                                break;
+                        }
+                    }
+
+                    // Дальше - после того, как узнали столбцы
+
+                    // Узнаем что именно нужно парсить - шины или диски
+                    if ((isset($options['priceType']) && $options['priceType'] === 'diski') || 
+                        isset($column['drilling_col']) || 
+                        isset($column['departure_col']) ||
+                        isset($column['dia_col']) ||
+                        isset($column['hole_col']) ||
+                        isset($column['s_hole_col'])) {
+
+                            $result = $this->diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
+                            if ($result) {
+                                
+                                $newMass = ['d' => $result];
+                                $types = [
+                                    's' => 'Шины',
+                                    'd' => 'Диски',
+                                    'un' => 'Неизвестно'
+                                ];
+
+                                // Формируем вид
+                                $this->content = view('admin.p_lists.add')->with([
+                                    'top'=>$headContent,
+                                    'products' => $newMass,
+                                    'types' => $types
+                                ])->render();
+                        
+                                return $this->renderOutput();
+
+                            }
+
+                        }
+
+
+                } else {
+                    return false;
+                }
+            }
+
+            // Парсим каждую строчку
+            foreach ($item as $keyRow=>$row){
+                $result = $this->parseRow($row,$header);
+
+                if($result){
+
+                    // Если массив брендом пустой и текущий бренд не пустая строка и не равна "-", то заносим в массив текущий бренд
+                    if (!isset($brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
+                        $brands[$result['type']][] = $result['value']['brand'];
                         $newMass[$result['type']][] = $result['value'];
+                        // Если массив брендов уже есть и текущий бренд еще не существует в массиве то заносим его
+                    } else if (isset($brands[$result['type']]) && !in_array($result['value']['brand'], $brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
+                        $brands[$result['type']][] = $result['value']['brand'];
+                        $newMass[$result['type']][] = $result['value'];
+                    } else {
+                        $newMass[$result['type']][] = $result['value'];
+                        continue;
                     }
                 }
+            }
+            
         }
 
         //заглушка если ничё не напарсили
@@ -122,12 +273,12 @@ class PricListsController extends AdminController
             'un' => 'Неизвестно'
         ];
 
-
         //формируем вид
         $this->content = view('admin.p_lists.add')->with([
             'top'=>$headContent,
             'products' => $newMass,
-            'types' => $types
+            'types' => $types,
+            'brands' => $brands
         ])->render();
 
         return $this->renderOutput();
@@ -147,9 +298,20 @@ class PricListsController extends AdminController
             }
 
             foreach ($row as $keyCol=>$column){
-                if(strripos(mb_strtolower($column),'номенклатур')  !== false){
+                if((strripos(mb_strtolower($column),'номенклатур')  !== false) && !isset($header['nomen'])){
                     $header['nomen'] = $keyCol;
+                    //break;
+                    continue;
+                }
 
+                // Ищем столбец бренда
+                if (preg_match('/производитель|бренд/iu', $column)) {
+                    $header['brand'] = $keyCol;
+                    continue;
+                }
+
+                // Выход из цикла
+                if (isset($header['nomen']) && isset($header['brand'])) {
                     break;
                 }
             }
@@ -163,28 +325,41 @@ class PricListsController extends AdminController
         //Тут сейчас всё толкается от номенкулатуры "$header['nomen']" но в хеадере задумываются и прочие разделы врое count, price
         if(isset($header['nomen'])){
             $reg = '/(r ?[0-9]+|[0-9]([*]|x|х)[0-9]|[0-9]{2,3}\/[0-9]{2,3}\/[0-9]{2,3}|д\/ст|[0-9]+(,|.)[0-9]+)/iu';
-            /* Проверяем что в строке шина или диск */
-            if(preg_match($reg,$row[$header['nomen']]) && preg_match('/\w+\s+\w+/iu',$row[$header['nomen']])){
-                if(preg_match('/([0-9]{3}\/[0-9]{2}| [0-9]{1}\.?[0-9]{2} R[0-9]{2})/u',$row[$header['nomen']])){
+            /* Проверяем что в строке шина или диск */ // /\w+\s+\w+/iug // /[a-z]+\s+[a-z]+|[а-яё]+\s(\d+|[а-яё]+)|^[^а-яё\d\s]+$/iugm
+            if(preg_match_all($reg,$row[$header['nomen']]) && preg_match('/\w+\s+\w+|^[а-яё]+|^[^а-яё]+$/ium',$row[$header['nomen']])){ // [0)-9]{1}\.?[0-9]{2}\sR[0-9]{2}|
+                if(preg_match('/^[0-9]{3}\/[0-9]{2,3}|\s[1-3][0-9]{2}\/[0-9]{2,3}\s|\s[0-9]{3}\/[0-9]{2,3}\/\d{2}\s|\d{3}\/\d{2,3}R\d{2}C?|\b\d{3}\/\d{2}\/\d{2}C?\b|\s\b1?\d{2}[HJ-NP-WYZТ]\b(?!\))|\s\b\d{2,3}\/\d{2,3}[HJ-NP-WYZТ]\b(?!\))|\b\d{1,2}[,\.]\d{2}\s?R\d{2}\b|[Кк]ама\s|\bSR[12]\d\b|\b[12]\d{2}\sR[12]\b|^\b[1-3]\d{2}\sR[12]\dC?\b|\b\d{1,2}[,\.]?\d?\/\d{2}[,\.]?\d?\/\d{2}\b|\b\d[,\.][50]0\/\d{2}\/\d{2}C?\b|\b\d{2}x\d{2}[,\.]?[50]?\sR[12]\d\b|\b\s[1-3]\d{2}\sR[12]\d\b|\b[1-3]\d{2}\/\d{2}-[12]\d\b|(^[Аа]втошина|^[сС]ельхозшина|^[Ии]ндустриальная)/um',$row[$header['nomen']]) && !preg_match('/\b(12|16|24)V\b|[Аа]ккумулятор|[Сс]в\.заж|[Аа]\/л|[Тт]орм\.кол/u' ,$row[$header['nomen']]) && !preg_match('/^[1-4]\d{2}\/?\d{0,2}\s?R?\s?[12]\d[,\.]?[50]?C?(\sШИП)?$|^\d{2}x\d{2}[,\.]?[50]\sR[12]\d$|^\d{1,2}[,\.]\d{0,2}\s?R?[12]\d[,\.]?\d{0,2}(\s\(.*\))?$|^[1-4]\d{2}\/?\d{0,2}\s?R?\s?[12]\d[,\.]?[50]?\s"?.*"$/um', trim($row[$header['nomen']]))){
                     $type = 's';
-                } else if(preg_match('/(д\/(л|ст)|[0-9]{1,2},?[0-9]*?[\*x][0-9]{2,3})/ui',$row[$header['nomen']])){
+                } else if(preg_match('/(^д\/(л|ст)|^(ст|л) диск| \d{1,2},?[0-9]*?[\*x][0-9]{2,3}[,\.]?\d? |^\d[\*x\-]\d{2,3},?\d?[\*x\-]\d{2}|\b(et|ет)\d{2,3}[,\.]?\d?\b)/uim', trim($row[$header['nomen']])) && preg_match('/^д\/(л|ст)|^(ст|л) диск|диск|\bR[12]\d\b|\b(et|ет)[02-9]\d{2}\b\s/uim', $row[$header['nomen']])){
                     $type = 'd';
                 }
                 else{
                     $type = 'un';
                 }
-                $nomen = explode(' ',$row[$header['nomen']]);
+                //$nomen = explode(' ',$row[$header['nomen']]);
+                $nomen = $row[$header['nomen']];    // Строка номенклатуры
+
+                if (isset($header['brand'])) {
+                    $brand_name = $row[$header['brand']];
+                } else {
+                    $brand_name = null;
+                }
+
+                if (isset($header['brand_position'])) {
+                    $brand_position = $header['brand_position'];
+                } else {
+                    $brand_position = null;
+                }
 
                 if($type === 's'){
                     //Если в строке шины то запускаем функцию парсинга шины
-                    $result = $this->sParse($nomen,$type);
+                    $result = $this->sParse($nomen,$type,$brand_name,$brand_position);
                 } else if($type === 'd'){
                     //Если диск то парсим как диск
-                    $result = $this->dParse($nomen,$type);
+                    $result = $this->dParse($nomen,$type,$brand_name,$brand_position);
                 }
                 else{
                     //заглушка
-                    $result = $this->sParse($nomen,$type);
+                    $result = $this->sParse($nomen,$type,$brand_name,$brand_position);
                 }
 
                 //Возвращаем тип и распаршенную строчку
@@ -198,18 +373,160 @@ class PricListsController extends AdminController
             }
         }
 
-        else{
+        // Если номенклатура не найдена
+        else {
             return false;
         }
 
     }
 
     //Парсинг инфы о шине
-    public function sParse($nomen,$type){
+    public function sParse($nomen,$type,$brand,$position){
+        //dump($position);
+        //$nomen = 'автошина 6,50 R16C HANKOOK AH11S 10PR 108/107M        ';
+
+        // Если передана позиция бренда в номенклатуре то - разбить строку по пробелу, вытащить бренд и проверить на соответствие решулярки
+        if (isset($position)) {
+            //$nomen = explode(' ',$row[$header['nomen']]);
+            $brand_search = explode(' ', $nomen);
+            $pattern_brand = '/^[a-zа-яё\-\_\']{2,}$/ium';
+            if (isset($brand_search[$position]) && preg_match($pattern_brand, $brand_search[$position])) {
+                $param['brand'] = $brand_search[$position];
+            } else if (isset($brand_search[$position - 1]) && preg_match($pattern_brand, $brand_search[$position - 1])) {
+                $param['brand'] = $brand_search[$position - 1];
+            } else if (isset($brand_search[$position + 1]) && preg_match($pattern_brand, $brand_search[$position + 1])) {
+                $param['brand'] = $brand_search[$position + 1];
+            }
+        }
+
+        // Если бренд берется из отдельного столбца
+        if (isset($brand) && !empty($brand) && preg_match('/^[a-zа-яё\-\_\']{2,}\.?(\s[a-zа-яё\-\_\'\(\)]{2,}\.?)?$/ium', $brand)) {
+            $param['brand'] = $brand;
+        } else if (!isset($brand)) {
+            $nomen_brand = preg_replace('/^(авто|сельхоз)шина|^индустриальная|(авто|а)\/?шина|(?<=\s)шип(?=\s)|(?<=\s)шип$/imu', '', $nomen);
+            $brand_search = explode(' ', $nomen_brand);
+            $pattern_brand = '/^[a-zа-яё\-\_\']{2,}\.?(\s[a-zа-яё\-\_\'\(\)]{2,}\.?)?$/ium';
+            foreach ($brand_search as $position => $name) {
+                if (preg_match($pattern_brand, $name) && !isset($param['brand'])) {
+                    $param['brand'] = $name;
+                    break;
+                }
+            }
+        }
+
         $param['type'] = $type;
-        foreach($nomen as $key=>$string){
+        //dump($param);
+
+        // Очищаем номенклатуру от лишних слов
+        $nomen = preg_replace('/^(авто|сельхоз)шина|^индустриальная|(авто|а)\/?шина/imu', '', $nomen);
+
+        while (!empty($nomen) && (
+            !isset($param['brand']) ||
+            !isset($param['all']) ||
+            !isset($param['width']) ||
+            !isset($param['height']) ||
+            !isset($param['radius']) ||
+            !isset($param['index_load']) ||
+            !isset($param['index_speed']))) {
+
+            // Диаметр      //(?<![A-Za-zа-яёА-ЯЁ])R[12]\d[,\.]?[50]?C?|(?<=\s)[-xXхХ]R?[12]\d[,\.]?[50]?C?|(?<=[1-4]\d{2}[\/xXхХ\s\:-]\d{2}[\/xXхХ\s\:-]|\d{2}[\/xXхХ\s\:-]\d{2}|\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d|\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d{2}|\d{2}[,\.]\d[\/xXхХ\s\:-]\d{2}|\d{2}[,\.]\d[\/xXхХ\s\:-]\d{2}[,\.]\d|\d{2}[,\.]\d[\/xXхХ\s\:-]\d{2}[,\.]\d{2}|\d{2}[,\.]\d{2}[\/xXхХ\s\:-]\d{2}|\d{2}[,\.]\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d|\d{2}[,\.]\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d{2}|[,\.][50][\/xXхХ\s\:-]\d{2}|\d{2}[\/xXхХ\s\:-]\d[,\.]\d{2})[\/xXхХ\s\:-]R?\s?[12]\d[,\.]?[50]?C?|(?<=\d{2})-\s[12]\d[,\.]?5?|(?<=\s)ZR\s?[12]\d[,\.]?5?(?=\s)|(?<=\s)ZR\s?[12]\d[,\.]?5?$
+            if (!isset($param['radius']) && preg_match('/(?<![A-Za-zа-яёА-ЯЁ])R\s?[12]\d[,\.]?[50]?C?|(?<=\s)[-xXхХ]R?[12]\d[,\.]?[50]?C?|(?<=[1-4]\d{2}[\/xXхХ\s\:-]\d{2}[\/xXхХ\s\:-]|\d{2}[\/xXхХ\s\:-]\d{2}|\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d|\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d{2}|\d{2}[,\.]\d[\/xXхХ\s\:-]\d{2}|\d{2}[,\.]\d[\/xXхХ\s\:-]\d{2}[,\.]\d|\d{2}[,\.]\d[\/xXхХ\s\:-]\d{2}[,\.]\d{2}|\d{2}[,\.]\d{2}[\/xXхХ\s\:-]\d{2}|\d{2}[,\.]\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d|\d{2}[,\.]\d{2}[\/xXхХ\s\:-]\d{2}[,\.]\d{2}|[,\.][50][\/xXхХ\s\:-]\d{2}|\d{2}[\/xXхХ\s\:-]\d[,\.]\d{2}|\d{2}[\/xXхХ\s\:-]\d[,\.]\d|\d[\/xXхХ\s\:-]\d{2})[\/xXхХ\s\:-]R?\s?[12]\d[,\.]?[50]?C?(?=\s[^R])|(?<=\d{2})-\s[12]\d[,\.]?5?|(?<=\s)ZR\s?[12]\d[,\.]?5?(?=\s)|(?<=\s)ZR\s?[12]\d[,\.]?5?$/mu', $nomen, $diameter)) {
+                $nomen = str_replace($diameter[0], '', $nomen);     // Стираем найденное совпадение
+                preg_match('/[12]\d[,\.]?\d{0,2}C?/u', $diameter[0], $value);  // Вытаскиваем диаметр, без символов и R
+                $param['radius'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);    // Заносим значение в массив параметров
+            } else if (isset($param['radius'])) {
+
+            } else {
+                $param['radius'] = '-';
+            }
+
+            //dump($nomen);
+
+            // Индекс общий     //(?<![\w\/])1?\d{1,2}\/1?\d{1,2}[GHJ-NP-WYZTТМН](?![a-zA-Zа-чщ-яё])|(?<!\w)1?\d{1,2}[GHJ-NP-WYZTТМН](?![a-zA-Zа-чщ-яё])|(?<![\w\/])1\d{2}[B-GJ-N](?![a-zA-Zа-чщ-яё])|(?<![\w\/])1\d{2}[АA][1-7](?!\w)|(?<![\w,])1?\d{1,2}[HJ-NP-WYZTТМН](?=[a-zA-Z]{2})
+            if (preg_match('/(?<![\w\/])1?\d{1,2}\/1?\d{1,2}[GHJ-NP-WYZTТМНК](?![a-zA-Zа-чщ-яё])|(?<![\w\*])1?(\d{2}|0)[GHJ-NP-WYZTТМНК](?![a-zA-Zа-чщ-яё])|(?<![\w\/])1\d{2}[B-GJ-N](?![a-zA-Zа-чщ-яё])|(?<![\w\/])1\d{2}[АA][1-7](?!\w)|(?<![\w,\*])1?\d{1,2}[HJ-NP-WYZTТМНК](?=[a-zA-Z]{2})|(?<![\w\/])1?\d{1,2}\/1?\d{1,2}\s?[GHJ-NP-WYZTТМНК](?=\s)|(?<![\w\*])1?(\d{2}|0)\s?[GHJ-NP-WYZTТМНК](?=\s)|(?<![\w\/])1?\d{1,2}\/1?\d{1,2}\s?[GHJ-NP-WYZTТМНК]$|(?<!\w)1?\d{1,2}\s?[GHJ-NP-WYZTТМНК]$/mu', $nomen, $index)) {
+                $nomen = str_replace($index[0], '', $nomen);
+                preg_match('/\d{1,3}\/?\d{0,3}/u', $index[0], $value_load);
+                preg_match('/[АA-ZТМНК][1-7]?/u', $index[0], $value_speed);
+                $param['index_load'] = $value_load[0];
+                $param['index_speed'] = $value_speed[0];
+
+                // Индекс скорости, если нет общего 
+            } else if (!isset($param['index_load']) && preg_match('/\s([HJ-NP-WYZTТМК]|[B-GJ-N]|A[1-7])\s|(?<=\s)([HJ-NP-WYZTТМК]|[B-GJ-N]|A[1-7])$/mu', $nomen, $speed)) {
+                $nomen = str_replace($speed[0], '', $nomen);
+                preg_match('/[АA-ZТМ][1-7]?/u', $speed[0], $value);
+                $param['index_speed'] = $value[0];
+                $param['index_load'] = '-';
+            } else if (!isset($param['index_load']) && !isset($param['index_speed'])) {
+                $param['index_speed'] = '-';
+                $param['index_load'] = '-';
+            } else {
+
+            }
+
+            // Ширина и высота      //^[1-4]?\d{2}[\/xXхХ\:-]\d{1,2}[,\.]?[50]{0,2}|(?<=\s)[1-4]?\d{1,2}[,\.]?[50]{0,2}[\/xXхХ\:-](\d{2}|\d{2}[,\.]\d|\d{2}[,\.]\d{2}|\d|\d[,\.]\d|\d[,\.]\d{2})(?![a-zA-Z0-9])
+            if (preg_match('/^[1-4]?\d{2}[\/xXхХ\:-]\d{1,2}[,\.]?[50]{0,2}|(?<=\s)[1-4]?\d{1,2}[,\.]?[50]{0,2}[\/xXхХ\:-](\d{2}[,\.]\d{2}|\d{2}[,\.][50]|\d{2}|\d[,\.]\d{2}|\d[,\.][50]|[0-35-9])(?![a-zA-Z0-9])/mu', $nomen, $size)) {
+                $nomen = str_replace($size[0], '', $nomen);
+                //dd($nomen);
+                $size_value = preg_split('/[\/xXхХ\s\:-]/u', $size[0]);
+                $param['width'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[0]);
+                $param['height'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[1]);
+
+                // Ширина, если без высоты
+            } else if (!isset($param['width']) && preg_match('/^[1-4]\d{2}(?=\s)|^\s[1-4]\d{2}(?=\s)|^\d{1,2}[,\.]?[50]{0,2}(?=\s)|(?<=\s)\d{1,2}[,\.]\d{1,2}(?=[\sR])|(?<=\s)[1-4]\d[05](?=[\sRш])|(?<=\s)[1-4]\d{2}(?=\/\s)/mu', $nomen, $width)) {
+                $nomen = str_replace($width[0], '', $nomen);
+                $param['width'] = trim(preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $width[0]));   // Убираем в конце нули и заменяем запятые на точки
+                $param['height'] = '-';
+            } else if (!isset($param['width']) && !isset($param['height'])) {
+                $param['width'] = '-';
+                $param['height'] = '-';
+            } else {
+
+            }
+
+            // Шипы
+            if (!isset($param['spikes']) && preg_match('/(?<![a-zа-я])([\*]?ш|шип)[\.]?(?=\s)|(Ш|шип)[\.]?$/ium', $nomen, $spikes)) {
+                $nomen = str_replace($spikes[0], '', $nomen);
+                $param['spikes'] = 'Да';
+                $param['season'] = 'Зима';
+            }
+
+            // Очищаем лишние пробелы
+            $nomen = trim(preg_replace('/\s{2,}/', ' ', $nomen));
+
+            if (!isset($param['brand'])) {
+                $param['brand'] = '-';
+            } else {
+                $nomen = preg_replace(['/' . $param['brand'] . '/iu', '/\s+|\(\)|\_+/', '/^\s?[^\wа-яё\(]/ium'], ['', ' ', ''], $nomen);
+                $param['brand'] = str_replace('_', ' ', $param['brand']);
+
+                if (!empty($nomen)) {
+                    $param['all'] = trim($nomen);
+                } else {
+                    $param['all'] = '-';
+                }
+                
+            }
+            if (!isset($param['all'])) {
+                $param['all'] = trim($nomen);
+            } else {
+
+            }
+
+            //dd($param);
+            //dd($nomen);
+            //dump($param);
+        }
+
+        //dd($param);
+
+        return $param;
+
+
+
+
+        /*foreach($nomen as $key=>$string){*/
             /*Ищем радиус */
-            if(preg_match('/^z?r$/iu',$string) && isset($nomen[$key+1])){
+            /*if(preg_match('/^z?r$/iu',$string) && isset($nomen[$key+1])){
                 $param['radius'] = $string.$nomen[$key+1];
                 unset($nomen[$key]);
                 unset($nomen[$key+1]);
@@ -231,8 +548,12 @@ class PricListsController extends AdminController
                 continue;
             }
 
-            if(preg_match('/[0-9]{2,3}[a-zа-я]/iu',$string)){
+            if(preg_match('/\b\d{2,3}[HJ-NP-WYZ]\b|\b\d{2,3}\/\d{2,3}[HJ-NP-WYZ]\b/u',$string)){
                 $param['index'] = $string;
+                preg_match('/\d{2,3}|\d{2,3}\/\d{2,3}/u', $param['index'], $matches);
+                $param['index_load'] = $matches[0];
+                preg_match('/[HJ-NP-WYZ]/u', $param['index'], $matches);
+                $param['index_speed'] = $matches[0];
                 unset($nomen[$key]);
                 continue;
             }else if(!isset($param['index']) && preg_match('/^[A-Z]$/u',$string)){
@@ -250,7 +571,9 @@ class PricListsController extends AdminController
                 unset($nomen[$key]);
                 continue;
             }
-        }
+        }*/
+
+        //
 
         if(isset($param['width'])){
             $split = preg_split('/\//',$param['width']);
@@ -332,8 +655,156 @@ class PricListsController extends AdminController
         ksort($param);
         return $param;
     }
+
     //Парсинг инфы о диске
-    public function dParse($nomen,$type){
+    public function dParse($nomen,$type,$brand,$position){
+
+        if (isset($position)) {
+            $nomen = preg_replace('/\s{2,}/', ' ', $nomen);
+            $brand_search = explode(' ', $nomen);
+            $pattern_brand = '/^[a-zа-яё\-\_\'\&]+\.?(\s?[a-zа-яё\-\_\'\(\)\&]+\.?)?$/ium';
+            if (isset($brand_search[$position]) && preg_match($pattern_brand, $brand_search[$position])) {
+                $param['brand'] = $brand_search[$position];
+            } else if (isset($brand_search[$position - 1]) && preg_match($pattern_brand, $brand_search[$position - 1])) {
+                $param['brand'] = $brand_search[$position - 1];
+            } else if (isset($brand_search[$position + 1]) && preg_match($pattern_brand, $brand_search[$position + 1])) {
+                $param['brand'] = $brand_search[$position + 1];
+            }
+        }
+
+        // Если бренд берется из отдельного столбца
+        if (isset($brand) && !empty($brand) && preg_match('/^[a-zа-яё\-\_\'\&]+\.?(\s?[a-zа-яё\-\_\'\(\)\&]+\.?)?$/ium', $brand)) {
+            $param['brand'] = $brand;
+        } else if (!isset($brand)) {
+            $nomen = preg_replace(['/\s+/', '/^\s|\s$/m', '/^диск(\sстальной(\s\(штампованный\))?|\sлитой)?|^д\/(л|ст)|^(л|ст)\sдиск|а\/диск|ар?т?\.\d+|уцен\.?|(?<=\s)диск(?=\s)/imu', '/\s+/'], [' ', '', '', ' '], $nomen);
+            $brand_search = explode(' ', $nomen);
+            $pattern_brand = '/^[a-zа-яё\-\_\'\&]+\.?(\s?[a-zа-яё\-\_\'\(\)\&]+\.?)?$/ium';
+            foreach ($brand_search as $position => $name) {
+                if (preg_match($pattern_brand, $name) && !isset($param['brand'])) {
+                    $param['brand'] = $name;
+                    // Удаляем скобки
+                    $param['brand'] = preg_replace('/\(|\)/', '', $param['brand']);
+                    break;
+                }
+            }
+        }
+
+        $param['type'] = $type;
+
+        // тело
+        // Очищаем номенклатуру от лишних слов и пробелов
+        $nomen = preg_replace(['/\s+/', '/^\s|\s$/m', '/^диск(\sстальной(\s\(штампованный\))?|\sлитой)?|^д\/(л|ст)|^(л|ст)\sдиск|а\/диск|ар?т?\.\d+|уцен\.?|(?<=\s)диск(?=\s)/imu', '/\s+/'], [' ', '', '', ' '], $nomen);
+
+        // Если есть какие-то скобки, то временно их вырезать, потом вставить обратно
+        if (preg_match('/\([^()]*\)/', $nomen, $result)) {
+            $nomen = str_replace($result[0], '', $nomen);
+        }
+
+        while (!empty($nomen) && (
+            !isset($param['brand']) ||
+            !isset($param['all']) ||
+            !isset($param['width']) ||
+            !isset($param['drilling']) ||
+            !isset($param['diametr']) ||
+            !isset($param['departure']) ||
+            !isset($param['dia']))) {
+
+                // DIA
+                if (!isset($param['dia']) && preg_match('/(?<!\w)([dD]|dia|DIA)\s?\d{2,3}[,\.]?\d?|(?<=[^eEеЕ][^tTтТ]\s)[4-9]\d[,\.]\d{1,2}(?=\s)|(?<=\s)1\d{2}[,\.]\d(?=\s)|(?<=\s)[4-9]\d[,\.]\d{1,2}$|(?<=\s)1\d{2}[,\.]\d$|(?<=\s)[4-9]\d$|(?<=\s)1\d{2}$|(?<=\/)[12]\d{2}[,\.]?\d?(?=[\s\/])|(?<=[^eEеЕ][^tTтТ]\s)[4-9]\d(?=\s)|(?<=[^lL][^sS]\s)1\d{2}(?=\s)|(?<=[^lL][^sS]\s)2\d{2}[,\.][50](?=\s)/mu', $nomen, $dia)) {
+                    $nomen = str_replace($dia[0], '', $nomen);
+                    preg_match('/\d{2,3}[,\.]?\d?/u', $dia[0], $value);
+                    $param['dia'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                } else if (isset($param['dia'])) {
+
+                } else {
+                    $param['dia'] = '-';
+                }
+
+                // Сверловка
+                if (!isset($param['drilling']) && preg_match('/(?<=[\s\/])\d[xXхХ\-\*]([3-9]\d|1\d{2})[,\.]?\d?|^\d[xXхХ\-\*]([3-9]\d|1\d{2})[,\.]?\d?|(?<=\s)(\d|1\d)\/\d{3}|^(\d|1\d)\/\d{3}|(?<=\s)(\d|[12]\d)[^\deEtT]+\d{3}[,\.]?[50]?(?=[\/])|^(\d|[12]\d)\D+\d{3}|(?<=\s)(\d|[12]\d)_отв[,\.](?=\s)|^(\d|1\d)\*\d{2,3}[,\.]?\d?(?=\s)|(?<=)(\d|1\d)\*\d{2,3}[,\.]?\d?$/mu', $nomen, $drilling)) {
+                    $nomen = str_replace($drilling[0], '', $nomen);
+                    $param['drilling'] = preg_replace('/\D{2,}|(?<=\d)[^,\.\d](?=\d)/u', '*', $drilling[0]);
+                } else if (isset($param['drilling'])) {
+
+                } else {
+                    $param['drilling'] = '-';
+                }
+
+                // Вылет
+                if (!isset($param['departure']) && preg_match('/(?<!\w)[EeЕе][TtТт][\s-]?\d{1,3}[,\.]?5?|(?<=\s\-)([2-5]\d|1\d{2})(?=\s)|(?<=[\/,])1\d{0,2}(?=\s)|(?<=\s)([2-5]\d|6[02])(?=\s)|(?<=\s)([2-5]\d|6[02])[,\.]5(?=\s)|(?<=[^lL][^sS]\s)([2-5]\d|6[02]|1\d{2})$|^([2-5]\d|6[02])(?=\s)|^([2-5]\d|6[02])[,\.]5(?=\s)|(?<=\s)d{2}(?=\s)/mu', $nomen, $departure)) {
+                    $nomen = str_replace($departure[0], '', $nomen);
+                    preg_match('/\d+[,\.]?\d*/u', $departure[0], $value);
+                    $param['departure'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                } else if (isset($param['departure'])) {
+
+                } else {
+                    $param['departure'] = '-';
+                }
+
+                // Ширина и диаметр общие
+                if (preg_match('/(?<=\s)[12]?\d[,\.]?\d?[50]?[xXхХ\-][12]\d[,\.]?[50]?(?=[\s\"\'\/])|^[12]?\d[,\.]?\d?[50]?[xXхХ\-][12]\d[,\.]?[50]?/mu', $nomen, $size)) {
+                    $nomen = str_replace($size[0], '', $nomen);
+                    $size_value = preg_split('/[xXхХ\*\-\/]/u', $size[0]);
+                    $param['width'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[0]);
+                    $param['diametr'] = preg_replace(['/(?<=[,\.])0+$/m', '/(?<=[,\.]\d)0+$/m', '/,/', '/\.$/m'], ['', '', '.', ''], $size_value[1]);
+                } else {
+                    // Если ширина и диаметр записаны раздельно
+
+                    // Ищем диаметр
+                    if (!isset($param['diametr']) && preg_match('/(?<=\s)[rR\-][12]\d[,\.]?[50]?(?=\s)|^[rR\-]?[12]\d[,\.]?[50]?|[rR\-][12]\d[,\.]?[50]?$/mu', $nomen, $diametr)) {
+                        $nomen = str_replace($diametr[0], '', $nomen);
+                        preg_match('/[12]\d[,\.]?\d{0,2}C?/u', $diametr[0], $value);
+                        $param['diametr'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                    } else {
+                        $param['diametr'] = '-';
+                    }
+
+                    // Ищем ширину
+                    if (!isset($param['width']) && preg_match('/(?<=\s)([jJ]?[5-9]|[jJ]?1[0-2468-9]|[jJ]?1[0-2468-9][,\.][50]|[jJ]?[4-9][,\.][50]|[jJ]?[5-9][,\.]\d[50])(?=\s)|^([jJ]?[5-9]|[jJ]?1[0-2468-9]|[jJ]?1[0-2468-9][,\.][50]|[jJ]?[5-9][,\.][50]|[jJ]?[5-9][,\.]\d[50])(?=\s)|(?<=\s)([jJ]?[5-9]|[jJ]?1[0-2468-9]|[jJ]?1[0-2468-9][,\.][50]|[jJ]?[5-9][,\.][50]|[jJ]?[5-9][,\.]\d[50])$/mu', $nomen, $width)) {
+                        $nomen = str_replace($width[0], '', $nomen);
+                        preg_match('/1?\d[,\.]?\d{0,2}/u', $width[0], $value);
+                        $param['width'] = preg_replace(['/(?<=[,\.])0+/', '/(?<=[,\.]\d)0+/', '/,/', '/\.$/m'], ['', '', '.', ''], $value[0]);
+                    } else {
+                        $param['width'] = '-';
+                    }
+                }
+
+                // Очищаем лишние пробелы и одиночные символы
+                $nomen = trim(preg_replace(['/(?<=\s)[^a-z0-9а-яё\+]+(?=\s)/iu', '/\s{2,}/'], ['', ' '], $nomen));
+
+                if (!isset($param['brand'])) {
+                    $param['brand'] = '-';
+                } else {
+                    $nomen = preg_replace(['/' . $param['brand'] . '/iu', '/\s+|\(\)|\_+/', '/^\s?[^\wа-яё\(]/ium'], ['', ' ', ''], $nomen);
+                    $param['brand'] = str_replace('_', ' ', $param['brand']);
+                    if (!empty($nomen)) {
+                        if (!empty($result)) {
+                            $param['all'] = $nomen . ' ' .$result[0];
+                        } else {
+                            $param['all'] = $nomen;
+                        }
+                    } else {
+                        $param['all'] = '-';
+                    }
+                }
+                if (!isset($param['all'])) {
+                    if (!empty($result)) {
+                        $param['all'] = trim($nomen) . ' ' .$result[0];
+                    } else {
+                        $param['all'] = trim($nomen);
+                    }
+                    
+                } else {
+    
+                }
+
+            }
+
+        return $param;
+        // ===========//
+
+
+
         $param['type'] = $type;
 
         foreach($nomen as $key=>$string){
@@ -400,6 +871,53 @@ class PricListsController extends AdminController
         ksort($param);
 
         return $param;
+    }
+
+    public function diskParse($start_row, $list, $column) {
+
+        //dump('столбцы', $column);
+
+        $params = [];
+
+        $list_count = count($list);     // Узнаем количество строк в листе
+
+        for ($i = $start_row; $i < $list_count; $i++) {
+            //dd($list[$start_row]);
+
+            if (isset($column['brand_col'])) {
+                $params[$i - $start_row]['brand'] = $list[$i][$column['brand_col']];
+            }
+
+            if (isset($column['model_col'])) {
+                $params[$i - $start_row]['all'] = $list[$i][$column['model_col']];
+            }
+
+            if (isset($column['width_col'])) {
+                $params[$i - $start_row]['width'] = $list[$i][$column['width_col']];
+            }
+
+            if (isset($column['diameter_col'])) {
+                $params[$i - $start_row]['diametr'] = preg_replace('/r/iu', '' ,$list[$i][$column['diameter_col']]);
+            }
+
+            if (isset($column['departure_col'])) {
+                $params[$i - $start_row]['departure'] = $list[$i][$column['departure_col']];
+            }
+
+            if (isset($column['dia_col'])) {
+                $params[$i - $start_row]['dia'] = $list[$i][$column['dia_col']];
+            }
+
+            if (isset($column['drilling_col'])) {
+                $params[$i - $start_row]['drilling'] = $list[$i][$column['drilling_col']];
+            } else {
+                $params[$i - $start_row]['drilling'] = $list[$i][$column['hole_col']] . 'x' . $list[$i][$column['s_hole_col']];
+            }
+        }
+        //dump($params);
+
+        return $params;
+
     }
 
 
