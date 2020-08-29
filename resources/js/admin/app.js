@@ -2,7 +2,7 @@ import '@scss/admin/adminStyle.scss';
 import "regenerator-runtime/runtime";
 import Server from '@core/servers';
 import Tabs from './tabs';
-import {PriceToParse} from "./components/priceToParse"; //временный компонент
+import Spoiler from "@core/spoiler";
 import {OrdersComponents} from "@js/admin/components/mainPage/ordersComponent";
 import {ListComponent} from './components/list';
 
@@ -19,6 +19,7 @@ window.addEventListener('load',() => {
     new ListComponent('list-component');   //список элементов
 
     new Tabs({parent:'.tabs-contaiter'})
+    new Spoiler()
 
     //new PriceToParse('parse')
     //TODO убрать всё что ниже в компоненты

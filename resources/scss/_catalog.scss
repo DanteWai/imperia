@@ -678,6 +678,7 @@
 
 
 
+/*
 .select {
     text-align: right;
     text-align-last: right;
@@ -704,7 +705,7 @@
     }
 
 }
-
+*/
 .content-filter {
 	grid-column-start: 1;
 	grid-column-end: -1;
@@ -1502,11 +1503,11 @@
 }
 
 @media only screen and (max-width: 655px) {
-    
+
     .header {
         height: 55vh;
     }
-    
+
     .options-panel {
         height: 150px;
 

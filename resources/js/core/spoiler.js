@@ -1,4 +1,4 @@
-export default class spoiler {
+export default class Spoiler {
     constructor(){
         this.init()
     }
@@ -7,7 +7,7 @@ export default class spoiler {
         let spoilers = document.querySelectorAll('.spoiler-trigger');
 
 
-        for(spoiler of spoilers){
+        for(let spoiler of spoilers){
             spoiler.addEventListener('click',this.click)
         }
     }
