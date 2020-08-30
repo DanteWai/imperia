@@ -58,9 +58,9 @@ class BrandsRepository extends Repository {
         return $brand;
     }
 
-    public function addBrand($data, $logo = false) {
+    public function addBrand($request, $logo = false) {
 
-        //$data = $request->except('_token','brand_logo');
+        $data = $request->except('_token','brand_logo');
 
         if(empty($data)){
             return ['error' => 'Нет данных'];

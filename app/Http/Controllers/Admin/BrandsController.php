@@ -74,7 +74,7 @@ class BrandsController extends AdminController
             return back()->withErrors($result['error']);
         }
 
-        return redirect('/admin/brands/')->with($result);
+        return redirect('/imperia_admin_panel/brands/')->with($result);
     }
 
     /**
