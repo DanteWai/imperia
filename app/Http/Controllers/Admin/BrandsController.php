@@ -56,7 +56,8 @@ class BrandsController extends AdminController
     public function create()
     {
         $this->title = 'Добавление производителя';
-        $this->content = view('admin.brands.add')->with(['title'=>$this->title])->render();
+        $categories = $this->c_rep->get(['category_id', 'category_name']);
+        $this->content = view('admin.brands.add')->with(['title'=>$this->title, 'categories'=>$categories])->render();
         return $this->renderOutput();
     }
 
@@ -100,9 +101,12 @@ class BrandsController extends AdminController
 
 
         $this->title = 'Изменение производителя '.$brand->brand_name;
+        $brand['category'] = json_decode($brand['category']);
+        $categories = $this->c_rep->get(['category_id', 'category_name']);
 
         $this->content = view('admin.brands.add')->with([
             'title'=>$this->title,
+            'categories'=>$categories,
             'brand'=>$brand,
         ])->render();
 
@@ -126,7 +130,7 @@ class BrandsController extends AdminController
             return back()->withErrors($result['error']);
         }
 
-        return redirect('/admin/brands/')->with($result);
+        return redirect('/imperia_admin_panel/brands/')->with($result);
     }
 
     /**

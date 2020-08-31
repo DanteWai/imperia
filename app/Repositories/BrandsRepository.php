@@ -62,12 +62,15 @@ class BrandsRepository extends Repository {
 
         $data = $request->except('_token','brand_logo');
 
+
         if(empty($data)){
             return ['error' => 'Нет данных'];
         }
         if(empty( $data['brand_alias'])){
             $data['brand_alias'] = Str::slug($data['brand_name']);
         }
+
+        $data['category'] = json_encode($data['category']);
 
 
         if($this->one('brand_alias',$data['brand_alias'])){

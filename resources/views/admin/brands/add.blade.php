@@ -26,6 +26,19 @@
 
             <div class="form-body">
                 <div class="form-section">
+                    <label for="category">Категория</label>
+                    <div class="select">
+                        <select multiple class="select " name="category[]" id="category">
+                            @foreach($categories as $item)
+                                <option value="{{$item->category_id}}">{{$item->category_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-body">
+                <div class="form-section">
                     <label for="brand_name">Описание</label>
                     <textarea class="text-input" placeholder="Описание" name="brand_desc" id="brand_desc" cols="30" rows="10">{{ isset($brand->brand_desc) ? $brand->brand_desc : old('brand_desc')}}</textarea>
                 </div>

@@ -23,7 +23,7 @@ class BrandsTableSeed extends Seeder
             $input[] = [
                 'brand_name' => $item,
                 'brand_alias' => Str::slug($item),
-
+                'category' => json_encode([rand(1,2)])
             ];
         }
 

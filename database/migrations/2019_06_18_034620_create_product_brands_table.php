@@ -15,6 +15,7 @@ class CreateProductBrandsTable extends Migration
     {
         Schema::create('product_brands', function (Blueprint $table) {
             $table->increments('brand_id');
+            $table->jsonb('category');
             $table->string('brand_name',150);
             $table->string('brand_alias',150)->unique()->nullable();
             $table->jsonb('brand_logo')->nullable();
