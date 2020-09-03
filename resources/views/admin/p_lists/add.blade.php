@@ -70,11 +70,37 @@
                 <div  data-t-source="{{ 'tab'.$key}}" class="tab-source">
                     @if (isset($brands))
                         <h2>Найденные производители:</h2>
-                        <ul>
-                            @foreach ($brands[$key] as $name)
-                                <li>{{ $name }}</li>
-                            @endforeach
-                        </ul>
+                        
+
+                        <table class="table-elements table-elements__small" id="{{ 'brands' . $key}}">
+                            <thead>
+                                <tr>
+                                    <td>Производитель</td>
+                                    <td colspan="2" class="table-td_center">Действия</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($brands[$key] as $name => $value)
+                                    <tr>
+                                        <td>{{ $name }}</td>
+                                        @if ($value)
+                                            <td colspan="2" class="table-td_center table-td_success">Этот производитель уже есть</td>
+                                        @else
+                                            <td class="table-td_center">
+                                                <svg class="add-brand js-add-brand" data-title="{{ $name }}">
+                                                    <use xlink:href="/images/sprite.svg#add"></use>
+                                                </svg>
+                                            </td>
+                                            <td class="table-td_center">
+                                                <svg class="edit-brand js-edit-brand" data-title="{{ $name }}">
+                                                    <use xlink:href="/images/sprite.svg#edit"></use>
+                                                </svg>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     @endif
                     <p>Колечество: {{ count($type)}}</p>
                     <table id="parse" class="table-elements">
@@ -107,7 +133,7 @@
                         <tbody>
                         @foreach ($type as $row)
                             <tr>
-                                @isset($row['brand'])<td title="Производитель">{{ $row['brand']}}</td>@endisset
+                                @isset($row['brand'])<td title="Производитель" class="js-brand-name">{{ $row['brand']}}</td>@endisset
                                 @isset($row['all'])<td title="Модель">{{ $row['all'] }}</td>@endisset
                                 @isset($row['width'])<td title="Ширина">{{ $row['width']}}</td>@endisset
                                 @isset($row['height'])<td title="Высота">{{ $row['height']}}</td>@endisset

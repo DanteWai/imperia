@@ -4,6 +4,7 @@ import Server from '@core/servers';
 import Tabs from './tabs';
 import Spoiler from "@core/spoiler";
 import {OrdersComponents} from "@js/admin/components/mainPage/ordersComponent";
+import {BrandsParseComponent} from './components/mainPage/brandsParseComponent';
 import {ListComponent} from './components/list';
 
 //import Lang from './../lang';
@@ -16,6 +17,8 @@ import {ListComponent} from './components/list';
 window.addEventListener('load',() => {
 
     new OrdersComponents('main-orders-component')
+    new BrandsParseComponent('brandss');
+    new BrandsParseComponent('brandsd');
     new ListComponent('list-component');   //список элементов
 
     new Tabs({parent:'.tabs-contaiter'})

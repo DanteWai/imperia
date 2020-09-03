@@ -264,6 +264,65 @@ class PricListsController extends AdminController
             
         }
 
+        // == Получаем существующие бренды
+        // Если напарсили бренды шин
+        /*if (isset($brands['s'])) {
+            $brands_site['s'] = $this -> b_rep -> getBrands('brand_name', 1) -> toArray();
+        }*/
+
+        // Если напарсили бренды дисков
+        /*if (isset($brands['d'])) {
+            $brands_site['d'] = $this -> b_rep -> getBrands('brand_name', 2) -> toArray();
+            
+        }*/
+
+        $all_brands = $this -> b_rep -> get(['brand_name', 'category']);
+        $brands_site = [];
+        foreach ($all_brands as $item) {
+            $categories = json_decode($item['category']);
+            foreach ($categories as $category) {
+                if ($category == 1) $brands_site['s'][] = $item['brand_name'];
+                if ($category == 2) $brands_site['d'][] = $item['brand_name'];
+            }
+        }
+
+        // TODO - временная хуйня
+        $brands_site['un'] = [];
+        // TODO
+
+        //dd($brands_site);
+
+        /*foreach ($brands_site as $key => $item) {
+            $brands_site[$key] = array_map(function ($el) {
+                return $el['brand_name'];
+            }, $item);
+        }*/
+        // ==
+
+        // == Сравниваем существующие бренды с найденными
+        //$isset_brand = [];
+        foreach ($brands as $key => $item) {
+            foreach ($item as $value) {
+                // value - строка со значением бренда
+                // item - массив брендов категории
+                // key - s d
+
+                if (in_array($value, $brands_site[$key])) {
+                    $isset_brand[$key][$value] = true;
+                } else {
+                    $isset_brand[$key][$value] = false;
+                }
+            }
+        }
+
+        // Новые бренды
+        //$new_brands = array_diff($brands['s'], $brands_site);
+
+        //dd($new_brands);
+        //dd($brands);
+        //dd($brands_site);
+        //dd($isset_brand);
+
         //заглушка если ничё не напарсили
         if(!isset($newMass)) $newMass = [];
 
@@ -278,7 +337,7 @@ class PricListsController extends AdminController
             'top'=>$headContent,
             'products' => $newMass,
             'types' => $types,
-            'brands' => $brands
+            'brands' => $isset_brand
         ])->render();
 
         return $this->renderOutput();

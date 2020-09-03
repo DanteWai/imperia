@@ -326,6 +326,10 @@
 
 }
 
+textarea {
+    resize: none;
+}
+
 .orders-list{
     h2{
         font-size: 1.1em;
@@ -348,6 +352,11 @@
     overflow: hidden;
     font-size: 14px;
     width: 100%;
+
+    &__small {
+        width: auto;
+    }
+
     thead{
         font-weight: bold;
         color:#f2f2f2;
@@ -376,6 +385,42 @@
     }
     .delete-link:hover svg{
         fill:$dangerButtonColor;
+    }
+
+    .table-td {
+        &_center {
+            text-align: center;
+        }
+
+        &_success {
+            color: #0fbc2c;
+        }
+
+        &_primary {
+            color: $basicButtonColor;
+        }
+    }
+
+    .add-brand {
+        width: 24px;
+        height: 24px;
+        fill: $successButtonColor;
+        cursor: pointer;
+
+        &:hover {
+            fill: lighten($successButtonColor, 10%);
+        }
+    }
+
+    .edit-brand {
+        width: 24px;
+        height: 24px;
+        fill: $basicButtonColor;
+        cursor: pointer;
+
+        &:hover {
+            fill: lighten($basicButtonColor, 10%);
+        }
     }
 }
 

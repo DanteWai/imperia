@@ -854,9 +854,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
 /* harmony import */ var _tabs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tabs */ "./resources/js/admin/tabs.js");
-/* harmony import */ var _components_priceToParse__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/priceToParse */ "./resources/js/admin/components/priceToParse.js");
+/* harmony import */ var _core_spoiler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @core/spoiler */ "./resources/js/core/spoiler.js");
 /* harmony import */ var _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @js/admin/components/mainPage/ordersComponent */ "./resources/js/admin/components/mainPage/ordersComponent.js");
-/* harmony import */ var _components_list__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/list */ "./resources/js/admin/components/list.js");
+/* harmony import */ var _components_mainPage_brandsParseComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/mainPage/brandsParseComponent */ "./resources/js/admin/components/mainPage/brandsParseComponent.js");
+/* harmony import */ var _components_list__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/list */ "./resources/js/admin/components/list.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -871,7 +872,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
- //временный компонент
+
 
 
  //import Lang from './../lang';
@@ -883,11 +884,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 window.addEventListener('load', function () {
   new _js_admin_components_mainPage_ordersComponent__WEBPACK_IMPORTED_MODULE_5__["OrdersComponents"]('main-orders-component');
-  new _components_list__WEBPACK_IMPORTED_MODULE_6__["ListComponent"]('list-component'); //список элементов
+  new _components_mainPage_brandsParseComponent__WEBPACK_IMPORTED_MODULE_6__["BrandsParseComponent"]('brandss');
+  new _components_mainPage_brandsParseComponent__WEBPACK_IMPORTED_MODULE_6__["BrandsParseComponent"]('brandsd');
+  new _components_list__WEBPACK_IMPORTED_MODULE_7__["ListComponent"]('list-component'); //список элементов
 
   new _tabs__WEBPACK_IMPORTED_MODULE_3__["default"]({
     parent: '.tabs-contaiter'
-  }); //new PriceToParse('parse')
+  });
+  new _core_spoiler__WEBPACK_IMPORTED_MODULE_4__["default"](); //new PriceToParse('parse')
   //TODO убрать всё что ниже в компоненты
 
   var server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin'); //этот server deprecated
@@ -1141,6 +1145,320 @@ var ListRenderComponent = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./resources/js/admin/components/mainPage/brandsParseComponent.js":
+/*!************************************************************************!*\
+  !*** ./resources/js/admin/components/mainPage/brandsParseComponent.js ***!
+  \************************************************************************/
+/*! exports provided: BrandsParseComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrandsParseComponent", function() { return BrandsParseComponent; });
+/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
+/* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
+/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var BrandsParseComponent = /*#__PURE__*/function (_Component) {
+  _inherits(BrandsParseComponent, _Component);
+
+  var _super = _createSuper(BrandsParseComponent);
+
+  function BrandsParseComponent(id) {
+    _classCallCheck(this, BrandsParseComponent);
+
+    return _super.call(this, id);
+  }
+
+  _createClass(BrandsParseComponent, [{
+    key: "init",
+    value: function init() {
+      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin');
+      this.modal = false;
+      this.token = document.querySelector('[name="_token"]').value; // TODO - получить бренды из базы
+      // Это временный список брендов для теста
+
+      this.brandsList = ['Kama', 'Hankook', 'Nokian', 'Cordiant', 'Nexen', 'Viatti', 'KamaEuro', 'Michlen', 'Tigar', 'Toyo'];
+      this.$el.addEventListener('click', addBrand.bind(this));
+      this.$el.addEventListener('click', editBrand.bind(this));
+    }
+  }]);
+
+  return BrandsParseComponent;
+}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]); // Добавление бренда в базу
+
+function addBrand(e) {
+  var _this = this;
+
+  var target = e.target.closest('.js-add-brand');
+
+  if (target) {
+    console.log('modal add', this.modal);
+    var name = target.dataset.title;
+    var title = 'Добавление производителя';
+    var content = "\n      <div class=\"content-wrapper form\">\n            <form method=\"POST\" action=\"http://imperia/imperia_admin_panel/brands\" accept-charset=\"UTF-8\" enctype=\"multipart/form-data\" id=\"add-brand\">\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"brand_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435</label>\n                     <input class=\"form-model text-input\" type=\"text\" placeholder=\"\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\" name=\"brand_name\" id=\"brand_name\" value=\"".concat(name, "\">\n                  </div>\n               </div>\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"category\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</label>\n                     <div class=\"select\">\n                        <select multiple class=\"select\" name=\"category\" id=\"category\">\n                           <option value=\"1\">\u0428\u0438\u043D\u044B</option>\n                           <option value=\"2\">\u0414\u0438\u0441\u043A\u0438</option>\n                        </select>\n                     </div>\n                  </div>\n               </div>\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"brand_desc\">\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435</label>\n                     <textarea class=\"text-input\" placeholder=\"\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435\" name=\"brand_desc\" id=\"brand_desc\" cols=\"30\" rows=\"10\"></textarea>\n                  </div>\n               </div>\n               <div>\n                  <input class=\"inputFile\" type=\"file\" name=\"brand_logo\" id=\"brand_logo\" data-multiple-caption=\"{count} files selected\">\n                  <label for=\"brand_logo\">\n                     <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"17\" viewBox=\"0 0 20 17\"><path d=\"M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z\"></path></svg>\n                     <span>\u0412\u044B\u0431\u043E\u0440 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F</span>\n                  </label>\n               </div>\n            </form>\n         </div>\n      ");
+
+    if (!this.modal) {
+      this.modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
+        showHeader: true,
+        title: title,
+        width: '80%',
+        closable: true,
+        footerButtons: [{
+          text: 'Сохранить',
+          type: 'bg-success',
+          handler: function handler() {
+            formHandler.call(_this, e);
+          }
+        }, {
+          text: 'Отменить',
+          type: 'bg-danger',
+          handler: function handler() {
+            _this.modal.close();
+          }
+        }, {
+          text: 'Закрыть',
+          type: 'bg-basic',
+          handler: function handler() {
+            _this.modal.close();
+          }
+        }],
+        content: content
+      });
+    } else {
+      this.modal.setTitle(title);
+      this.modal.setContent(content);
+    }
+
+    this.modal.open();
+  }
+} // Редактирование бренда
+
+
+function editBrand(e) {
+  var _this2 = this;
+
+  var target = e.target.closest('.js-edit-brand');
+
+  if (target) {
+    console.log('modal edit', this.modal);
+    var name = target.dataset.title;
+    var title = "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044F ".concat(name);
+    var content = "\n         <div class=\"content-wrapper form\">\n            <div class=\"form-body\">\n               <div class=\"form-section\">\n                  <label for=\"brand_name\">\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C</label>\n                  <input class=\"form-model text-input js-input-brand\" type=\"text\" placeholder=\"\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\" name=\"brand_name\" id=\"brand_name\" autocomplete=\"off\">\n               </div>\n\n               <div class=\"form-list\">\n                  <ul class=\"brands-list hide\">\n                     ".concat(this.brandsList.map(function (item) {
+      return "<li class=\"brands-item\">".concat(item, "</li>");
+    }).join(''), "\n                  </ul>\n               </div>\n            </div>\n         </div>\n      ");
+
+    if (!this.modal) {
+      this.modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
+        showHeader: true,
+        title: title,
+        width: '80%',
+        closable: true,
+        footerButtons: [{
+          text: 'Сохранить',
+          type: 'bg-success',
+          handler: function handler() {
+            replaceBrand.call(_this2, e, name);
+          }
+        }, {
+          text: 'Отменить',
+          type: 'bg-danger',
+          handler: function handler() {
+            _this2.modal.close();
+          }
+        }, {
+          text: 'Закрыть',
+          type: 'bg-basic',
+          handler: function handler() {
+            _this2.modal.close();
+          }
+        }],
+        content: content
+      });
+      autocomplete(this.brandsList);
+    } else {
+      this.modal.setTitle(title);
+      this.modal.setContent(content);
+      autocomplete(this.brandsList);
+    }
+
+    this.modal.open();
+  }
+} // Добавление производителя в базу
+
+
+function formHandler(_x) {
+  return _formHandler.apply(this, arguments);
+} // Автокомплит для редактирования
+
+
+function _formHandler() {
+  _formHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+    var _this3 = this;
+
+    var form, row, options, selected, formData, object, data;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            form = document.getElementById('add-brand');
+            row = e.target.closest('tr'); // Получаем значения выбранных селектов
+
+            options = _toConsumableArray(form.category.options);
+            selected = [];
+            options.map(function (option) {
+              if (option.selected) selected.push(option.value);
+            }); // ===
+
+            formData = new FormData(form);
+            object = {};
+            formData.forEach(function (value, key) {
+              object[key] = value;
+            });
+            object['category'] = selected;
+            data = JSON.stringify(object);
+            _context.next = 12;
+            return this.server.post('brands', data, {
+              'Content-Type': 'application/json;charset=utf-8'
+            }, this.token).then(function (answer) {
+              _this3.modal.close();
+
+              row.innerHTML = "\n         <td>".concat(form.brand_name.value, "</td>\n         <td colspan=\"2\" class=\"table-td_center table-td_success\">\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C</td>\n      ");
+              console.log('answer', answer);
+            });
+
+          case 12:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+  return _formHandler.apply(this, arguments);
+}
+
+function autocomplete(brandsList) {
+  // TODO
+  // Надо пофиксить показ списка при потере фокуса инпута
+  var input = document.querySelector('.js-input-brand');
+  var list = document.querySelector('.brands-list');
+  var access = brandsList.filter(function (item) {
+    return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+  });
+  input.addEventListener('focus', function () {
+    var label = input.previousElementSibling;
+    label.textContent = 'Производитель';
+    label.style.color = '';
+    access = brandsList.filter(function (item) {
+      return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+    });
+
+    if (access.length) {
+      list.innerHTML = '';
+      list.innerHTML = "\n            ".concat(access.map(function (item) {
+        return "<li class=\"brands-item\">".concat(item, "</li>");
+      }).join(''), "\n         ");
+      list.classList.remove('hide');
+    }
+  });
+  list.addEventListener('click', function (e) {
+    var target = e.target.closest('.brands-item');
+
+    if (target) {
+      access = brandsList.filter(function (item) {
+        return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+      });
+      input.value = target.textContent;
+      input.focus();
+      list.innerHTML = '';
+      list.innerHTML = "\n            ".concat(access.map(function (item) {
+        return "<li class=\"brands-item\">".concat(item, "</li>");
+      }).join(''), "\n         ");
+      list.classList.add('hide');
+    }
+  });
+  input.addEventListener('input', function () {
+    access = brandsList.filter(function (item) {
+      return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+    });
+
+    if (access.length) {
+      list.classList.remove('hide');
+      list.innerHTML = '';
+      list.innerHTML = "\n            ".concat(access.map(function (item) {
+        return "<li class=\"brands-item\">".concat(item, "</li>");
+      }).join(''), "\n         ");
+    } else {
+      list.classList.add('hide');
+    }
+  });
+} // Переименование производителя
+
+
+function replaceBrand(e, name) {
+  var input = document.querySelector('.js-input-brand'); // Проверяем поле на пустоту
+
+  if (input.value.trim() === '') {
+    var label = input.previousElementSibling;
+    label.textContent = 'Поле не должно быть пустым';
+    label.style.color = 'red';
+    return;
+  } else {
+    var brands = document.querySelectorAll('.js-brand-name');
+    var row = e.target.closest('tr');
+    console.log('row', row);
+    brands.forEach(function (item) {
+      if (item.textContent.trim() === name.trim()) {
+        item.textContent = input.value;
+      }
+    });
+    row.innerHTML = "\n         <td>".concat(name, "</td>\n         <td class=\"table-td_center table-td_primary\">\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D \u0432 \"").concat(input.value, "\"</td>\n         <td class=\"table-td_center\">\n            <svg class=\"edit-brand js-edit-brand\" data-title=\"").concat(input.value, "\">\n                  <use xlink:href=\"/images/sprite.svg#edit\"></use>\n            </svg>\n         </td>\n      ");
+    this.modal.close();
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/admin/components/mainPage/ordersComponent.js":
 /*!*******************************************************************!*\
   !*** ./resources/js/admin/components/mainPage/ordersComponent.js ***!
@@ -1349,214 +1667,6 @@ var PaginationComponent = /*#__PURE__*/function (_Component) {
 
   return PaginationComponent;
 }(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-/***/ }),
-
-/***/ "./resources/js/admin/components/priceToParse.js":
-/*!*******************************************************!*\
-  !*** ./resources/js/admin/components/priceToParse.js ***!
-  \*******************************************************/
-/*! exports provided: PriceToParse */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PriceToParse", function() { return PriceToParse; });
-/* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
-/* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var PriceToParse = /*#__PURE__*/function (_Component) {
-  _inherits(PriceToParse, _Component);
-
-  var _super = _createSuper(PriceToParse);
-
-  function PriceToParse(id) {
-    _classCallCheck(this, PriceToParse);
-
-    return _super.call(this, id);
-  }
-
-  _createClass(PriceToParse, [{
-    key: "init",
-    value: function init() {
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_1__["default"]();
-      this.token = document.querySelector('[name="_token"]').value;
-      var $elements = this.$el.querySelectorAll('tr');
-      this.save = document.getElementById('save');
-      elementsCalculate.call(this, $elements);
-      this.save.addEventListener('click', saveEl.bind(this)); //console.log($elements)
-    }
-  }]);
-
-  return PriceToParse;
-}(_core_component__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-function saveEl() {
-  return _saveEl.apply(this, arguments);
-}
-
-function _saveEl() {
-  _saveEl = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var successElement, elements, old, i, data, answer;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            successElement = document.querySelectorAll('.success');
-            elements = successElement;
-            old = elements;
-            elements = Array.from(elements);
-            elements = elements.map(function (el) {
-              var children = el.children;
-              return {
-                'category_id': 1,
-
-                /*TODO хардкод*/
-                'brand': children[0].innerHTML.trim(),
-                'product_model': children[1].innerHTML.trim(),
-                'opt_json_width': children[2].innerHTML.trim(),
-                'opt_json_height': children[3].innerHTML.trim(),
-                'opt_json_diameter': children[4].innerHTML.trim(),
-                'opt_json_index': children[5].innerHTML.trim(),
-                'price': children[9].innerHTML.trim(),
-                'parser_name': document.getElementById('parser_name').value
-              };
-            });
-            console.log(elements);
-            i = 0;
-
-          case 7:
-            if (!(i < elements.length)) {
-              _context.next = 16;
-              break;
-            }
-
-            data = JSON.stringify(elements[i]);
-            _context.next = 11;
-            return this.server.post('imperia_admin_panel/price_lists/add_product', data, {
-              'Content-Type': 'application/json;charset=utf-8'
-            }, this.token);
-
-          case 11:
-            answer = _context.sent;
-            console.log(answer);
-
-          case 13:
-            i++;
-            _context.next = 7;
-            break;
-
-          case 16:
-            window.location = "/imperia_admin_panel/price_lists";
-
-          case 17:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-  return _saveEl.apply(this, arguments);
-}
-
-function elementsCalculate(_x) {
-  return _elementsCalculate.apply(this, arguments);
-}
-
-function _elementsCalculate() {
-  _elementsCalculate = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(elements) {
-    var old, i, data, answer;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            old = elements;
-            elements = Array.from(elements);
-            elements.shift();
-            elements = elements.map(function (el) {
-              var children = el.children;
-              return {
-                'brand': children[0].innerHTML.trim(),
-                'model': children[1].innerHTML.trim(),
-                'width': children[2].innerHTML.trim(),
-                'height': children[3].innerHTML.trim(),
-                'diameter': children[4].innerHTML.trim(),
-                'index': children[5].innerHTML.trim()
-              };
-            }); //console.log(old[0].style.color='red')
-            //console.log(elements)
-
-            i = 0;
-
-          case 5:
-            if (!(i < elements.length)) {
-              _context2.next = 14;
-              break;
-            }
-
-            data = JSON.stringify(elements[i]);
-            _context2.next = 9;
-            return this.server.post('imperia_admin_panel/price_lists/parse', data, {
-              'Content-Type': 'application/json;charset=utf-8'
-            }, this.token);
-
-          case 9:
-            answer = _context2.sent;
-
-            if (answer.price) {
-              old[i + 1].classList.add('success');
-              old[i + 1].lastElementChild.innerHTML = answer.price;
-              old[i + 1].style.color = 'green';
-            } else {
-              old[i + 1].lastElementChild.innerHTML = answer.error;
-              old[i + 1].style.color = 'red';
-            }
-
-          case 11:
-            i++;
-            _context2.next = 5;
-            break;
-
-          case 14:
-            this.save.classList.add('bg-success');
-            this.save.disabled = false; ///
-
-          case 16:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, this);
-  }));
-  return _elementsCalculate.apply(this, arguments);
-}
 
 /***/ }),
 
@@ -2201,6 +2311,68 @@ function objToFormData(data) {
 
   return form;
 }
+
+/***/ }),
+
+/***/ "./resources/js/core/spoiler.js":
+/*!**************************************!*\
+  !*** ./resources/js/core/spoiler.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Spoiler; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Spoiler = /*#__PURE__*/function () {
+  function Spoiler() {
+    _classCallCheck(this, Spoiler);
+
+    this.init();
+  }
+
+  _createClass(Spoiler, [{
+    key: "init",
+    value: function init() {
+      var spoilers = document.querySelectorAll('.spoiler-trigger');
+
+      var _iterator = _createForOfIteratorHelper(spoilers),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var spoiler = _step.value;
+          spoiler.addEventListener('click', this.click);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    }
+  }, {
+    key: "click",
+    value: function click() {
+      this.nextElementSibling.classList.toggle('active');
+    }
+  }]);
+
+  return Spoiler;
+}();
+
+
 
 /***/ }),
 
