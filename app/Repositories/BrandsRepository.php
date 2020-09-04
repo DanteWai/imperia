@@ -29,11 +29,6 @@ class BrandsRepository extends Repository {
         return $builder->get();
     }
 
-    public function getBrandsForSort($sortName,$sort){
-        $builder = $this->model->select('*')->orderBy($sortName, $sort);
-
-        return $builder->paginate(20);
-    }
 
     public function getBrandsForSearch($search, $sortName, $sort, $currentPage=1){
 
@@ -49,7 +44,7 @@ class BrandsRepository extends Repository {
                 ->orderBy('updated_at', 'desc');
         }
 
-        return $builder->paginate(3);
+        return $builder->paginate(20);
     }
 
     public function one($aliasName,$alias, $attr = array()){
@@ -58,7 +53,7 @@ class BrandsRepository extends Repository {
         return $brand;
     }
 
-    public function addBrand($request, $logo = false) {
+    public function addBrand($request) {
 
         $data = $request->except('_token','brand_logo');
 
@@ -77,16 +72,13 @@ class BrandsRepository extends Repository {
             return ['error' => 'Данный псевдоним уже используется'];
         }
 
-
-
-
-        /*if($request->hasFile('brand_logo')){
+        if($request->hasFile('brand_logo')){
             $image = $request->file('brand_logo');
 
             if($image->isValid()){
-                $data['brand_logo'] = $this->resizeImage('brand',$image);
+                $data['brand_logo'] = $this->resizeImage('brands',$image);
             }
-        }*/
+        }
 
         $this->model->fill($data);
 
@@ -124,7 +116,7 @@ class BrandsRepository extends Repository {
             $image = $request->file('brand_logo');
 
             if($image->isValid()){
-                $data['brand_logo'] = $this->resizeImage('brand',$image);
+                $data['brand_logo'] = $this->resizeImage('brands',$image);
             }
         }
 

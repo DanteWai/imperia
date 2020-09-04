@@ -11,6 +11,7 @@ export class BrandsParseComponent extends Component {
 
    init() {
       this.server = new Server('admin');
+       this.api = new Server();
        /*let api = new Server();
        api.get('/api/brands').then((answer) => {
            console.log(answer)
@@ -211,15 +212,14 @@ async function formHandler(e) {
 
    const data = JSON.stringify(object);
 
-   await this.server.post('brands', data, {'Content-Type': 'application/json;charset=utf-8'}, this.token).then(answer => {
-      this.modal.close();
+   let answer = await this.api.post('api/brands', formData, this.token)
+    this.addModal.close();
+
       row.innerHTML = `
          <td>${form.brand_name.value}</td>
          <td colspan="2" class="table-td_center table-td_success">Этот производитель уже есть</td>
       `;
       console.log('answer', answer);
-   });
-
 }
 
 // Автокомплит для редактирования
@@ -303,6 +303,6 @@ function replaceBrand(e, name) {
          </td>
       `;
 
-      this.modal.close();
+      this.editModal.close();
    }
 }

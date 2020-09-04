@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use Config;
 use Debugbar;
 use Illuminate\Support\Str;
 use Image;
