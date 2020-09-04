@@ -111,7 +111,6 @@ class PagesController extends AdminController
      */
     public function destroy(Page $page)
     {
-        //
         if($page->delete()) {
             return response()->json(['status' => 'Материал удален']);
         } else{

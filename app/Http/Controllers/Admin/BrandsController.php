@@ -137,7 +137,7 @@ class BrandsController extends AdminController
      * Remove the specified resource from storage.
      *
      * @param Product_brand $brand
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
     public function destroy(Product_brand $brand)
@@ -157,7 +157,5 @@ class BrandsController extends AdminController
         } else{
             return response()->json(['status' => 'Удалить не удалось']);
         }
-
-        /* TODO проощарить return json_encode($data); и X-Requested-With*/
     }
 }

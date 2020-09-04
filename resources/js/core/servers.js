@@ -5,8 +5,6 @@ export default class Server {
     }
 
     get(url, data={}, headers = {}, token){
-
-
         headers = {
             'X-CSRF-TOKEN':token,
             "X-Requested-With": "XMLHttpRequest",
@@ -37,6 +35,24 @@ export default class Server {
 
         return makeRequest(this.baseURL+url, {
             method: 'POST',
+            body: data,
+            headers:headers
+        })
+    }
+    put(url, data, headers = {}, token){
+
+        if(data instanceof Object)
+            data = JSON_to_URLEncoded(data)
+
+        headers = Object.assign({
+            'X-CSRF-TOKEN':token,
+            "X-Requested-With": "XMLHttpRequest",
+            'content-type':'application/x-www-form-urlencoded'
+        }, headers)
+
+
+        return makeRequest(this.baseURL+url, {
+            method: 'PUT',
             body: data,
             headers:headers
         })
@@ -79,6 +95,17 @@ function objToFormData(data){
     return form
 
 }
+
+function JSON_to_URLEncoded(element,key,list = []){
+    if(typeof(element)=='object'){
+        for (let idx in element)
+            JSON_to_URLEncoded(element[idx],key?key+'['+idx+']':idx,list);
+    } else {
+        list.push(key+'='+encodeURIComponent(element));
+    }
+    return list.join('&');
+}
+
 
 
 

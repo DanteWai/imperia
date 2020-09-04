@@ -74,9 +74,6 @@ class BrandsRepository extends Repository {
 
 
         if($this->one('brand_alias',$data['brand_alias'])){
-            /*$request->merge(['brand_alias' => $data['brand_alias']]);
-            $request->flash();*/
-
             return ['error' => 'Данный псевдоним уже используется'];
         }
 
@@ -102,12 +99,15 @@ class BrandsRepository extends Repository {
 
         $data = $request->except('_token','brand_logo','_method');
 
-        if(empty($data)){
+        if(empty($data))
             return ['error' => 'Нет данных'];
-        }
-        if(empty( $data['brand_alias'])){
+
+        if(empty( $data['brand_alias']))
             $data['brand_alias'] = Str::slug($data['brand_name']);
-        }
+
+        if(isset($data['category']))
+            $data['category'] = json_encode($data['category']);
+
 
         $result = $this->one('brand_alias',$data['brand_alias']);
 
@@ -138,8 +138,8 @@ class BrandsRepository extends Repository {
         }
 
         $brand->fill($data);
-        if($brand->update()){
 
+        if($brand->update()){
             return ['status' => 'Редактирование прошло успешно'];
         }
         return ['error' => 'Не удалось произвести Редактирование'];

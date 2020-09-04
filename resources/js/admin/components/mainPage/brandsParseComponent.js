@@ -8,9 +8,17 @@ export class BrandsParseComponent extends Component {
       super(id);
    }
 
+
    init() {
       this.server = new Server('admin');
-      this.modal = false
+       /*let api = new Server();
+       api.get('/api/brands').then((answer) => {
+           console.log(answer)
+       }).catch((e)=>{
+           console.log(e)
+       })*/
+      this.addModal = false
+      this.editModal = false
       this.token = document.querySelector('[name="_token"]').value;
       // TODO - получить бренды из базы
       // Это временный список брендов для теста
@@ -36,7 +44,7 @@ export class BrandsParseComponent extends Component {
 function addBrand(e) {
    const target = e.target.closest('.js-add-brand');
    if (target) {
-      console.log('modal add', this.modal);
+      //console.log('modal add', this.modal);
       const name = target.dataset.title;
       const title = 'Добавление производителя';
       const content = `
@@ -76,8 +84,8 @@ function addBrand(e) {
          </div>
       `;
 
-      if(!this.modal){
-         this.modal = new Modal({
+      if(!this.addModal){
+         this.addModal = new Modal({
              showHeader: true,
              title,
              width: '80%',
@@ -94,25 +102,25 @@ function addBrand(e) {
                      text: 'Отменить',
                      type: 'bg-danger',
                      handler: () => {
-                         this.modal.close()
+                         this.addModal.close()
                      }
                  },
                  {
                      text: 'Закрыть',
                      type: 'bg-basic',
                      handler: () => {
-                         this.modal.close()
+                         this.addModal.close()
                      }
                  }
              ],
              content
          });
      } else{
-         this.modal.setTitle(title)
-         this.modal.setContent(content)
+         this.addModal.setTitle(title)
+         this.addModal.setContent(content)
      }
 
-     this.modal.open()
+     this.addModal.open()
    }
 }
 
@@ -120,7 +128,7 @@ function addBrand(e) {
 function editBrand(e) {
    const target = e.target.closest('.js-edit-brand');
    if (target) {
-      console.log('modal edit', this.modal);
+      //console.log('modal edit', this.modal);
       const name = target.dataset.title;
       const title = `Редактирование производителя ${name}`;
       const content = `
@@ -140,8 +148,8 @@ function editBrand(e) {
          </div>
       `;
 
-      if (!this.modal) {
-         this.modal = new Modal({
+      if (!this.editModal) {
+         this.editModal = new Modal({
             showHeader: true,
             title,
             width: '80%',
@@ -158,27 +166,26 @@ function editBrand(e) {
                   text: 'Отменить',
                   type: 'bg-danger',
                   handler: () => {
-                        this.modal.close()
+                        this.editModal.close()
                   }
                },
                {
                   text: 'Закрыть',
                   type: 'bg-basic',
                   handler: () => {
-                        this.modal.close()
+                        this.editModal.close()
                   }
                }
             ],
             content
          });
-         autocomplete(this.brandsList);
       } else {
-         this.modal.setTitle(title)
-         this.modal.setContent(content)
-         autocomplete(this.brandsList);
-     }
+         this.editModal.setTitle(title)
+         this.editModal.setContent(content)
 
-     this.modal.open()
+     }
+   autocomplete(this.brandsList);
+     this.editModal.open()
    }
 }
 
@@ -222,7 +229,7 @@ function autocomplete(brandsList) {
    const input = document.querySelector('.js-input-brand');
    const list = document.querySelector('.brands-list');
    let access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
-   
+
    input.addEventListener('focus', () => {
       const label = input.previousElementSibling;
       label.textContent = 'Производитель';
@@ -253,7 +260,7 @@ function autocomplete(brandsList) {
 
    input.addEventListener('input', () => {
       access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
-      
+
       if (access.length) {
          list.classList.remove('hide');
          list.innerHTML = '';

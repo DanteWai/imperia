@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Brand_alias;
 use App\Models\Price;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -86,6 +87,14 @@ class PricListsController extends AdminController
     //ИМПОРТ ИЗ ЭКСЕЛЯ
     public function import(Request $request)
     {
+        /* Получить
+         * Brand_alias::all()
+         *
+         * Добавить
+         * $alias = new Brand_alias;
+        $alias->alias_name = 'test';
+        $alias->brand_id = 1;
+        $alias->save();*/
 
         $this->title = 'Добавление прайс листа';
         $uri = $request->getPathInfo();
@@ -124,7 +133,7 @@ class PricListsController extends AdminController
             /*if ((isset($options['colNum']) && $options['colNum'] !== '0') && (isset($options['colBrand']) && $options['colBrand'] !== '0')) {
                 $header['nomen'] = intval($options['colNum']) - 1;
                 $header['brand'] = intval($options['colBrand']) - 1;
-            } else if (((isset($options['colNum']) && $options['colNum'] === '0') || !isset($options['colNum'])) && 
+            } else if (((isset($options['colNum']) && $options['colNum'] === '0') || !isset($options['colNum'])) &&
                         ((isset($options['colBrand']) && $options['colBrand'] === '0') || !isset($options['colBrand']))) {
                 $header = $this->parseHead($item);
             } else {
@@ -152,7 +161,7 @@ class PricListsController extends AdminController
 
             // Если колонка "Номенклатура" не задана пользователем или не нашлась
             if (!isset($header['nomen'])) {
-                
+
                 if (isset($options['rowNum'])) {
                     $row = intval($options['rowNum']) - 1;      // Номер строки заголовков таблицы
                     $column = [];                               // Массив для номеров столбцов
@@ -205,8 +214,8 @@ class PricListsController extends AdminController
                     // Дальше - после того, как узнали столбцы
 
                     // Узнаем что именно нужно парсить - шины или диски
-                    if ((isset($options['priceType']) && $options['priceType'] === 'diski') || 
-                        isset($column['drilling_col']) || 
+                    if ((isset($options['priceType']) && $options['priceType'] === 'diski') ||
+                        isset($column['drilling_col']) ||
                         isset($column['departure_col']) ||
                         isset($column['dia_col']) ||
                         isset($column['hole_col']) ||
@@ -214,7 +223,7 @@ class PricListsController extends AdminController
 
                             $result = $this->diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
                             if ($result) {
-                                
+
                                 $newMass = ['d' => $result];
                                 $types = [
                                     's' => 'Шины',
@@ -228,7 +237,7 @@ class PricListsController extends AdminController
                                     'products' => $newMass,
                                     'types' => $types
                                 ])->render();
-                        
+
                                 return $this->renderOutput();
 
                             }
@@ -261,7 +270,7 @@ class PricListsController extends AdminController
                     }
                 }
             }
-            
+
         }
 
         // == Получаем существующие бренды
@@ -273,18 +282,20 @@ class PricListsController extends AdminController
         // Если напарсили бренды дисков
         /*if (isset($brands['d'])) {
             $brands_site['d'] = $this -> b_rep -> getBrands('brand_name', 2) -> toArray();
-            
+
         }*/
 
-        $all_brands = $this -> b_rep -> get(['brand_name', 'category']);
+        $all_brands = $this -> b_rep -> get(['brand_name', 'category'])->toArray();
         $brands_site = [];
         foreach ($all_brands as $item) {
             $categories = json_decode($item['category']);
+
             foreach ($categories as $category) {
                 if ($category == 1) $brands_site['s'][] = $item['brand_name'];
                 if ($category == 2) $brands_site['d'][] = $item['brand_name'];
             }
         }
+
 
         // TODO - временная хуйня
         $brands_site['un'] = [];
@@ -322,6 +333,7 @@ class PricListsController extends AdminController
         //dd($brands);
         //dd($brands_site);
         //dd($isset_brand);
+
 
         //заглушка если ничё не напарсили
         if(!isset($newMass)) $newMass = [];
@@ -509,7 +521,7 @@ class PricListsController extends AdminController
                 $param['index_load'] = $value_load[0];
                 $param['index_speed'] = $value_speed[0];
 
-                // Индекс скорости, если нет общего 
+                // Индекс скорости, если нет общего
             } else if (!isset($param['index_load']) && preg_match('/\s([HJ-NP-WYZTТМК]|[B-GJ-N]|A[1-7])\s|(?<=\s)([HJ-NP-WYZTТМК]|[B-GJ-N]|A[1-7])$/mu', $nomen, $speed)) {
                 $nomen = str_replace($speed[0], '', $nomen);
                 preg_match('/[АA-ZТМ][1-7]?/u', $speed[0], $value);
@@ -563,7 +575,7 @@ class PricListsController extends AdminController
                 } else {
                     $param['all'] = '-';
                 }
-                
+
             }
             if (!isset($param['all'])) {
                 $param['all'] = trim($nomen);
@@ -852,9 +864,9 @@ class PricListsController extends AdminController
                     } else {
                         $param['all'] = trim($nomen);
                     }
-                    
+
                 } else {
-    
+
                 }
 
             }
