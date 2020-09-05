@@ -4244,6 +4244,8 @@ function outsideClick() {}
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Server; });
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -4299,6 +4301,23 @@ var Server = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "put",
+    value: function put(url, data) {
+      var headers = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var token = arguments.length > 3 ? arguments[3] : undefined;
+      if (data instanceof Object) data = JSON_to_URLEncoded(data);
+      headers = Object.assign({
+        'X-CSRF-TOKEN': token,
+        "X-Requested-With": "XMLHttpRequest",
+        'content-type': 'application/x-www-form-urlencoded'
+      }, headers);
+      return makeRequest(this.baseURL + url, {
+        method: 'PUT',
+        body: data,
+        headers: headers
+      });
+    }
+  }, {
     key: "delete",
     value: function _delete(url) {
       var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -4339,6 +4358,20 @@ function objToFormData(data) {
   }
 
   return form;
+}
+
+function JSON_to_URLEncoded(element, key) {
+  var list = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+  if (_typeof(element) == 'object') {
+    for (var idx in element) {
+      JSON_to_URLEncoded(element[idx], key ? key + '[' + idx + ']' : idx, list);
+    }
+  } else {
+    list.push(key + '=' + encodeURIComponent(element));
+  }
+
+  return list.join('&');
 }
 
 /***/ }),

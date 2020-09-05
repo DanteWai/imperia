@@ -9,7 +9,7 @@ export class BrandsParseComponent extends Component {
    }
 
 
-   init() {
+   async init() {
       this.server = new Server('admin');
        this.api = new Server();
        /*let api = new Server();
@@ -18,23 +18,14 @@ export class BrandsParseComponent extends Component {
        }).catch((e)=>{
            console.log(e)
        })*/
-      this.addModal = false
-      this.editModal = false
+
+      this.brandsList = await this.api.get('api/brands').then(data => data.map(item => item.brand_name));
+
+      this.hand = null;
+      this.replace = null;
+      this.addModal = false;
+      this.editModal = false;
       this.token = document.querySelector('[name="_token"]').value;
-      // TODO - получить бренды из базы
-      // Это временный список брендов для теста
-      this.brandsList = [
-         'Kama',
-         'Hankook',
-         'Nokian',
-         'Cordiant',
-         'Nexen',
-         'Viatti',
-         'KamaEuro',
-         'Michlen',
-         'Tigar',
-         'Toyo'
-      ];
       this.$el.addEventListener('click', addBrand.bind(this));
       this.$el.addEventListener('click', editBrand.bind(this));
    }
@@ -45,8 +36,8 @@ export class BrandsParseComponent extends Component {
 function addBrand(e) {
    const target = e.target.closest('.js-add-brand');
    if (target) {
-      //console.log('modal add', this.modal);
       const name = target.dataset.title;
+      this.hand = formHandler.bind(this, e, name);
       const title = 'Добавление производителя';
       const content = `
       <div class="content-wrapper form">
@@ -61,7 +52,7 @@ function addBrand(e) {
                   <div class="form-section">
                      <label for="category">Категория</label>
                      <div class="select">
-                        <select multiple class="select" name="category" id="category">
+                        <select multiple class="select" name="category[]" id="category">
                            <option value="1">Шины</option>
                            <option value="2">Диски</option>
                         </select>
@@ -96,7 +87,7 @@ function addBrand(e) {
                      text: 'Сохранить',
                      type: 'bg-success',
                      handler: () => {
-                        formHandler.call(this, e);
+                        this.hand();
                      }
                   },
                  {
@@ -129,8 +120,8 @@ function addBrand(e) {
 function editBrand(e) {
    const target = e.target.closest('.js-edit-brand');
    if (target) {
-      //console.log('modal edit', this.modal);
       const name = target.dataset.title;
+      this.replace = replaceBrand.bind(this, e, name);
       const title = `Редактирование производителя ${name}`;
       const content = `
          <div class="content-wrapper form">
@@ -160,7 +151,7 @@ function editBrand(e) {
                   text: 'Сохранить',
                   type: 'bg-success',
                   handler: () => {
-                     replaceBrand.call(this, e, name);
+                     this.replace();
                   }
                },
                {
@@ -191,41 +182,59 @@ function editBrand(e) {
 }
 
 // Добавление производителя в базу
-async function formHandler(e) {
+async function formHandler(e, name) {
    const form = document.getElementById('add-brand');
+   const brandName = form.brand_name;
    const row = e.target.closest('tr');
 
-   // Получаем значения выбранных селектов
-   const options = [...form.category.options];
-   const selected = [];
-   options.map(option => {
-      if (option.selected) selected.push(option.value);
-   });
-   // ===
+   // Проверка на заполнение полей
+   if (brandName.value.trim() === '' || form['category[]'].options.selectedIndex === -1) {
+      if (brandName.value.trim() === '') {
+         const label = brandName.previousElementSibling;
+         label.textContent = 'Название не должно быть пустым';
+         label.style.color = 'red';
+         const brandNameChange = () => {
+            label.textContent = 'Название';
+            label.style.color = '';
+            console.log(123);
+            brandName.removeEventListener('change', brandNameChange);
+         }
+         brandName.addEventListener('change', brandNameChange);
+      }
+
+      if (form['category[]'].options.selectedIndex === -1) {
+         const label = document.querySelector('label[for="category"]');
+         label.textContent = 'Выберите одну или несколько категорий';
+         label.style.color = 'red';
+         const categoryChange = () => {
+            label.textContent = 'Категория';
+            label.style.color = '';
+            console.log(123);
+            form['category[]'].removeEventListener('change', categoryChange);
+         }
+         form['category[]'].addEventListener('change', categoryChange);
+      }
+
+      return;
+   }
 
    const formData = new FormData(form);
-   const object = {};
-   formData.forEach((value, key) => {
-      object[key] = value;
-   });
-   object['category'] = selected;
-
-   const data = JSON.stringify(object);
 
    let answer = await this.api.post('api/brands', formData, this.token)
     this.addModal.close();
 
       row.innerHTML = `
-         <td>${form.brand_name.value}</td>
+         <td>${brandName.value}</td>
          <td colspan="2" class="table-td_center table-td_success">Этот производитель уже есть</td>
       `;
       console.log('answer', answer);
+      this.brandsList.push(brandName.value);    // Добавляем новый бренд в массив брендов
+
+   if (brandName.value !== name) renameBrand(name, brandName.value);
 }
 
 // Автокомплит для редактирования
 function autocomplete(brandsList) {
-   // TODO
-   // Надо пофиксить показ списка при потере фокуса инпута
    const input = document.querySelector('.js-input-brand');
    const list = document.querySelector('.brands-list');
    let access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
@@ -284,18 +293,12 @@ function replaceBrand(e, name) {
       label.style.color = 'red';
       return;
    } else {
-      const brands = document.querySelectorAll('.js-brand-name');
       const row = e.target.closest('tr');
-      console.log('row', row);
-      brands.forEach(item => {
-         if (item.textContent.trim() === name.trim()) {
-            item.textContent = input.value;
-         }
-      });
+      renameBrand(name, input.value);
 
       row.innerHTML = `
          <td>${name}</td>
-         <td class="table-td_center table-td_primary">Переименован в "${input.value}"</td>
+         <td class="table-td_center table-td_primary">Связан с "${input.value}"</td>
          <td class="table-td_center">
             <svg class="edit-brand js-edit-brand" data-title="${input.value}">
                   <use xlink:href="/images/sprite.svg#edit"></use>
@@ -305,4 +308,15 @@ function replaceBrand(e, name) {
 
       this.editModal.close();
    }
+}
+
+// Переимнование бренда в таблице товаров
+function renameBrand(name, input) {
+   const brands = document.querySelectorAll('.js-brand-name');
+   brands.forEach(item => {
+      if (item.textContent.trim() === name.trim()) {
+         item.textContent = input;
+         item.style.color = 'orange';
+      }
+   });
 }

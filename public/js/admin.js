@@ -1158,18 +1158,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1212,16 +1200,52 @@ var BrandsParseComponent = /*#__PURE__*/function (_Component) {
 
   _createClass(BrandsParseComponent, [{
     key: "init",
-    value: function init() {
-      this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin');
-      this.modal = false;
-      this.token = document.querySelector('[name="_token"]').value; // TODO - получить бренды из базы
-      // Это временный список брендов для теста
+    value: function () {
+      var _init = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.server = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]('admin');
+                this.api = new _core_servers__WEBPACK_IMPORTED_MODULE_2__["default"]();
+                /*let api = new Server();
+                api.get('/api/brands').then((answer) => {
+                    console.log(answer)
+                }).catch((e)=>{
+                    console.log(e)
+                })*/
 
-      this.brandsList = ['Kama', 'Hankook', 'Nokian', 'Cordiant', 'Nexen', 'Viatti', 'KamaEuro', 'Michlen', 'Tigar', 'Toyo'];
-      this.$el.addEventListener('click', addBrand.bind(this));
-      this.$el.addEventListener('click', editBrand.bind(this));
-    }
+                _context.next = 4;
+                return this.api.get('api/brands').then(function (data) {
+                  return data.map(function (item) {
+                    return item.brand_name;
+                  });
+                });
+
+              case 4:
+                this.brandsList = _context.sent;
+                this.hand = null;
+                this.replace = null;
+                this.addModal = false;
+                this.editModal = false;
+                this.token = document.querySelector('[name="_token"]').value;
+                this.$el.addEventListener('click', addBrand.bind(this));
+                this.$el.addEventListener('click', editBrand.bind(this));
+
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function init() {
+        return _init.apply(this, arguments);
+      }
+
+      return init;
+    }()
   }]);
 
   return BrandsParseComponent;
@@ -1233,13 +1257,13 @@ function addBrand(e) {
   var target = e.target.closest('.js-add-brand');
 
   if (target) {
-    console.log('modal add', this.modal);
     var name = target.dataset.title;
+    this.hand = formHandler.bind(this, e, name);
     var title = 'Добавление производителя';
-    var content = "\n      <div class=\"content-wrapper form\">\n            <form method=\"POST\" action=\"http://imperia/imperia_admin_panel/brands\" accept-charset=\"UTF-8\" enctype=\"multipart/form-data\" id=\"add-brand\">\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"brand_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435</label>\n                     <input class=\"form-model text-input\" type=\"text\" placeholder=\"\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\" name=\"brand_name\" id=\"brand_name\" value=\"".concat(name, "\">\n                  </div>\n               </div>\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"category\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</label>\n                     <div class=\"select\">\n                        <select multiple class=\"select\" name=\"category\" id=\"category\">\n                           <option value=\"1\">\u0428\u0438\u043D\u044B</option>\n                           <option value=\"2\">\u0414\u0438\u0441\u043A\u0438</option>\n                        </select>\n                     </div>\n                  </div>\n               </div>\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"brand_desc\">\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435</label>\n                     <textarea class=\"text-input\" placeholder=\"\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435\" name=\"brand_desc\" id=\"brand_desc\" cols=\"30\" rows=\"10\"></textarea>\n                  </div>\n               </div>\n               <div>\n                  <input class=\"inputFile\" type=\"file\" name=\"brand_logo\" id=\"brand_logo\" data-multiple-caption=\"{count} files selected\">\n                  <label for=\"brand_logo\">\n                     <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"17\" viewBox=\"0 0 20 17\"><path d=\"M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z\"></path></svg>\n                     <span>\u0412\u044B\u0431\u043E\u0440 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F</span>\n                  </label>\n               </div>\n            </form>\n         </div>\n      ");
+    var content = "\n      <div class=\"content-wrapper form\">\n            <form method=\"POST\" action=\"http://imperia/imperia_admin_panel/brands\" accept-charset=\"UTF-8\" enctype=\"multipart/form-data\" id=\"add-brand\">\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"brand_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435</label>\n                     <input class=\"form-model text-input\" type=\"text\" placeholder=\"\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\" name=\"brand_name\" id=\"brand_name\" value=\"".concat(name, "\">\n                  </div>\n               </div>\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"category\">\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F</label>\n                     <div class=\"select\">\n                        <select multiple class=\"select\" name=\"category[]\" id=\"category\">\n                           <option value=\"1\">\u0428\u0438\u043D\u044B</option>\n                           <option value=\"2\">\u0414\u0438\u0441\u043A\u0438</option>\n                        </select>\n                     </div>\n                  </div>\n               </div>\n               <div class=\"form-body\">\n                  <div class=\"form-section\">\n                     <label for=\"brand_desc\">\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435</label>\n                     <textarea class=\"text-input\" placeholder=\"\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435\" name=\"brand_desc\" id=\"brand_desc\" cols=\"30\" rows=\"10\"></textarea>\n                  </div>\n               </div>\n               <div>\n                  <input class=\"inputFile\" type=\"file\" name=\"brand_logo\" id=\"brand_logo\" data-multiple-caption=\"{count} files selected\">\n                  <label for=\"brand_logo\">\n                     <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"17\" viewBox=\"0 0 20 17\"><path d=\"M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z\"></path></svg>\n                     <span>\u0412\u044B\u0431\u043E\u0440 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F</span>\n                  </label>\n               </div>\n            </form>\n         </div>\n      ");
 
-    if (!this.modal) {
-      this.modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    if (!this.addModal) {
+      this.addModal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
         showHeader: true,
         title: title,
         width: '80%',
@@ -1248,29 +1272,29 @@ function addBrand(e) {
           text: 'Сохранить',
           type: 'bg-success',
           handler: function handler() {
-            formHandler.call(_this, e);
+            _this.hand();
           }
         }, {
           text: 'Отменить',
           type: 'bg-danger',
           handler: function handler() {
-            _this.modal.close();
+            _this.addModal.close();
           }
         }, {
           text: 'Закрыть',
           type: 'bg-basic',
           handler: function handler() {
-            _this.modal.close();
+            _this.addModal.close();
           }
         }],
         content: content
       });
     } else {
-      this.modal.setTitle(title);
-      this.modal.setContent(content);
+      this.addModal.setTitle(title);
+      this.addModal.setContent(content);
     }
 
-    this.modal.open();
+    this.addModal.open();
   }
 } // Редактирование бренда
 
@@ -1281,15 +1305,15 @@ function editBrand(e) {
   var target = e.target.closest('.js-edit-brand');
 
   if (target) {
-    console.log('modal edit', this.modal);
     var name = target.dataset.title;
+    this.replace = replaceBrand.bind(this, e, name);
     var title = "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044F ".concat(name);
     var content = "\n         <div class=\"content-wrapper form\">\n            <div class=\"form-body\">\n               <div class=\"form-section\">\n                  <label for=\"brand_name\">\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C</label>\n                  <input class=\"form-model text-input js-input-brand\" type=\"text\" placeholder=\"\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\" name=\"brand_name\" id=\"brand_name\" autocomplete=\"off\">\n               </div>\n\n               <div class=\"form-list\">\n                  <ul class=\"brands-list hide\">\n                     ".concat(this.brandsList.map(function (item) {
       return "<li class=\"brands-item\">".concat(item, "</li>");
     }).join(''), "\n                  </ul>\n               </div>\n            </div>\n         </div>\n      ");
 
-    if (!this.modal) {
-      this.modal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    if (!this.editModal) {
+      this.editModal = new _core_modal__WEBPACK_IMPORTED_MODULE_1__["default"]({
         showHeader: true,
         title: title,
         width: '80%',
@@ -1298,88 +1322,113 @@ function editBrand(e) {
           text: 'Сохранить',
           type: 'bg-success',
           handler: function handler() {
-            replaceBrand.call(_this2, e, name);
+            _this2.replace();
           }
         }, {
           text: 'Отменить',
           type: 'bg-danger',
           handler: function handler() {
-            _this2.modal.close();
+            _this2.editModal.close();
           }
         }, {
           text: 'Закрыть',
           type: 'bg-basic',
           handler: function handler() {
-            _this2.modal.close();
+            _this2.editModal.close();
           }
         }],
         content: content
       });
-      autocomplete(this.brandsList);
     } else {
-      this.modal.setTitle(title);
-      this.modal.setContent(content);
-      autocomplete(this.brandsList);
+      this.editModal.setTitle(title);
+      this.editModal.setContent(content);
     }
 
-    this.modal.open();
+    autocomplete(this.brandsList);
+    this.editModal.open();
   }
 } // Добавление производителя в базу
 
 
-function formHandler(_x) {
+function formHandler(_x, _x2) {
   return _formHandler.apply(this, arguments);
 } // Автокомплит для редактирования
 
 
 function _formHandler() {
-  _formHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    var _this3 = this;
+  _formHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e, name) {
+    var form, brandName, row, label, brandNameChange, _label, categoryChange, formData, answer;
 
-    var form, row, options, selected, formData, object, data;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
             form = document.getElementById('add-brand');
-            row = e.target.closest('tr'); // Получаем значения выбранных селектов
+            brandName = form.brand_name;
+            row = e.target.closest('tr'); // Проверка на заполнение полей
 
-            options = _toConsumableArray(form.category.options);
-            selected = [];
-            options.map(function (option) {
-              if (option.selected) selected.push(option.value);
-            }); // ===
+            if (!(brandName.value.trim() === '' || form['category[]'].options.selectedIndex === -1)) {
+              _context2.next = 7;
+              break;
+            }
 
+            if (brandName.value.trim() === '') {
+              label = brandName.previousElementSibling;
+              label.textContent = 'Название не должно быть пустым';
+              label.style.color = 'red';
+
+              brandNameChange = function brandNameChange() {
+                label.textContent = 'Название';
+                label.style.color = '';
+                console.log(123);
+                brandName.removeEventListener('change', brandNameChange);
+              };
+
+              brandName.addEventListener('change', brandNameChange);
+            }
+
+            if (form['category[]'].options.selectedIndex === -1) {
+              _label = document.querySelector('label[for="category"]');
+              _label.textContent = 'Выберите одну или несколько категорий';
+              _label.style.color = 'red';
+
+              categoryChange = function categoryChange() {
+                _label.textContent = 'Категория';
+                _label.style.color = '';
+                console.log(123);
+                form['category[]'].removeEventListener('change', categoryChange);
+              };
+
+              form['category[]'].addEventListener('change', categoryChange);
+            }
+
+            return _context2.abrupt("return");
+
+          case 7:
             formData = new FormData(form);
-            object = {};
-            formData.forEach(function (value, key) {
-              object[key] = value;
-            });
-            object['category'] = selected;
-            data = JSON.stringify(object);
-            _context.next = 12;
-            return this.server.post('brands', data, {
-              'Content-Type': 'application/json;charset=utf-8'
-            }, this.token).then(function (answer) {
-              _this3.modal.close();
+            _context2.next = 10;
+            return this.api.post('api/brands', formData, this.token);
 
-              row.innerHTML = "\n         <td>".concat(form.brand_name.value, "</td>\n         <td colspan=\"2\" class=\"table-td_center table-td_success\">\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C</td>\n      ");
-              console.log('answer', answer);
-            });
+          case 10:
+            answer = _context2.sent;
+            this.addModal.close();
+            row.innerHTML = "\n         <td>".concat(brandName.value, "</td>\n         <td colspan=\"2\" class=\"table-td_center table-td_success\">\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C</td>\n      ");
+            console.log('answer', answer);
+            this.brandsList.push(brandName.value); // Добавляем новый бренд в массив брендов
 
-          case 12:
+            if (brandName.value !== name) renameBrand(name, brandName.value);
+
+          case 16:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee, this);
+    }, _callee2, this);
   }));
   return _formHandler.apply(this, arguments);
 }
 
 function autocomplete(brandsList) {
-  // TODO
-  // Надо пофиксить показ списка при потере фокуса инпута
   var input = document.querySelector('.js-input-brand');
   var list = document.querySelector('.brands-list');
   var access = brandsList.filter(function (item) {
@@ -1444,17 +1493,22 @@ function replaceBrand(e, name) {
     label.style.color = 'red';
     return;
   } else {
-    var brands = document.querySelectorAll('.js-brand-name');
     var row = e.target.closest('tr');
-    console.log('row', row);
-    brands.forEach(function (item) {
-      if (item.textContent.trim() === name.trim()) {
-        item.textContent = input.value;
-      }
-    });
-    row.innerHTML = "\n         <td>".concat(name, "</td>\n         <td class=\"table-td_center table-td_primary\">\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D \u0432 \"").concat(input.value, "\"</td>\n         <td class=\"table-td_center\">\n            <svg class=\"edit-brand js-edit-brand\" data-title=\"").concat(input.value, "\">\n                  <use xlink:href=\"/images/sprite.svg#edit\"></use>\n            </svg>\n         </td>\n      ");
-    this.modal.close();
+    renameBrand(name, input.value);
+    row.innerHTML = "\n         <td>".concat(name, "</td>\n         <td class=\"table-td_center table-td_primary\">\u0421\u0432\u044F\u0437\u0430\u043D \u0441 \"").concat(input.value, "\"</td>\n         <td class=\"table-td_center\">\n            <svg class=\"edit-brand js-edit-brand\" data-title=\"").concat(input.value, "\">\n                  <use xlink:href=\"/images/sprite.svg#edit\"></use>\n            </svg>\n         </td>\n      ");
+    this.editModal.close();
   }
+} // Переимнование бренда в таблице товаров
+
+
+function renameBrand(name, input) {
+  var brands = document.querySelectorAll('.js-brand-name');
+  brands.forEach(function (item) {
+    if (item.textContent.trim() === name.trim()) {
+      item.textContent = input;
+      item.style.color = 'orange';
+    }
+  });
 }
 
 /***/ }),
@@ -2215,6 +2269,8 @@ var Modal = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Server; });
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -2270,6 +2326,23 @@ var Server = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "put",
+    value: function put(url, data) {
+      var headers = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var token = arguments.length > 3 ? arguments[3] : undefined;
+      if (data instanceof Object) data = JSON_to_URLEncoded(data);
+      headers = Object.assign({
+        'X-CSRF-TOKEN': token,
+        "X-Requested-With": "XMLHttpRequest",
+        'content-type': 'application/x-www-form-urlencoded'
+      }, headers);
+      return makeRequest(this.baseURL + url, {
+        method: 'PUT',
+        body: data,
+        headers: headers
+      });
+    }
+  }, {
     key: "delete",
     value: function _delete(url) {
       var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -2310,6 +2383,20 @@ function objToFormData(data) {
   }
 
   return form;
+}
+
+function JSON_to_URLEncoded(element, key) {
+  var list = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+  if (_typeof(element) == 'object') {
+    for (var idx in element) {
+      JSON_to_URLEncoded(element[idx], key ? key + '[' + idx + ']' : idx, list);
+    }
+  } else {
+    list.push(key + '=' + encodeURIComponent(element));
+  }
+
+  return list.join('&');
 }
 
 /***/ }),
