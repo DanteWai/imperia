@@ -19,6 +19,8 @@ class CreateBrandAliases extends Migration
             $table->string('alias_name');
             $table->timestamps();
 
+            $table->unique(['brand_id','alias_name']);
+
             $table->foreign('brand_id')->references('brand_id')->on('product_brands');
         });
     }
