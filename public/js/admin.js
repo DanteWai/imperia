@@ -1218,7 +1218,10 @@ var BrandsParseComponent = /*#__PURE__*/function (_Component) {
                 _context.next = 4;
                 return this.api.get('api/brands').then(function (data) {
                   return data.map(function (item) {
-                    return item.brand_name;
+                    return {
+                      brand_id: item.brand_id,
+                      brand_name: item.brand_name
+                    };
                   });
                 });
 
@@ -1308,8 +1311,8 @@ function editBrand(e) {
     var name = target.dataset.title;
     this.replace = replaceBrand.bind(this, e, name);
     var title = "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044F ".concat(name);
-    var content = "\n         <div class=\"content-wrapper form\">\n            <div class=\"form-body\">\n               <div class=\"form-section\">\n                  <label for=\"brand_name\">\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C</label>\n                  <input class=\"form-model text-input js-input-brand\" type=\"text\" placeholder=\"\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\" name=\"brand_name\" id=\"brand_name\" autocomplete=\"off\">\n               </div>\n\n               <div class=\"form-list\">\n                  <ul class=\"brands-list hide\">\n                     ".concat(this.brandsList.map(function (item) {
-      return "<li class=\"brands-item\">".concat(item, "</li>");
+    var content = "\n         <div class=\"content-wrapper form\">\n            <div class=\"form-body\">\n               <div class=\"form-section\">\n                  <label for=\"brand_name\">\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C</label>\n                  <input class=\"form-model text-input js-input-brand\" type=\"text\" placeholder=\"\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\" name=\"brand_name\" id=\"brand_name\" autocomplete=\"off\" data-id=\"\">\n               </div>\n\n               <div class=\"form-list\">\n                  <ul class=\"brands-list hide\">\n                     ".concat(this.brandsList.map(function (item) {
+      return "<li class=\"brands-item\" data-brand-id=\"".concat(item.brand_id, "\">").concat(item.brand_name, "</li>");
     }).join(''), "\n                  </ul>\n               </div>\n            </div>\n         </div>\n      ");
 
     if (!this.editModal) {
@@ -1414,11 +1417,15 @@ function _formHandler() {
             this.addModal.close();
             row.innerHTML = "\n         <td>".concat(brandName.value, "</td>\n         <td colspan=\"2\" class=\"table-td_center table-td_success\">\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C</td>\n      ");
             console.log('answer', answer);
-            this.brandsList.push(brandName.value); // Добавляем новый бренд в массив брендов
+            answer = JSON.parse(answer); // Добавляем новый бренд в массив брендов
 
+            this.brandsList.push({
+              brand_id: answer.brand_id,
+              brand_name: brandName.value
+            });
             if (brandName.value !== name) renameBrand(name, brandName.value);
 
-          case 16:
+          case 17:
           case "end":
             return _context2.stop();
         }
@@ -1432,20 +1439,20 @@ function autocomplete(brandsList) {
   var input = document.querySelector('.js-input-brand');
   var list = document.querySelector('.brands-list');
   var access = brandsList.filter(function (item) {
-    return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+    return item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1;
   });
   input.addEventListener('focus', function () {
     var label = input.previousElementSibling;
     label.textContent = 'Производитель';
     label.style.color = '';
     access = brandsList.filter(function (item) {
-      return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+      return item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1;
     });
 
     if (access.length) {
       list.innerHTML = '';
       list.innerHTML = "\n            ".concat(access.map(function (item) {
-        return "<li class=\"brands-item\">".concat(item, "</li>");
+        return "<li class=\"brands-item\" data-brand-id=\"".concat(item.brand_id, "\">").concat(item.brand_name, "</li>");
       }).join(''), "\n         ");
       list.classList.remove('hide');
     }
@@ -1455,27 +1462,29 @@ function autocomplete(brandsList) {
 
     if (target) {
       access = brandsList.filter(function (item) {
-        return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+        return item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1;
       });
       input.value = target.textContent;
+      input.dataset.id = target.dataset.brandId;
       input.focus();
       list.innerHTML = '';
       list.innerHTML = "\n            ".concat(access.map(function (item) {
-        return "<li class=\"brands-item\">".concat(item, "</li>");
+        return "<li class=\"brands-item\" data-brand-id=\"".concat(item.brand_id, "\">").concat(item.brand_name, "</li>");
       }).join(''), "\n         ");
       list.classList.add('hide');
     }
   });
   input.addEventListener('input', function () {
     access = brandsList.filter(function (item) {
-      return item.search(new RegExp(input.value.trim(), 'i')) !== -1;
+      return item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1;
     });
+    input.dataset.id = '';
 
     if (access.length) {
       list.classList.remove('hide');
       list.innerHTML = '';
       list.innerHTML = "\n            ".concat(access.map(function (item) {
-        return "<li class=\"brands-item\">".concat(item, "</li>");
+        return "<li class=\"brands-item\" data-brand-id=\"".concat(item.brand_id, "\">").concat(item.brand_name, "</li>");
       }).join(''), "\n         ");
     } else {
       list.classList.add('hide');
@@ -1484,22 +1493,78 @@ function autocomplete(brandsList) {
 } // Переименование производителя
 
 
-function replaceBrand(e, name) {
-  var input = document.querySelector('.js-input-brand'); // Проверяем поле на пустоту
-
-  if (input.value.trim() === '') {
-    var label = input.previousElementSibling;
-    label.textContent = 'Поле не должно быть пустым';
-    label.style.color = 'red';
-    return;
-  } else {
-    var row = e.target.closest('tr');
-    renameBrand(name, input.value);
-    row.innerHTML = "\n         <td>".concat(name, "</td>\n         <td class=\"table-td_center table-td_primary\">\u0421\u0432\u044F\u0437\u0430\u043D \u0441 \"").concat(input.value, "\"</td>\n         <td class=\"table-td_center\">\n            <svg class=\"edit-brand js-edit-brand\" data-title=\"").concat(input.value, "\">\n                  <use xlink:href=\"/images/sprite.svg#edit\"></use>\n            </svg>\n         </td>\n      ");
-    this.editModal.close();
-  }
+function replaceBrand(_x3, _x4) {
+  return _replaceBrand.apply(this, arguments);
 } // Переимнование бренда в таблице товаров
 
+
+function _replaceBrand() {
+  _replaceBrand = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e, name) {
+    var input, id, label, brand, data, answer, row;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            input = document.querySelector('.js-input-brand');
+            id = input.dataset.id;
+            label = input.previousElementSibling; // Проверяем поле на пустоту
+
+            if (!(input.value.trim() === '')) {
+              _context3.next = 9;
+              break;
+            }
+
+            label.textContent = 'Поле не должно быть пустым';
+            label.style.color = 'red';
+            return _context3.abrupt("return");
+
+          case 9:
+            if (!(id === '')) {
+              _context3.next = 18;
+              break;
+            }
+
+            brand = this.brandsList.filter(function (item) {
+              return item.brand_name === input.value.trim();
+            });
+
+            if (brand.length) {
+              _context3.next = 17;
+              break;
+            }
+
+            label.textContent = 'Такого бренда не существует';
+            label.style.color = 'red';
+            return _context3.abrupt("return");
+
+          case 17:
+            id = brand[0].brand_id;
+
+          case 18:
+            data = {
+              brand_id: id,
+              alias_name: name.toLowerCase()
+            };
+            _context3.next = 21;
+            return this.api.post('api/brand_aliases', data, this.token);
+
+          case 21:
+            answer = _context3.sent;
+            console.log('answer', answer);
+            row = e.target.closest('tr');
+            renameBrand(name, input.value);
+            row.innerHTML = "\n         <td>".concat(name, "</td>\n         <td colspan=\"2\" class=\"table-td_center table-td_primary\">\u0421\u0432\u044F\u0437\u0430\u043D \u0441 \"").concat(input.value, "\"</td>\n      ");
+            this.editModal.close();
+
+          case 27:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this);
+  }));
+  return _replaceBrand.apply(this, arguments);
+}
 
 function renameBrand(name, input) {
   var brands = document.querySelectorAll('.js-brand-name');

@@ -19,7 +19,7 @@ export class BrandsParseComponent extends Component {
            console.log(e)
        })*/
 
-      this.brandsList = await this.api.get('api/brands').then(data => data.map(item => item.brand_name));
+      this.brandsList = await this.api.get('api/brands').then(data => data.map(item => ({brand_id: item.brand_id ,brand_name: item.brand_name})));
 
       this.hand = null;
       this.replace = null;
@@ -128,12 +128,12 @@ function editBrand(e) {
             <div class="form-body">
                <div class="form-section">
                   <label for="brand_name">Производитель</label>
-                  <input class="form-model text-input js-input-brand" type="text" placeholder="Производитель" name="brand_name" id="brand_name" autocomplete="off">
+                  <input class="form-model text-input js-input-brand" type="text" placeholder="Производитель" name="brand_name" id="brand_name" autocomplete="off" data-id="">
                </div>
 
                <div class="form-list">
                   <ul class="brands-list hide">
-                     ${this.brandsList.map(item => `<li class="brands-item">${item}</li>`).join('')}
+                     ${this.brandsList.map(item => `<li class="brands-item" data-brand-id="${item.brand_id}">${item.brand_name}</li>`).join('')}
                   </ul>
                </div>
             </div>
@@ -228,7 +228,13 @@ async function formHandler(e, name) {
          <td colspan="2" class="table-td_center table-td_success">Этот производитель уже есть</td>
       `;
       console.log('answer', answer);
-      this.brandsList.push(brandName.value);    // Добавляем новый бренд в массив брендов
+      answer = JSON.parse(answer);
+
+      // Добавляем новый бренд в массив брендов
+      this.brandsList.push({
+         brand_id: answer.brand_id,
+         brand_name: brandName.value
+      });
 
    if (brandName.value !== name) renameBrand(name, brandName.value);
 }
@@ -237,17 +243,17 @@ async function formHandler(e, name) {
 function autocomplete(brandsList) {
    const input = document.querySelector('.js-input-brand');
    const list = document.querySelector('.brands-list');
-   let access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
+   let access = brandsList.filter(item => item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1);
 
    input.addEventListener('focus', () => {
       const label = input.previousElementSibling;
       label.textContent = 'Производитель';
       label.style.color = '';
-      access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
+      access = brandsList.filter(item => item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1);
       if (access.length) {
          list.innerHTML = '';
          list.innerHTML = `
-            ${access.map(item => `<li class="brands-item">${item}</li>`).join('')}
+            ${access.map(item => `<li class="brands-item" data-brand-id="${item.brand_id}">${item.brand_name}</li>`).join('')}
          `;
          list.classList.remove('hide');
       }
@@ -256,25 +262,27 @@ function autocomplete(brandsList) {
    list.addEventListener('click', e => {
       const target = e.target.closest('.brands-item');
       if (target) {
-         access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
+         access = brandsList.filter(item => item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1);
          input.value = target.textContent;
+         input.dataset.id = target.dataset.brandId;
          input.focus();
          list.innerHTML = '';
          list.innerHTML = `
-            ${access.map(item => `<li class="brands-item">${item}</li>`).join('')}
+            ${access.map(item => `<li class="brands-item" data-brand-id="${item.brand_id}">${item.brand_name}</li>`).join('')}
          `;
          list.classList.add('hide');
       }
    });
 
    input.addEventListener('input', () => {
-      access = brandsList.filter(item => item.search(new RegExp(input.value.trim(), 'i')) !== -1);
+      access = brandsList.filter(item => item.brand_name.search(new RegExp(input.value.trim(), 'i')) !== -1);
+      input.dataset.id = '';
 
       if (access.length) {
          list.classList.remove('hide');
          list.innerHTML = '';
          list.innerHTML = `
-            ${access.map(item => `<li class="brands-item">${item}</li>`).join('')}
+            ${access.map(item => `<li class="brands-item" data-brand-id="${item.brand_id}">${item.brand_name}</li>`).join('')}
          `;
       } else {
          list.classList.add('hide');
@@ -283,27 +291,45 @@ function autocomplete(brandsList) {
 }
 
 // Переименование производителя
-function replaceBrand(e, name) {
+async function replaceBrand(e, name) {
    const input = document.querySelector('.js-input-brand');
+   let id = input.dataset.id;
+   const label = input.previousElementSibling;
 
    // Проверяем поле на пустоту
    if (input.value.trim() === '') {
-      const label = input.previousElementSibling;
       label.textContent = 'Поле не должно быть пустым';
       label.style.color = 'red';
       return;
    } else {
+
+      // Если пользователь ввел несуществующий бренд
+      if (id === '') {
+         const brand = this.brandsList.filter(item => item.brand_name === input.value.trim());
+
+         if (!brand.length) {
+            label.textContent = 'Такого бренда не существует';
+            label.style.color = 'red';
+            return;
+         } else {
+            id = brand[0].brand_id;
+         }
+      }
+
+      const data = {
+         brand_id: id,
+         alias_name: name.toLowerCase()
+      }
+
+      const answer = await this.api.post('api/brand_aliases', data, this.token);
+      console.log('answer', answer);
+
       const row = e.target.closest('tr');
       renameBrand(name, input.value);
 
       row.innerHTML = `
          <td>${name}</td>
-         <td class="table-td_center table-td_primary">Связан с "${input.value}"</td>
-         <td class="table-td_center">
-            <svg class="edit-brand js-edit-brand" data-title="${input.value}">
-                  <use xlink:href="/images/sprite.svg#edit"></use>
-            </svg>
-         </td>
+         <td colspan="2" class="table-td_center table-td_primary">Связан с "${input.value}"</td>
       `;
 
       this.editModal.close();
