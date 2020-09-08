@@ -81,21 +81,25 @@
                             </thead>
                             <tbody>
                                 @foreach ($brands[$key] as $name => $value)
-                                    <tr>
+                                    <tr data-brand-alias="{{ $value['alias'] }}">
                                         <td>{{ $name }}</td>
-                                        @if ($value)
+                                        @if ($value['isset'])
                                             <td colspan="2" class="table-td_center table-td_success">Этот производитель уже есть</td>
                                         @else
-                                            <td class="table-td_center">
-                                                <svg class="add-brand js-add-brand" data-title="{{ $name }}">
-                                                    <use xlink:href="/images/sprite.svg#add"></use>
-                                                </svg>
-                                            </td>
-                                            <td class="table-td_center">
-                                                <svg class="edit-brand js-edit-brand" data-title="{{ $name }}">
-                                                    <use xlink:href="/images/sprite.svg#edit"></use>
-                                                </svg>
-                                            </td>
+                                            @if ($value['alias_isset'])
+                                                <td colspan="2" class="table-td_center table-td_primary">Связан с "{{ $value['original_name'] }}"</td>
+                                            @else
+                                                <td class="table-td_center">
+                                                    <svg class="add-brand js-add-brand" data-title="{{ $name }}">
+                                                        <use xlink:href="/images/sprite.svg#add"></use>
+                                                    </svg>
+                                                </td>
+                                                <td class="table-td_center">
+                                                    <svg class="edit-brand js-edit-brand" data-title="{{ $name }}">
+                                                        <use xlink:href="/images/sprite.svg#edit"></use>
+                                                    </svg>
+                                                </td>
+                                            @endif
                                         @endif
                                     </tr>
                                 @endforeach
@@ -133,7 +137,14 @@
                         <tbody>
                         @foreach ($type as $row)
                             <tr>
-                                @isset($row['brand'])<td title="Производитель" class="js-brand-name">{{ $row['brand']}}</td>@endisset
+                                @isset($row['brand'])
+                                    @if($row['brand'] !== '-' && $brands[$key][$row['brand']]['alias_isset'])
+                                        <td title="Производитель" class="js-brand-name" style="color: orange;">{{ $brands[$key][$row['brand']]['original_name'] }}</td>
+                                    @else
+                                        <td title="Производитель" class="js-brand-name">{{ $row['brand']}}</td>
+                                    @endif
+                                @endisset
+
                                 @isset($row['all'])<td title="Модель">{{ $row['all'] }}</td>@endisset
                                 @isset($row['width'])<td title="Ширина">{{ $row['width']}}</td>@endisset
                                 @isset($row['height'])<td title="Высота">{{ $row['height']}}</td>@endisset

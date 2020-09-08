@@ -273,6 +273,8 @@ class PricListsController extends AdminController
 
         }
 
+        //dd($brand_alias);   // алиасы брендов
+
         // == Получаем существующие бренды
         // Если напарсили бренды шин
         /*if (isset($brands['s'])) {
@@ -296,11 +298,26 @@ class PricListsController extends AdminController
             }
         }
 
-
         // TODO - временная хуйня
         $brands_site['un'] = [];
         // TODO
 
+        // получаем алиасы брендов
+        $brands_alias = Brand_alias::all() -> toArray();
+        foreach ($brands_alias as $item => $value) {
+            $brand_alias[$item]['alias'] = $value['alias_name'];
+            //$brand_alias[$item]['id'] = $value['brand_id'];
+            $brand_alias[$item]['original_name'] = $this -> b_rep -> one('brand_id', $value['brand_id']) -> toArray()['brand_name'];
+        }
+
+        //dd($brand_alias);
+
+        // Делаем массив для поиска по алиасу
+        if (count($brands_alias) !== 0) {
+            foreach ($brand_alias as $key => $value) {
+                $aliases[] = $value['alias'];
+            }
+        }
         //dd($brands_site);
 
         /*foreach ($brands_site as $key => $item) {
@@ -311,7 +328,6 @@ class PricListsController extends AdminController
         // ==
 
         // == Сравниваем существующие бренды с найденными
-        //$isset_brand = [];
         foreach ($brands as $key => $item) {
             foreach ($item as $value) {
                 // value - строка со значением бренда
@@ -319,9 +335,38 @@ class PricListsController extends AdminController
                 // key - s d
 
                 if (in_array($value, $brands_site[$key])) {
-                    $isset_brand[$key][$value] = true;
+                    $isset_brand[$key][$value]['isset'] = true;
+                    $isset_brand[$key][$value]['alias'] = mb_strtolower($value);
+
+                    // Проверяем наличие алиаса
+                    if (count($brands_alias) !== 0) {
+                        $index = array_search($isset_brand[$key][$value]['alias'] ,$aliases);
+                        if ($index !== false) {
+                            $isset_brand[$key][$value]['alias_isset'] = true;
+                            $isset_brand[$key][$value]['original_name'] = $brand_alias[$index]['original_name'];
+                        } else {
+                            $isset_brand[$key][$value]['alias_isset'] = false;
+                        }
+                    } else {
+                        $isset_brand[$key][$value]['alias_isset'] = false;
+                    }
+
                 } else {
-                    $isset_brand[$key][$value] = false;
+                    $isset_brand[$key][$value]['isset'] = false;
+                    $isset_brand[$key][$value]['alias'] = mb_strtolower($value);
+
+                    // Проверяем наличие алиаса
+                    if (count($brands_alias) !== 0) {
+                        $index = array_search($isset_brand[$key][$value]['alias'] ,$aliases);
+                        if ($index !== false) {
+                            $isset_brand[$key][$value]['alias_isset'] = true;
+                            $isset_brand[$key][$value]['original_name'] = $brand_alias[$index]['original_name'];
+                        } else {
+                            $isset_brand[$key][$value]['alias_isset'] = false;
+                        }
+                    } else {
+                        $isset_brand[$key][$value]['alias_isset'] = false;
+                    }
                 }
             }
         }
@@ -329,6 +374,7 @@ class PricListsController extends AdminController
         // Новые бренды
         //$new_brands = array_diff($brands['s'], $brands_site);
 
+        //dd($brand_alias);   // алиасы брендов
         //dd($new_brands);
         //dd($brands);
         //dd($brands_site);
@@ -343,6 +389,8 @@ class PricListsController extends AdminController
             'd' => 'Диски',
             'un' => 'Неизвестно'
         ];
+
+        //dd($newMass);
 
         //формируем вид
         $this->content = view('admin.p_lists.add')->with([
