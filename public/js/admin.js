@@ -1158,6 +1158,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/component */ "./resources/js/core/component.js");
 /* harmony import */ var _core_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @core/modal */ "./resources/js/core/modal.js");
 /* harmony import */ var _core_servers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @core/servers */ "./resources/js/core/servers.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1500,7 +1512,7 @@ function replaceBrand(_x3, _x4) {
 
 function _replaceBrand() {
   _replaceBrand = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e, name) {
-    var input, id, label, brand, data, answer, row;
+    var input, id, label, brand, data, answer, rows;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -1551,12 +1563,15 @@ function _replaceBrand() {
           case 21:
             answer = _context3.sent;
             console.log('answer', answer);
-            row = e.target.closest('tr');
-            renameBrand(name, input.value);
-            row.innerHTML = "\n         <td>".concat(name, "</td>\n         <td colspan=\"2\" class=\"table-td_center table-td_primary\">\u0421\u0432\u044F\u0437\u0430\u043D \u0441 \"").concat(input.value, "\"</td>\n      ");
+            rows = _toConsumableArray(document.querySelectorAll("[data-brand-alias=\"".concat(name.toLowerCase(), "\"]")));
+            rows.map(function (item) {
+              var brandName = item.querySelector('.js-brand').textContent;
+              renameBrand(brandName, input.value);
+              item.innerHTML = "\n            <td>".concat(brandName, "</td>\n            <td colspan=\"2\" class=\"table-td_center table-td_primary\">\u0421\u0432\u044F\u0437\u0430\u043D \u0441 \"").concat(input.value, "\"</td>\n         ");
+            });
             this.editModal.close();
 
-          case 27:
+          case 26:
           case "end":
             return _context3.stop();
         }

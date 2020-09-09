@@ -323,14 +323,17 @@ async function replaceBrand(e, name) {
 
       const answer = await this.api.post('api/brand_aliases', data, this.token);
       console.log('answer', answer);
+   
+      const rows = [...document.querySelectorAll(`[data-brand-alias="${name.toLowerCase()}"]`)];
+      rows.map(item => {
+         const brandName = item.querySelector('.js-brand').textContent;
+         renameBrand(brandName, input.value);
 
-      const row = e.target.closest('tr');
-      renameBrand(name, input.value);
-
-      row.innerHTML = `
-         <td>${name}</td>
-         <td colspan="2" class="table-td_center table-td_primary">Связан с "${input.value}"</td>
-      `;
+         item.innerHTML = `
+            <td>${brandName}</td>
+            <td colspan="2" class="table-td_center table-td_primary">Связан с "${input.value}"</td>
+         `;
+      });
 
       this.editModal.close();
    }

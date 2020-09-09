@@ -82,7 +82,7 @@
                             <tbody>
                                 @foreach ($brands[$key] as $name => $value)
                                     <tr data-brand-alias="{{ $value['alias'] }}">
-                                        <td>{{ $name }}</td>
+                                        <td class="js-brand">{{ $name }}</td>
                                         @if ($value['isset'])
                                             <td colspan="2" class="table-td_center table-td_success">Этот производитель уже есть</td>
                                         @else
