@@ -117,49 +117,15 @@ class PricListsController extends AdminController
         $brands = [];
 
         foreach($array as $key=>$item){
-            //dd($item);
 
-            // Исходный
-            /*if (isset($options['colNum']) && $options['colNum'] === '0') {
-                $header = $this->parseHead($item);
-            } else if (isset($options['colNum']) && $options['colNum'] !== '0') {
-                $header['nomen'] = intval($options['colNum']) - 1;
-            } else {
-                $header = $this->parseHead($item);
-            }*/
-            // -- Исходный
-
-            // Пока оставлю это
-            /*if ((isset($options['colNum']) && $options['colNum'] !== '0') && (isset($options['colBrand']) && $options['colBrand'] !== '0')) {
-                $header['nomen'] = intval($options['colNum']) - 1;
-                $header['brand'] = intval($options['colBrand']) - 1;
-            } else if (((isset($options['colNum']) && $options['colNum'] === '0') || !isset($options['colNum'])) &&
-                        ((isset($options['colBrand']) && $options['colBrand'] === '0') || !isset($options['colBrand']))) {
-                $header = $this->parseHead($item);
-            } else {
-                $header = $this->parseHead($item);
-            }*/
-            // -- Пока оставлю это
             $header = $this->parseHead($item);
-            //dd($header);
-            //if ((isset($options['colNum']) && $options['colNum'] !== '0') && ((isset($options['brand_col']) && $options['brand_col'] === '0') || !isset($options['brand_col'])))
 
             // Проверяет наличие позиции бренда в номенклатуре
             if(isset($options['brand_position'])) {
                 $header['brand_position'] = intval($options['brand_position']) - 1;
             }
 
-            // Столбец Бренд
-            /*if (isset($options['brand_col']) && isset($options['brand_col']) === '0') {
-                $header = $this->parseHead($item);
-            } else if (isset($options['brand_col']) && $options['brand_col'] !== '0') {
-                $header['brand'] = intval($options['brand_col']) - 1;
-            } else {
-                $header = $this->parseHead($item);
-            }*/
-
-
-            // Если колонка "Номенклатура" не задана пользователем или не нашлась
+            // Если колонка "Номенклатура" не нашлась
             if (!isset($header['nomen'])) {
 
                 if (isset($options['rowNum'])) {
@@ -182,13 +148,13 @@ class PricListsController extends AdminController
                                 $column['height_col'] = $col;                      // Столбец высоты
                                 break;
                             case preg_match_all('/^индекс$/ium', $title):
-                                $column['index_col'] = $col;                      // Столбец высоты
+                                $column['index_col'] = $col;                      // Столбец индекс общий
                                 break;
                             case preg_match_all('/индекс\sскорости|скорост/iu', $title):
-                                $column['index_speed_col'] = $col;                      // Столбец высоты
+                                $column['index_speed_col'] = $col;                      // Столбец индекса скорости
                                 break;
                             case preg_match_all('/индекс\нагрузки|нагруз/iu', $title):
-                                $column['index_load_col'] = $col;                      // Столбец высоты
+                                $column['index_load_col'] = $col;                      // Столбец индекса нагрузки
                                 break;
                             case preg_match_all('/^R$|^диаметр$|диаметр\sдиска|диаметр\sшины/ium', $title):
                                 $column['diameter_col'] = $col;                      // Столбец диаметра диска
@@ -221,31 +187,66 @@ class PricListsController extends AdminController
                         isset($column['hole_col']) ||
                         isset($column['s_hole_col'])) {
 
-                            $result = $this->diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
-                            if ($result) {
+                        $result = $this->diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
+                        if ($result) {
 
-                                $newMass = ['d' => $result];
-                                $types = [
-                                    's' => 'Шины',
-                                    'd' => 'Диски',
-                                    'un' => 'Неизвестно'
-                                ];
+                            $brands['d'] = $result['brands'];
+                            $isset_brand = $this -> brandsAliases($brands);
+                            unset($result['brands']);
 
-                                // Формируем вид
-                                $this->content = view('admin.p_lists.add')->with([
-                                    'top'=>$headContent,
-                                    'products' => $newMass,
-                                    'types' => $types
-                                ])->render();
+                            $newMass = ['d' => $result];
+                            $types = [
+                                's' => 'Шины',
+                                'd' => 'Диски',
+                                'un' => 'Неизвестно'
+                            ];
 
-                                return $this->renderOutput();
+                            // Формируем вид
+                            $this->content = view('admin.p_lists.add')->with([
+                                'top'=>$headContent,
+                                'products' => $newMass,
+                                'types' => $types,
+                                'brands' => $isset_brand
+                            ])->render();
 
-                            }
+                            return $this->renderOutput();
 
                         }
 
+                    } else if (
+                        // Условия для парсинга шин
+                        (isset($options['priceType']) && $options['priceType'] === 'shiny') ||
+                        isset($column['height_col']) ||
+                        isset($column['index_col']) ||
+                        isset($column['index_speed_col']) ||
+                        isset($column['index_load_col'])
+                    ) {
+                        // НЕ УДАЛЯТЬ - ЭТО КОД ДЛЯ ПАРСА ШИН
+                        //$result = $this->shinParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры шины
+
+                        /*
+                        $newMass = ['d' => $result];
+                        $types = [
+                            's' => 'Шины',
+                            'd' => 'Диски',
+                            'un' => 'Неизвестно'
+                        ];
+
+                        // Формируем вид
+                        $this->content = view('admin.p_lists.add')->with([
+                            'top'=>$headContent,
+                            'products' => $newMass,
+                            'types' => $types
+                        ])->render();
+
+                        return $this->renderOutput();*/
+
+                    }
+
 
                 } else {
+
+                    // Тут надо выкинуть ошибку пользователю, что он должен заполнить поле "Строка заголовков"
                     return false;
                 }
             }
@@ -273,19 +274,38 @@ class PricListsController extends AdminController
 
         }
 
+        $isset_brand = $this -> brandsAliases($brands);
+
         //dd($brand_alias);   // алиасы брендов
+        //dd($new_brands);
+        //dd($brands);
+        //dd($brands_site);
+        //dd($isset_brand);
 
-        // == Получаем существующие бренды
-        // Если напарсили бренды шин
-        /*if (isset($brands['s'])) {
-            $brands_site['s'] = $this -> b_rep -> getBrands('brand_name', 1) -> toArray();
-        }*/
 
-        // Если напарсили бренды дисков
-        /*if (isset($brands['d'])) {
-            $brands_site['d'] = $this -> b_rep -> getBrands('brand_name', 2) -> toArray();
+        //заглушка если ничё не напарсили
+        if(!isset($newMass)) $newMass = [];
 
-        }*/
+        $types = [
+            's' => 'Шины',
+            'd' => 'Диски',
+            'un' => 'Неизвестно'
+        ];
+
+        //dd($newMass);
+
+        //формируем вид
+        $this->content = view('admin.p_lists.add')->with([
+            'top'=>$headContent,
+            'products' => $newMass,
+            'types' => $types,
+            'brands' => $isset_brand
+        ])->render();
+
+        return $this->renderOutput();
+    }
+
+    public function brandsAliases ($brands) {
 
         $all_brands = $this -> b_rep -> get(['brand_name', 'category'])->toArray();
         $brands_site = [];
@@ -310,22 +330,12 @@ class PricListsController extends AdminController
             $brand_alias[$item]['original_name'] = $this -> b_rep -> one('brand_id', $value['brand_id']) -> toArray()['brand_name'];
         }
 
-        //dd($brand_alias);
-
         // Делаем массив для поиска по алиасу
         if (count($brands_alias) !== 0) {
             foreach ($brand_alias as $key => $value) {
                 $aliases[] = $value['alias'];
             }
         }
-        //dd($brands_site);
-
-        /*foreach ($brands_site as $key => $item) {
-            $brands_site[$key] = array_map(function ($el) {
-                return $el['brand_name'];
-            }, $item);
-        }*/
-        // ==
 
         // == Сравниваем существующие бренды с найденными
         foreach ($brands as $key => $item) {
@@ -371,36 +381,8 @@ class PricListsController extends AdminController
             }
         }
 
-        // Новые бренды
-        //$new_brands = array_diff($brands['s'], $brands_site);
+        return $isset_brand;
 
-        //dd($brand_alias);   // алиасы брендов
-        //dd($new_brands);
-        //dd($brands);
-        //dd($brands_site);
-        //dd($isset_brand);
-
-
-        //заглушка если ничё не напарсили
-        if(!isset($newMass)) $newMass = [];
-
-        $types = [
-            's' => 'Шины',
-            'd' => 'Диски',
-            'un' => 'Неизвестно'
-        ];
-
-        //dd($newMass);
-
-        //формируем вид
-        $this->content = view('admin.p_lists.add')->with([
-            'top'=>$headContent,
-            'products' => $newMass,
-            'types' => $types,
-            'brands' => $isset_brand
-        ])->render();
-
-        return $this->renderOutput();
     }
 
     //Нахождения заголовка таблицы и колонки с номенкулатурой, плюс помогает отсечь левые строки перед таблицей
@@ -992,6 +974,7 @@ class PricListsController extends AdminController
         return $param;
     }
 
+    // Парсинг дисков для прайсов без номенклатуры
     public function diskParse($start_row, $list, $column) {
 
         //dump('столбцы', $column);
@@ -1004,36 +987,76 @@ class PricListsController extends AdminController
             //dd($list[$start_row]);
 
             if (isset($column['brand_col'])) {
-                $params[$i - $start_row]['brand'] = $list[$i][$column['brand_col']];
+                if (!empty(trim($list[$i][$column['brand_col']]))) {
+                    $params[$i - $start_row]['brand'] = $list[$i][$column['brand_col']];
+                } else {
+                    $params[$i - $start_row]['brand'] = '-';
+                }
             }
 
             if (isset($column['model_col'])) {
-                $params[$i - $start_row]['all'] = $list[$i][$column['model_col']];
+                if (!empty(trim($list[$i][$column['model_col']]))) {
+                    $params[$i - $start_row]['all'] = $list[$i][$column['model_col']];
+                } else {
+                    $params[$i - $start_row]['all'] = '-';
+                }
             }
 
             if (isset($column['width_col'])) {
-                $params[$i - $start_row]['width'] = $list[$i][$column['width_col']];
+                if (!empty(trim($list[$i][$column['width_col']]))) {
+                    $params[$i - $start_row]['width'] = $list[$i][$column['width_col']];
+                } else {
+                    $params[$i - $start_row]['width'] = '-';
+                }
             }
 
             if (isset($column['diameter_col'])) {
-                $params[$i - $start_row]['diametr'] = preg_replace('/r/iu', '' ,$list[$i][$column['diameter_col']]);
+                if (!empty(trim($list[$i][$column['diameter_col']]))) {
+                    $params[$i - $start_row]['diametr'] = preg_replace('/r/iu', '' ,$list[$i][$column['diameter_col']]);
+                } else {
+                    $params[$i - $start_row]['diametr'] = '-';
+                }
             }
 
             if (isset($column['departure_col'])) {
-                $params[$i - $start_row]['departure'] = $list[$i][$column['departure_col']];
+                if (!empty(trim($list[$i][$column['departure_col']]))) {
+                    $params[$i - $start_row]['departure'] = $list[$i][$column['departure_col']];
+                } else {
+                    $params[$i - $start_row]['departure'] = '-';
+                }
             }
 
             if (isset($column['dia_col'])) {
-                $params[$i - $start_row]['dia'] = $list[$i][$column['dia_col']];
+                if (!empty(trim($list[$i][$column['dia_col']]))) {
+                    $params[$i - $start_row]['dia'] = $list[$i][$column['dia_col']];
+                } else {
+                    $params[$i - $start_row]['dia'] = '-';
+                }
             }
 
-            if (isset($column['drilling_col'])) {
+            if (isset($column['drilling_col']) && !empty(trim($list[$i][$column['drilling_col']]))) {
                 $params[$i - $start_row]['drilling'] = $list[$i][$column['drilling_col']];
+            } else if (isset($column['drilling_col']) && empty(trim($list[$i][$column['drilling_col']]))) {
+                $params[$i - $start_row]['drilling'] = '-';
             } else {
-                $params[$i - $start_row]['drilling'] = $list[$i][$column['hole_col']] . 'x' . $list[$i][$column['s_hole_col']];
+                $params[$i - $start_row]['drilling'] = $list[$i][$column['hole_col']] . '*' . $list[$i][$column['s_hole_col']];
+            }
+
+
+            // Если массив брендом пустой и текущий бренд не пустая строка и не равна "-", то заносим в массив текущий бренд
+            if (!isset($brands) && !empty($params[$i - $start_row]['brand']) && $params[$i - $start_row]['brand'] !== '-') {
+                $brands[] = $params[$i - $start_row]['brand'];
+                // Если массив брендов уже есть и текущий бренд еще не существует в массиве то заносим его
+            } else if (isset($brands) && !in_array($params[$i - $start_row]['brand'], $brands) && !empty($params[$i - $start_row]['brand']) && $params[$i - $start_row]['brand'] !== '-') {
+                $brands[] = $params[$i - $start_row]['brand'];
+            } else {
+                continue;
             }
         }
+        //dd($brands);        // Массив найденных брендов в прайсе
+        $params['brands'] = $brands;
         //dump($params);
+        //dd($params);
 
         return $params;
 
