@@ -68,7 +68,7 @@
 
             @foreach ($products as $key=>$type)
                 <div  data-t-source="{{ 'tab'.$key}}" class="tab-source">
-                    @if (isset($brands))
+                    @if (isset($brands[$key]))
                         <h2>Найденные производители:</h2>
                         
 
