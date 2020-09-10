@@ -190,26 +190,19 @@ class PricListsController extends AdminController
                         $result = $this -> diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
                         if ($result) {
 
-                            $brands['d'] = $result['brands'];
-                            $isset_brand = $this -> brandsAliases($brands);
+                            if (!isset($brands['d'])) {
+                                $brands['d'] = $result['brands'];
+                            } else {
+                                $brands['d'] = array_merge($brands['d'], $result['brands']);
+                            }
+                            
                             unset($result['brands']);
 
-                            $newMass = ['d' => $result];
-                            $types = [
-                                's' => 'Шины',
-                                'd' => 'Диски',
-                                'un' => 'Неизвестно'
-                            ];
-
-                            // Формируем вид
-                            $this->content = view('admin.p_lists.add')->with([
-                                'top'=>$headContent,
-                                'products' => $newMass,
-                                'types' => $types,
-                                'brands' => $isset_brand
-                            ])->render();
-
-                            return $this->renderOutput();
+                            if (!isset($newMass['d'])) {
+                                $newMass['d'] = $result;
+                            } else {
+                                $newMass['d'] = array_merge($newMass['d'], $result);
+                            }
 
                         }
 
@@ -226,26 +219,19 @@ class PricListsController extends AdminController
 
                         if ($result) {
 
-                            $brands['s'] = $result['brands'];
-                            $isset_brand = $this -> brandsAliases($brands);
+                            if (!isset($brands['s'])) {
+                                $brands['s'] = $result['brands'];
+                            } else {
+                                $brands['s'] = array_merge($brands['s'], $result['brands']);
+                            }
+                            
                             unset($result['brands']);
 
-                            $newMass = ['s' => $result];
-                            $types = [
-                                's' => 'Шины',
-                                'd' => 'Диски',
-                                'un' => 'Неизвестно'
-                            ];
-
-                            // Формируем вид
-                            $this->content = view('admin.p_lists.add')->with([
-                                'top'=>$headContent,
-                                'products' => $newMass,
-                                'types' => $types,
-                                'brands' => $isset_brand
-                            ])->render();
-
-                            return $this->renderOutput();
+                            if (!isset($newMass['s'])) {
+                                $newMass['s'] = $result;
+                            } else {
+                                $newMass['s'] = array_merge($newMass['s'], $result);
+                            }
 
                         }
 
@@ -258,27 +244,29 @@ class PricListsController extends AdminController
                     dd('Ты обосрался!! Надо было указать строку заголовков');
                     return false;
                 }
-            }
+            } else {
 
-            // Парсим каждую строчку
-            foreach ($item as $keyRow=>$row){
-                $result = $this->parseRow($row,$header);
+                // Парсим каждую строчку
+                foreach ($item as $keyRow=>$row){
+                    $result = $this->parseRow($row,$header);
 
-                if($result){
+                    if($result){
 
-                    // Если массив брендом пустой и текущий бренд не пустая строка и не равна "-", то заносим в массив текущий бренд
-                    if (!isset($brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
-                        $brands[$result['type']][] = $result['value']['brand'];
-                        $newMass[$result['type']][] = $result['value'];
-                        // Если массив брендов уже есть и текущий бренд еще не существует в массиве то заносим его
-                    } else if (isset($brands[$result['type']]) && !in_array($result['value']['brand'], $brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
-                        $brands[$result['type']][] = $result['value']['brand'];
-                        $newMass[$result['type']][] = $result['value'];
-                    } else {
-                        $newMass[$result['type']][] = $result['value'];
-                        continue;
+                        // Если массив брендом пустой и текущий бренд не пустая строка и не равна "-", то заносим в массив текущий бренд
+                        if (!isset($brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
+                            $brands[$result['type']][] = $result['value']['brand'];
+                            $newMass[$result['type']][] = $result['value'];
+                            // Если массив брендов уже есть и текущий бренд еще не существует в массиве то заносим его
+                        } else if (isset($brands[$result['type']]) && !in_array($result['value']['brand'], $brands[$result['type']]) && !empty($result['value']['brand']) && $result['value']['brand'] !== '-') {
+                            $brands[$result['type']][] = $result['value']['brand'];
+                            $newMass[$result['type']][] = $result['value'];
+                        } else {
+                            $newMass[$result['type']][] = $result['value'];
+                            continue;
+                        }
                     }
                 }
+
             }
 
         }
@@ -290,6 +278,7 @@ class PricListsController extends AdminController
         //dd($brands);
         //dd($brands_site);
         //dd($isset_brand);
+        //dd($newMass);
 
 
         //заглушка если ничё не напарсили
