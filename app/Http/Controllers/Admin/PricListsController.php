@@ -150,10 +150,10 @@ class PricListsController extends AdminController
                             case preg_match_all('/^индекс$/ium', $title):
                                 $column['index_col'] = $col;                      // Столбец индекс общий
                                 break;
-                            case preg_match_all('/индекс\sскорости|скорост/iu', $title):
+                            case preg_match('/индекс\sскорости|скорост/iu', $title):
                                 $column['index_speed_col'] = $col;                      // Столбец индекса скорости
                                 break;
-                            case preg_match_all('/индекс\нагрузки|нагруз/iu', $title):
+                            case preg_match('/индекс\sнагрузки|нагруз/iu', $title):
                                 $column['index_load_col'] = $col;                      // Столбец индекса нагрузки
                                 break;
                             case preg_match_all('/^R$|^диаметр$|диаметр\sдиска|диаметр\sшины/ium', $title):
@@ -187,7 +187,7 @@ class PricListsController extends AdminController
                         isset($column['hole_col']) ||
                         isset($column['s_hole_col'])) {
 
-                        $result = $this->diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
+                        $result = $this -> diskParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры диска
                         if ($result) {
 
                             $brands['d'] = $result['brands'];
@@ -221,25 +221,33 @@ class PricListsController extends AdminController
                         isset($column['index_speed_col']) ||
                         isset($column['index_load_col'])
                     ) {
-                        // НЕ УДАЛЯТЬ - ЭТО КОД ДЛЯ ПАРСА ШИН
-                        //$result = $this->shinParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры шины
+                        
+                        $result = $this -> shinParse($row + 1, $item, $column);    // Если передана опция "тип прайс-листа" или в массиве столбцов есть параметры шины
 
-                        /*
-                        $newMass = ['d' => $result];
-                        $types = [
-                            's' => 'Шины',
-                            'd' => 'Диски',
-                            'un' => 'Неизвестно'
-                        ];
+                        if ($result) {
 
-                        // Формируем вид
-                        $this->content = view('admin.p_lists.add')->with([
-                            'top'=>$headContent,
-                            'products' => $newMass,
-                            'types' => $types
-                        ])->render();
+                            $brands['s'] = $result['brands'];
+                            $isset_brand = $this -> brandsAliases($brands);
+                            unset($result['brands']);
 
-                        return $this->renderOutput();*/
+                            $newMass = ['s' => $result];
+                            $types = [
+                                's' => 'Шины',
+                                'd' => 'Диски',
+                                'un' => 'Неизвестно'
+                            ];
+
+                            // Формируем вид
+                            $this->content = view('admin.p_lists.add')->with([
+                                'top'=>$headContent,
+                                'products' => $newMass,
+                                'types' => $types,
+                                'brands' => $isset_brand
+                            ])->render();
+
+                            return $this->renderOutput();
+
+                        }
 
                     }
 
@@ -247,6 +255,7 @@ class PricListsController extends AdminController
                 } else {
 
                     // Тут надо выкинуть ошибку пользователю, что он должен заполнить поле "Строка заголовков"
+                    dd('Ты обосрался!! Надо было указать строку заголовков');
                     return false;
                 }
             }
@@ -1062,7 +1071,104 @@ class PricListsController extends AdminController
 
     }
 
+    // Парсинг шин для прайсов без номенклатуры
+    public function shinParse($start_row, $list, $column) {
 
+        //dump('столбцы', $column);
+
+        $params = [];
+
+        $list_count = count($list);     // Узнаем количество строк в листе
+
+        for ($i = $start_row; $i < $list_count; $i++) {
+
+            if (isset($column['brand_col'])) {
+                if (!empty(trim($list[$i][$column['brand_col']]))) {
+                    $params[$i - $start_row]['brand'] = $list[$i][$column['brand_col']];
+                } else {
+                    $params[$i - $start_row]['brand'] = '-';
+                }
+            }
+
+            if (isset($column['model_col'])) {
+                if (!empty(trim($list[$i][$column['model_col']]))) {
+                    $params[$i - $start_row]['all'] = $list[$i][$column['model_col']];
+                } else {
+                    $params[$i - $start_row]['all'] = '-';
+                }
+            }
+
+            if (isset($column['width_col'])) {
+                if (!empty(trim($list[$i][$column['width_col']]))) {
+                    $params[$i - $start_row]['width'] = $list[$i][$column['width_col']];
+                } else {
+                    $params[$i - $start_row]['width'] = '-';
+                }
+            }
+
+            if (isset($column['height_col'])) {
+                if (!empty(trim($list[$i][$column['height_col']]))) {
+                    $params[$i - $start_row]['height'] = $list[$i][$column['height_col']];
+                } else {
+                    $params[$i - $start_row]['height'] = '-';
+                }
+            }
+
+            if (isset($column['diameter_col'])) {
+                if (!empty(trim($list[$i][$column['diameter_col']]))) {
+                    $params[$i - $start_row]['radius'] = preg_replace('/r/iu', '' ,$list[$i][$column['diameter_col']]);
+                } else {
+                    $params[$i - $start_row]['radius'] = '-';
+                }
+            }
+
+            if (isset($column['index_speed_col'])) {
+                if (!empty(trim($list[$i][$column['index_speed_col']]))) {
+                    $params[$i - $start_row]['index_speed'] = $list[$i][$column['index_speed_col']];
+                } else {
+                    $params[$i - $start_row]['index_speed'] = '-';
+                }
+            }
+
+            if (isset($column['index_load_col'])) {
+                if (!empty(trim($list[$i][$column['index_load_col']]))) {
+                    $params[$i - $start_row]['index_load'] = $list[$i][$column['index_load_col']];
+                } else {
+                    $params[$i - $start_row]['index_load'] = '-';
+                }
+            }
+
+            // индекс общий без ном
+            if (isset($column['index_col']) && !empty(trim($list[$i][$column['index_col']]))) {
+                $index = $list[$i][$column['index_col']];
+                preg_match('/\d{1,3}\/?\d{0,3}/u', $index, $value_load);
+                preg_match('/[АA-ZТМНК][1-7]?/u', $index, $value_speed);
+                $params[$i - $start_row]['index_load'] = $value_load[0];
+                $params[$i - $start_row]['index_speed'] = $value_speed[0];
+            } else if (!isset($column['index_col']) && !isset($column['index_load_col']) && !isset($column['index_load_col'])) {
+                $params[$i - $start_row]['index_load'] = '-';
+                $params[$i - $start_row]['index_speed'] = '-';
+            }
+
+
+            // Если массив брендом пустой и текущий бренд не пустая строка и не равна "-", то заносим в массив текущий бренд
+            if (!isset($brands) && !empty($params[$i - $start_row]['brand']) && $params[$i - $start_row]['brand'] !== '-') {
+                $brands[] = $params[$i - $start_row]['brand'];
+                // Если массив брендов уже есть и текущий бренд еще не существует в массиве то заносим его
+            } else if (isset($brands) && !in_array($params[$i - $start_row]['brand'], $brands) && !empty($params[$i - $start_row]['brand']) && $params[$i - $start_row]['brand'] !== '-') {
+                $brands[] = $params[$i - $start_row]['brand'];
+            } else {
+                continue;
+            }
+        }
+        //dd($brands);        // Массив найденных брендов в прайсе
+        $params['brands'] = $brands;
+        //dump($params);
+        //dd($params);
+
+        return $params;
+
+    }
 
     //Для парсинга с сайтов (Пока не использовать)
     public function testParse(Request $request)
